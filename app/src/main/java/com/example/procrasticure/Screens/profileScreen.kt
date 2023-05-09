@@ -1,2 +1,17 @@
 package com.example.procrasticure.Screens
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.navigation.NavController
+import com.example.procrasticure.Widgets.TopMenu
+
+// show user profile
+
+@Composable
+fun ProfileScreen(navController: NavController){
+    Column() {
+        TopMenu(navController = navController)
+        Text(text = "Profile Screen")
+    }
+}
