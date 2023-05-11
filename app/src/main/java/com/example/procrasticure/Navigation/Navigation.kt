@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.procrasticure.Screens.DetailScreen
-import com.example.procrasticure.Screens.HomeScreen
-import com.example.procrasticure.Screens.ProfileScreen
-import com.example.procrasticure.Screens.Screen
+import com.example.procrasticure.Screens.*
 
 val goalList = listOf("Goal #1", "Goal #2", "Goal #3")
 @Composable
@@ -24,6 +21,10 @@ fun Navigation(){
 
         composable(route = Screen.ProfileScreen.route){
             ProfileScreen(navController = navController)
+        }
+
+        composable(route = Screen.TimerScreen.route){
+            Timer(navController = navController)
         }
     }
 }

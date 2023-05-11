@@ -13,7 +13,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProcrastiCureTheme {
                 // A surface container using the 'background' color from the theme
-                   Navigation()
+                Navigation()
             }
         }
     }
