@@ -1,6 +1,5 @@
 package com.example.procrasticure.Timer.Components
 
-
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box

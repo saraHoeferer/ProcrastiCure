@@ -13,14 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
 import com.example.procrasticure.Timer.CountDownView
 import com.example.procrasticure.Widgets.TopMenu
-import com.example.procrasticure.ViewModels.TimerViewModel
 
 @Composable
 fun Timer(navController: NavController) {
@@ -70,15 +68,17 @@ fun getTimerInfo() {
                         .background(color = Color.Red), horizontalArrangement = Arrangement.Center
                 ) {
                     Column {
-                        CountDownView(input)
+                        val newinput = convertTime(input)
+                        CountDownView(newinput)
                     }
                 }
             }
-
-
         }
     }
+}
 
+fun convertTime(input: String): Long {
+    return input.toLong() * 60000
 }
 
 /*

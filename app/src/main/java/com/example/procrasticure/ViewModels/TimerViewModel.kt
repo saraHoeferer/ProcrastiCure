@@ -6,17 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.Timer.SingleLiveEvent
 import com.example.procrasticure.Timer.Utility
-import com.example.procrasticure.Timer.Utility.formatTime
+import com.example.procrasticure.Timer.formatTime
 
-class TimerViewModel(time: String) : ViewModel() {
+class TimerViewModel(private val input: Long) : ViewModel() {
 
     //region Properties
     private var countDownTimer: CountDownTimer? = null
     //endregion
 
     //region States
-    private val _time = MutableLiveData(Utility.TIME_COUNTDOWN.formatTime())
-    val time: LiveData<String> = _time
+    private val _time = MutableLiveData(input.formatTime())
+    val time: MutableLiveData<String> = _time
 
     private val _progress = MutableLiveData(1.00F)
     val progress: LiveData<Float> = _progress
@@ -48,16 +48,16 @@ class TimerViewModel(time: String) : ViewModel() {
     //region Private methods
     private fun pauseTimer() {
         countDownTimer?.cancel()
-        handleTimerValues(false, Utility.TIME_COUNTDOWN.formatTime(), 1.0F, false)
+        handleTimerValues(false, input.formatTime(), 1.0F, false)
     }
 
     private fun startTimer() {
 
         _isPlaying.value = true
-        countDownTimer = object : CountDownTimer(Utility.TIME_COUNTDOWN, 1000) {
+        countDownTimer = object : CountDownTimer(input.toLong(), 1000) {
 
             override fun onTick(millisRemaining: Long) {
-                val progressValue = millisRemaining.toFloat() / Utility.TIME_COUNTDOWN
+                val progressValue = millisRemaining.toFloat() / input.toLong()
                 handleTimerValues(true, millisRemaining.formatTime(), progressValue, false)
                 _celebrate.postValue(false)
             }
