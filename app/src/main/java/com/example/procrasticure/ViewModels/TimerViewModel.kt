@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.Timer.SingleLiveEvent
-import com.example.procrasticure.Timer.Utility
 import com.example.procrasticure.Timer.formatTime
 
 class TimerViewModel(private val input: Long) : ViewModel() {

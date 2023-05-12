@@ -26,7 +26,6 @@ fun Timer(navController: NavController) {
     Column {
         TopMenu(navController = navController)
         getTimerInfo()
-        //CountDownView()
     }
 }
 
@@ -81,23 +80,5 @@ fun convertTime(input: String): Long {
     return input.toLong() * 60000
 }
 
-/*
-@Composable
-fun startTimer(time: Int) {
-
-    var minutes by remember {
-        mutableStateOf(time)
-    }
-
-    Text(text = minutes.toString(), fontSize = 40.sp)
-
-    LaunchedEffect(Unit) {
-        if(minutes != 0) {
-            minutes -= 1
-            //startTimer(time = minutes)
-            delay(1000)
-        }
-    }
-}*/
 
 

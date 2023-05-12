@@ -83,17 +83,6 @@ fun CountDownView(
 
         )
 
-        /*Text(
-            text = "1 minute to launch...",
-            color = androidx.compose.ui.graphics.Color.White,
-            fontSize = 16.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            fontFamily = FontFamily(Font(R.font.poppins_semibold))
-        )*/
-
         Text(
             text = "Click to start or stop countdown",
             color = androidx.compose.ui.graphics.Color.White,
