@@ -27,5 +27,13 @@ fun Navigation(){
         composable(route = Screen.TimerScreen.route){
             Timer(navController = navController)
         }
+
+        composable(route = Screen.AddGoalScreen.route){
+            AddGoalScreen(navController = navController)
+        }
+
+        composable(route = Screen.AddSubGoalScreen.route){
+            AddSubGoalScreen(navController = navController)
+        }
     }
 }

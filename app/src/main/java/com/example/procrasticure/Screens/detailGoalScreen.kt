@@ -11,7 +11,7 @@ import com.example.procrasticure.Widgets.TopMenu
 @Composable
 fun DetailScreen(navController: NavController){
     Column() {
-        TopMenu(navController = navController)
+        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack() })
         Text(text = "Details Screen")
     }
 }

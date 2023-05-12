@@ -7,4 +7,8 @@ sealed class Screen (val route: String){
     object DetailScreen: Screen("details")
 
     object TimerScreen: Screen("timer")
+
+    object AddGoalScreen: Screen("addGoal")
+
+    object AddSubGoalScreen: Screen("addSubGoal")
 }

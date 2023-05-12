@@ -24,11 +24,10 @@ import com.example.procrasticure.Widgets.TopMenu
 fun Timer(navController: NavController) {
 
     Column {
-        TopMenu(navController = navController)
+        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack()})
         getTimerInfo()
     }
 }
-
 
 @Composable
 fun getTimerInfo() {

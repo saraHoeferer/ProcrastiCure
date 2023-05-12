@@ -12,12 +12,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.procrasticure.Widgets.TopHomeMenu
 import com.example.procrasticure.Widgets.TopMenu
 
 @Composable
 fun HomeScreen(movieList: List<String>, navController: NavController){
     Column() {
-        TopMenu(navController = navController)
+        TopHomeMenu(navController = navController)
         heading(text = "Current Goals")
         goalList(goalList = movieList, checked = false)
         heading(text = "Finished goals")
