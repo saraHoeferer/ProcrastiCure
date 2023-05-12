@@ -1,15 +1,13 @@
 package com.example.procrasticure
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.procrasticure.Navigation.Navigation
+import com.example.procrasticure.ViewModels.TimerViewModel
+import com.example.procrasticure.ViewModels.TimerViewModelFactory
 import com.example.procrasticure.ui.theme.ProcrastiCureTheme
 
 class MainActivity : ComponentActivity() {
@@ -18,26 +16,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             ProcrastiCureTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+
+                /*val factoryTimer = TimerViewModelFactory()
+                val timerViewModel: TimerViewModel = viewModel(factory = factoryTimer)*/
+
+                Navigation()
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ProcrastiCureTheme {
-        Greeting("Android")
-    }
-}
