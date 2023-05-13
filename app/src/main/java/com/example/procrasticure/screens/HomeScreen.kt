@@ -17,13 +17,25 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
+import com.example.procrasticure.ui.theme.DarkGreen
 import com.example.procrasticure.widgets.TopHomeMenu
 
 @Composable
 fun HomeScreen(movieList: List<String>, navController: NavController){
     Column() {
         TopHomeMenu(navController = navController)
-        heading(text = "Current Goals")
+        Row() {
+            heading(text = "Current Goals")
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_add_task_24),
+                contentDescription = "Add Goal",
+                modifier = Modifier
+                    .padding(vertical = 25.dp, horizontal = 60.dp)
+                    .width(35.dp)
+                    .height(35.dp),
+                tint = DarkGreen,
+            )
+        }
         goalList(goalList = movieList, checked = false)
         heading(text = "Finished goals")
         goalList(goalList = movieList, checked = true)
