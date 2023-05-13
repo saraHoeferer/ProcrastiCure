@@ -1,16 +1,13 @@
-package com.example.procrasticure.Screens
+package com.example.procrasticure.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,13 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
-import com.example.procrasticure.Widgets.TopMenu
+import com.example.procrasticure.widgets.TopMenu
 
 // show user profile
 @Composable
 fun ProfileScreen(navController: NavController){
     Column() {
-        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack() })
+        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack() },
+            heading = "My Profile")
         ProfileDetails()
     }
 }

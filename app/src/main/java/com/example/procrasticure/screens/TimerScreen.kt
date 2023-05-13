@@ -1,4 +1,4 @@
-package com.example.procrasticure.Screens
+package com.example.procrasticure.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -17,14 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
-import com.example.procrasticure.Timer.CountDownView
-import com.example.procrasticure.Widgets.TopMenu
+import com.example.procrasticure.timer.CountDownView
+import com.example.procrasticure.widgets.TopMenu
 
 @Composable
 fun Timer(navController: NavController) {
 
     Column {
-        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack()})
+        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack()},
+            heading = "Timer")
         getTimerInfo()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.procrasticure.Screens
+package com.example.procrasticure.screens
 
 sealed class Screen (val route: String){
     object MainScreen: Screen("main")

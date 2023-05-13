@@ -1,4 +1,4 @@
-package com.example.procrasticure.Timer
+package com.example.procrasticure.timer
 
 import android.util.Log
 import androidx.annotation.MainThread

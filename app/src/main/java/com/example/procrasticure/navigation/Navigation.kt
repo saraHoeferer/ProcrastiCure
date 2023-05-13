@@ -1,11 +1,10 @@
-package com.example.procrasticure.Navigation
+package com.example.procrasticure.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.procrasticure.Screens.*
-import com.example.procrasticure.ViewModels.TimerViewModel
+import com.example.procrasticure.screens.*
 
 val goalList = listOf("Goal #1", "Goal #2", "Goal #3")
 @Composable

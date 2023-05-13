@@ -1,4 +1,4 @@
-package com.example.procrasticure.Timer
+package com.example.procrasticure.timer
 
 
 import androidx.compose.foundation.layout.Column
@@ -19,11 +19,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procrasticure.R
-import com.example.procrasticure.Timer.Components.CountDownButton
-import com.example.procrasticure.Timer.Components.CountDownIndicator
-import com.example.procrasticure.Timer.Components.ShowCelebration
-import com.example.procrasticure.ViewModels.TimerViewModel
-import com.example.procrasticure.ViewModels.TimerViewModelFactory
+import com.example.procrasticure.timer.components.CountDownButton
+import com.example.procrasticure.timer.components.CountDownIndicator
+import com.example.procrasticure.timer.components.ShowCelebration
+import com.example.procrasticure.viewModels.TimerViewModel
+import com.example.procrasticure.viewModels.TimerViewModelFactory
 import java.util.concurrent.TimeUnit
 
 

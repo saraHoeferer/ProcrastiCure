@@ -1,4 +1,4 @@
-package com.example.procrasticure.Timer.Components
+package com.example.procrasticure.timer.components
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas

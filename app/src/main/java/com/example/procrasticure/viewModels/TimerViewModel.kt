@@ -1,11 +1,11 @@
-package com.example.procrasticure.ViewModels
+package com.example.procrasticure.viewModels
 
 import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.procrasticure.Timer.SingleLiveEvent
-import com.example.procrasticure.Timer.formatTime
+import com.example.procrasticure.timer.SingleLiveEvent
+import com.example.procrasticure.timer.formatTime
 
 class TimerViewModel(private val input: Long) : ViewModel() {
 

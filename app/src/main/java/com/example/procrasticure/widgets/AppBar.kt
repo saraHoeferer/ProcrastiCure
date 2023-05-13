@@ -1,4 +1,4 @@
-package com.example.procrasticure.Widgets
+package com.example.procrasticure.widgets
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,24 +10,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.procrasticure.Screens.Screen
+import com.example.procrasticure.screens.Screen
 
 @Composable
-fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}){
+fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}, heading: String){
     var showMenu by remember { mutableStateOf(false) }
     TopAppBar(elevation = 2.dp) {
-        Row(Modifier.padding(5.dp)) {
+        Row(Modifier.padding(10.dp)) {
             Icon(imageVector = Icons.Default.ArrowBack,
                 contentDescription = "Arrow back",
                 modifier = Modifier.clickable {
-                    arrowBackClicked() // wenn der Up Button geklickt wird
+                    arrowBackClicked()
                 }
             )
-            Text(text = "ProcrastiCure", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = heading, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(1f))
             Box(contentAlignment = Alignment.TopEnd) {
                 Icon(
@@ -50,7 +50,10 @@ fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}){
                         Text(text = "Timer")
                     }
                     DropdownMenuItem(onClick = { navController.navigate(Screen.AddGoalScreen.route)}) {
-                        Text(text = "Add New Goal")
+                        Text(text = "New Goal")
+                    }
+                    DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
+                        Text(text = "New Subgoal")
                     }
                 }
             }
@@ -86,7 +89,10 @@ fun TopHomeMenu(navController: NavController){
                         Text(text = "Timer")
                     }
                     DropdownMenuItem(onClick = { navController.navigate(Screen.AddGoalScreen.route)}) {
-                        Text(text = "Add New Goal")
+                        Text(text = "New Goal")
+                    }
+                    DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
+                        Text(text = "New Subgoal")
                     }
                 }
             }

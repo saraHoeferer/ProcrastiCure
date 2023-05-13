@@ -1,6 +1,5 @@
-package com.example.procrasticure.ViewModels
+package com.example.procrasticure.viewModels
 
-import androidx.compose.runtime.isTraceInProgress
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 

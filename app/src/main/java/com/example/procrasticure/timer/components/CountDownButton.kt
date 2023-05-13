@@ -1,4 +1,4 @@
-package com.example.procrasticure.Timer.Components
+package com.example.procrasticure.timer.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
