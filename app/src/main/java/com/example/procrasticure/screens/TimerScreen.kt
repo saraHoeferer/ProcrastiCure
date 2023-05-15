@@ -24,8 +24,10 @@ import com.example.procrasticure.widgets.TopMenu
 fun Timer(navController: NavController) {
 
     Column {
-        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack()},
-            heading = "Timer")
+        TopMenu(
+            navController = navController, arrowBackClicked = { navController.popBackStack() },
+            heading = "Timer"
+        )
         getTimerInfo()
     }
 }
@@ -43,8 +45,10 @@ fun getTimerInfo() {
     Card(modifier = Modifier.padding(10.dp)) {
         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Text(text = "Type in the time in minutes!", fontSize = 25.sp, fontFamily = FontFamily(
-                Font(R.font.poppins_semibold))
+            Text(
+                text = "Type in the time in minutes!", fontSize = 25.sp, fontFamily = FontFamily(
+                    Font(R.font.poppins_semibold)
+                )
             )
 
             OutlinedTextField(
@@ -56,7 +60,11 @@ fun getTimerInfo() {
                 },
             )
 
-            Button(onClick = { checked = true }) {
+            Button(onClick = {
+                if (input != "") {
+                    checked = true
+                }
+            }) {
                 Text(text = "Start Timer")
             }
 

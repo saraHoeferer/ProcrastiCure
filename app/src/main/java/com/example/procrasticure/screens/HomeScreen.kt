@@ -1,94 +1,189 @@
 package com.example.procrasticure.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
-import com.example.procrasticure.ui.theme.DarkGreen
 import com.example.procrasticure.widgets.TopHomeMenu
 
 @Composable
-fun HomeScreen(movieList: List<String>, navController: NavController){
-    Column() {
+fun HomeScreen(movieList: List<String>, navController: NavController) {
+    val colorPrimary = Color(98, 0, 238)
+    val colorDisabled = Color(87,87,87,13)
+
+    var displayState by remember {
+        mutableStateOf(true)
+    }
+
+    var buttonColorCurrent by remember {
+        mutableStateOf(colorPrimary)
+    }
+
+    var buttonColorFinished by remember {
+        mutableStateOf(colorDisabled)
+    }
+    Column {
         TopHomeMenu(navController = navController)
-        Row() {
-            heading(text = "Current Goals")
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_add_task_24),
-                contentDescription = "Add Goal",
+        Row {
+            Button(
+                onClick = { displayState = true },
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = buttonColorCurrent),
                 modifier = Modifier
-                    .padding(vertical = 25.dp, horizontal = 60.dp)
-                    .width(35.dp)
-                    .height(35.dp),
-                tint = DarkGreen,
-            )
+                    .padding(4.dp)
+            ) {
+                Text(text = "Current Goals")
+            }
+            Button(
+                onClick = { displayState = false },
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.buttonColors(backgroundColor = buttonColorFinished),
+                modifier = Modifier
+                    .padding(4.dp)
+            ) {
+                Text(text = "Finished Goals")
+            }
+
+            if (displayState) {
+                Spacer(modifier = Modifier.weight(1f))
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_add_task_24),
+                    contentDescription = "Add Goal",
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp, vertical = 10.dp)
+                        .width(35.dp)
+                        .height(35.dp)
+                        .clickable { navController.navigate(Screen.AddGoalScreen.route)},
+                    tint = colorPrimary,
+                )
+            }
         }
-        goalList(goalList = movieList, checked = false)
-        heading(text = "Finished goals")
-        goalList(goalList = movieList, checked = true)
+
+        if (displayState) {
+            GoalList(goalList = movieList, navController=navController)
+            buttonColorFinished = colorDisabled
+            buttonColorCurrent = colorPrimary
+
+        } else {
+            FinishedGoalList(goalList = movieList)
+            buttonColorCurrent = colorDisabled
+            buttonColorFinished = colorPrimary
+        }
     }
 
 }
 
 
 @Composable
-fun heading(text: String){
-    Text(text = text,
-        fontSize = 40.sp,
-        fontWeight = FontWeight.Bold,
-        modifier = Modifier
-            .padding(horizontal = 5.dp, vertical = 12.dp),
-        textAlign = TextAlign.Center)
-}
-
-@Composable
-fun goalList(goalList: List<String>, checked: Boolean){
-    LazyColumn() {
+fun FinishedGoalList(goalList: List<String>) {
+    LazyColumn {
         items(items = goalList) { goal ->
-            val checkedState = remember { mutableStateOf(checked) }
-            Box() {
-                Row(modifier = Modifier.width(400.dp)) {
-                    Checkbox(
-                        checked = checkedState.value,
-                        onCheckedChange = { checkedState.value = it })
+            Box(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .clip(shape = RoundedCornerShape(18.dp))
+                    .background(Color(87, 87, 87, 22))
+                    .width(400.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 18.dp, vertical = 10.dp)
+                ) {
                     Text(
                         text = goal,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.padding(horizontal = 1.dp, vertical = 10.dp)
+                    )
+                    Text(
+                        text = "Points earned: 200",
+                        fontSize = 12.sp,
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun GoalList(goalList: List<String>, navController: NavController) {
+    LazyColumn {
+        items(items = goalList) { goal ->
+            // check State for checkbox
+            //val checkedState = remember { mutableStateOf(checked) }
+            Box(
+                modifier = Modifier
+                    .padding(5.dp)
+                    .clip(shape = RoundedCornerShape(18.dp))
+                    .background(Color(87, 87, 87, 22))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .width(400.dp)
+                        .padding(5.dp)
+                ) {
+                    Text(
+                        text = goal,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 18.dp, vertical = 11.dp)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "Go to Goal Details",
+                        modifier = Modifier
+                            .padding(horizontal = 10.dp, vertical = 10.dp)
+                            .width(35.dp)
+                            .height(35.dp)
+                            .clickable { navController.navigate(Screen.DetailScreen.route)},
+                        tint = Color.Gray,
                     )
 
-                    Column() {
-                        Icon(
-                            imageVector = Icons.Outlined.Edit,
-                            contentDescription = "Edit Goal",
-                            modifier = Modifier
-                                .padding(8.dp)
+                    // Checkbox
+                    /*Checkbox(
+                        checked = checkedState.value,
+                        onCheckedChange = { checkedState.value = it },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = Color.Green,
+                            uncheckedColor = Color.Gray,
+                            checkmarkColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .clip(shape = RoundedCornerShape(100.dp))
+                    )*/
 
-                                .width(30.dp)
-                                .height(30.dp),
-                            tint = Color.DarkGray
-                        )
-                    }
+                    // Edit Icon + Show Sub goals Icon
+                    /*Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Edit Goal",
+                        modifier = Modifier
+                            .padding(8.dp)
 
+                            .width(30.dp)
+                            .height(30.dp),
+                        tint = Color.DarkGray
+                    )
                     Spacer(modifier = Modifier.padding(horizontal = 0.dp))
-                    Column(horizontalAlignment = Alignment.End) {
-
-
-                        Icon(
+                    Icon(
                             painter = painterResource(id = R.drawable.baseline_format_list_bulleted_24),
                             contentDescription = "Display Subgoals",
                             modifier = Modifier
@@ -97,11 +192,9 @@ fun goalList(goalList: List<String>, checked: Boolean){
                                 .height(30.dp),
                             tint = Color.DarkGray,
                         )
-                    }
+                    */
                 }
-                    Divider(startIndent = 8.dp, thickness = 1.dp, color = Color.Black)
-                }
-
+            }
         }
     }
 }

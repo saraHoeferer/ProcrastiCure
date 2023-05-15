@@ -40,17 +40,8 @@ fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}, hea
                     DropdownMenuItem(onClick = { navController.navigate(Screen.ProfileScreen.route) }) {
                         Text(text = "Profile")
                     }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.DetailScreen.route) }) {
-                        Text(text = "Details")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.MainScreen.route) }) {
-                        Text(text = "Home")
-                    }
                     DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
                         Text(text = "Timer")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.AddGoalScreen.route)}) {
-                        Text(text = "New Goal")
                     }
                     DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
                         Text(text = "New Subgoal")
@@ -79,17 +70,8 @@ fun TopHomeMenu(navController: NavController){
                     DropdownMenuItem(onClick = { navController.navigate(Screen.ProfileScreen.route) }) {
                         Text(text = "Profile")
                     }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.DetailScreen.route) }) {
-                        Text(text = "Details")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.MainScreen.route) }) {
-                        Text(text = "Home")
-                    }
                     DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
                         Text(text = "Timer")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.AddGoalScreen.route)}) {
-                        Text(text = "New Goal")
                     }
                     DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
                         Text(text = "New Subgoal")
