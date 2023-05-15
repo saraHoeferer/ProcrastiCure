@@ -154,7 +154,7 @@ fun GoalList(goalList: List<String>, navController: NavController) {
                             .padding(horizontal = 10.dp, vertical = 10.dp)
                             .width(35.dp)
                             .height(35.dp)
-                            .clickable { navController.navigate(Screen.DetailScreen.route)},
+                            .clickable { navController.navigate(Screen.DetailScreen.withId(goal))},
                         tint = Color.Gray,
                     )
 
@@ -171,7 +171,7 @@ fun GoalList(goalList: List<String>, navController: NavController) {
                             .clip(shape = RoundedCornerShape(100.dp))
                     )*/
 
-                    // Edit Icon + Show Sub goals Icon
+                    // Edit Icon
                     /*Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit Goal",
@@ -182,16 +182,6 @@ fun GoalList(goalList: List<String>, navController: NavController) {
                             .height(30.dp),
                         tint = Color.DarkGray
                     )
-                    Spacer(modifier = Modifier.padding(horizontal = 0.dp))
-                    Icon(
-                            painter = painterResource(id = R.drawable.baseline_format_list_bulleted_24),
-                            contentDescription = "Display Subgoals",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .width(30.dp)
-                                .height(30.dp),
-                            tint = Color.DarkGray,
-                        )
                     */
                 }
             }

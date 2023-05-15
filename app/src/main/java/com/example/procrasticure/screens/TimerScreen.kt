@@ -25,7 +25,7 @@ fun Timer(navController: NavController) {
 
     Column {
         TopMenu(
-            navController = navController, arrowBackClicked = { navController.popBackStack() },
+            arrowBackClicked = { navController.popBackStack() },
             heading = "Timer"
         )
         getTimerInfo()

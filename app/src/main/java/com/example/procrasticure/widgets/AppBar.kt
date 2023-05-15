@@ -16,8 +16,7 @@ import androidx.navigation.NavController
 import com.example.procrasticure.screens.Screen
 
 @Composable
-fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}, heading: String){
-    var showMenu by remember { mutableStateOf(false) }
+fun TopMenu(arrowBackClicked: () -> Unit = {}, heading: String){
     TopAppBar(elevation = 2.dp) {
         Row(Modifier.padding(10.dp)) {
             Icon(imageVector = Icons.Default.ArrowBack,
@@ -29,25 +28,23 @@ fun TopMenu(navController: NavController, arrowBackClicked: () -> Unit = {}, hea
             Spacer(modifier = Modifier.weight(1f))
             Text(text = heading, fontSize = 20.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.weight(1f))
-            Box(contentAlignment = Alignment.TopEnd) {
-                Icon(
-                    imageVector = Icons.Default.Menu,
-                    contentDescription = "menu",
-                    modifier = Modifier
-                        .size(30.dp)
-                        .clickable { showMenu = !showMenu })
-                DropdownMenu(expanded = showMenu, onDismissRequest = { showMenu = false }) {
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.ProfileScreen.route) }) {
-                        Text(text = "Profile")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
-                        Text(text = "Timer")
-                    }
-                    DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
-                        Text(text = "New Subgoal")
-                    }
+        }
+    }
+}
+@Composable
+fun GoalMenu(arrowBackClicked: () -> Unit = {}, heading: String){
+    TopAppBar(elevation = 2.dp) {
+        Row(Modifier.padding(10.dp)) {
+            Icon(imageVector = Icons.Default.ArrowBack,
+                contentDescription = "Arrow back",
+                modifier = Modifier.clickable {
+                    arrowBackClicked()
                 }
-            }
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = heading, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.weight(1f))
+            Text(text = "Edit", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
@@ -72,9 +69,6 @@ fun TopHomeMenu(navController: NavController){
                     }
                     DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
                         Text(text = "Timer")
-                    }
-                    DropdownMenuItem(onClick = {navController.navigate(Screen.AddSubGoalScreen.route)}){
-                        Text(text = "New Subgoal")
                     }
                 }
             }

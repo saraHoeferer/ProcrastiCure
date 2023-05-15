@@ -26,7 +26,7 @@ import com.example.procrasticure.widgets.TopMenu
 @Composable
 fun ProfileScreen(navController: NavController){
     Column() {
-        TopMenu(navController = navController, arrowBackClicked = { navController.popBackStack() },
+        TopMenu(arrowBackClicked = { navController.popBackStack() },
             heading = "My Profile")
         ProfileDetails()
     }

@@ -28,7 +28,6 @@ fun AddSubGoalScreen(navController: NavController){
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TopMenu(
-                navController = navController,
                 arrowBackClicked = { navController.popBackStack() },
                 heading = "Add A New Subgoal"
             )
