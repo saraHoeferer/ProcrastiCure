@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
@@ -60,7 +61,7 @@ fun DisplayMainGoal(goalId: String, navController: NavController) {
             )
             Spacer(modifier = Modifier.weight(1f))
             Icon(
-                painter = painterResource(id = R.drawable.baseline_add_task_24),
+                imageVector = Icons.Default.Add,
                 contentDescription = "Add Goal",
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 10.dp)
