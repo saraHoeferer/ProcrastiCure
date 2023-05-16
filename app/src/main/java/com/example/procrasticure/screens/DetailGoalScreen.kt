@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +43,6 @@ fun DetailScreen(navController: NavController, goalId: String?) {
 
 @Composable
 fun DisplayMainGoal(goalId: String, navController: NavController) {
-    var checkedState = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .padding(5.dp)
@@ -59,17 +59,6 @@ fun DisplayMainGoal(goalId: String, navController: NavController) {
                     .padding(horizontal = 18.dp, vertical = 11.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            Checkbox(
-                checked = checkedState.value,
-                onCheckedChange = { checkedState.value = it },
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MaterialTheme.colors.primary,
-                    uncheckedColor = Color.Gray,
-                    checkmarkColor = Color.White
-                ),
-                modifier = Modifier
-                    .clip(shape = RoundedCornerShape(100.dp))
-            )
             Icon(
                 painter = painterResource(id = R.drawable.baseline_add_task_24),
                 contentDescription = "Add Goal",
@@ -101,14 +90,6 @@ fun DisplaySubGoals(goalList: List<String>) {
                                 .width(400.dp)
                                 .padding(0.dp)
                         ) {
-                            Text(
-                                text = goal,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .padding(horizontal = 18.dp, vertical = 11.dp)
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
                             Checkbox(
                                 checked = checkedState.value,
                                 onCheckedChange = { checkedState.value = it },
@@ -120,6 +101,14 @@ fun DisplaySubGoals(goalList: List<String>) {
                                 modifier = Modifier
                                     .clip(shape = RoundedCornerShape(100.dp))
                             )
+                            Text(
+                                text = goal,
+                                fontSize = 18.sp,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier
+                                    .padding(horizontal = 0.dp, vertical = 11.dp)
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
                             Icon(
                                 imageVector = Icons.Outlined.Edit,
                                 contentDescription = "Edit Goal",
@@ -128,6 +117,14 @@ fun DisplaySubGoals(goalList: List<String>) {
                                     .width(30.dp)
                                     .height(30.dp),
                                 tint = Color.DarkGray
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Delete,
+                                contentDescription = "delete",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .width(30.dp)
+                                    .height(30.dp),
                             )
                         }
                     }

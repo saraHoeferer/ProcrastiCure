@@ -126,7 +126,7 @@ fun GoalList(goalList: List<String>, navController: NavController) {
     LazyColumn {
         items(items = goalList) { goal ->
             // check State for checkbox
-            //val checkedState = remember { mutableStateOf(checked) }
+            val checkedState = remember { mutableStateOf(false) }
             Box(
                 modifier = Modifier
                     .padding(5.dp)
@@ -138,12 +138,23 @@ fun GoalList(goalList: List<String>, navController: NavController) {
                         .width(400.dp)
                         .padding(5.dp)
                 ) {
+                    Checkbox(
+                        checked = checkedState.value,
+                        onCheckedChange = { checkedState.value = it },
+                        colors = CheckboxDefaults.colors(
+                            checkedColor = MaterialTheme.colors.primary,
+                            uncheckedColor = Color.Gray,
+                            checkmarkColor = Color.White
+                        ),
+                        modifier = Modifier
+                            .padding(horizontal = 0.dp, vertical = 2.dp)
+                    )
                     Text(
                         text = goal,
                         fontSize = 20.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
-                            .padding(horizontal = 18.dp, vertical = 11.dp)
+                            .padding(horizontal = 2.dp, vertical = 12.dp)
                     )
                     Spacer(modifier = Modifier.weight(1f))
 
