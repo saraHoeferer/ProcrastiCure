@@ -44,12 +44,13 @@ fun CountDownView(input: Long) {
     }
 }
 
-const val TIME_FORMAT = "%02d:%02d"
+const val TIME_FORMAT = "%02d:%02d:%02d"
 
 fun Long.formatTime(): String {
     return String.format(
         TIME_FORMAT,
-        TimeUnit.MILLISECONDS.toMinutes(this),
+        TimeUnit.MILLISECONDS.toHours(this ),
+        TimeUnit.MILLISECONDS.toMinutes(this) % 60,
         TimeUnit.MILLISECONDS.toSeconds(this) % 60)
 }
 

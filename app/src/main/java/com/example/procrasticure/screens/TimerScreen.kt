@@ -1,12 +1,11 @@
 package com.example.procrasticure.screens
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,9 +15,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.commandiron.wheel_picker_compose.WheelTimePicker
+import com.commandiron.wheel_picker_compose.core.TimeFormat
+import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.example.procrasticure.R
 import com.example.procrasticure.timer.CountDownView
 import com.example.procrasticure.widgets.TopMenu
+import java.time.LocalTime
+
 
 @Composable
 fun Timer(navController: NavController) {
@@ -51,14 +55,27 @@ fun getTimerInfo() {
                 )
             )
 
-            OutlinedTextField(
+            WheelTimePicker(
+                startTime = LocalTime.of(0,0),
+                rowCount = 3,
+                textStyle = MaterialTheme.typography.subtitle1,
+                textColor = Color.Black,
+                selectorProperties = WheelPickerDefaults.selectorProperties(
+                    enabled = true,
+                    shape = RoundedCornerShape(0.dp),
+                    color = Color(0xFFf1faee).copy(alpha = 0.2f),
+                    border = BorderStroke(2.dp, Color(0xFFf1faee))
+                )
+            ){snappedTime -> input = snappedTime.toString() }
+
+            /*OutlinedTextField(
                 value = input,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 onValueChange = {
                     input = it
                 },
-            )
+            )*/
 
             Button(onClick = {
                 if (input != "") {
@@ -85,7 +102,9 @@ fun getTimerInfo() {
 }
 
 fun convertTime(input: String): Long {
-    return input.toLong() * 60000
+    val hours = input.dropLast(3)
+    val minutes = input.substring(input.length - 2)
+    return minutes.toLong()*60000 + hours.toLong()*3600000
 }
 
 
