@@ -47,7 +47,7 @@ fun CountDownIndicator(
                 modifier = Modifier
                     .height(size.dp)
                     .width(size.dp),
-                color = colorResource(R.color.pink),
+                color = Color.White,
                 stroke
             )
 
@@ -63,7 +63,7 @@ fun CountDownIndicator(
             Column(modifier = Modifier.align(Alignment.Center)) {
                 Text(
                     text = time,
-                    color = Color.White,
+                    color = Color.Black,
                     fontFamily = FontFamily(Font(R.font.poppins_semibold)),
                     style = MaterialTheme.typography.h2,
                     modifier = Modifier.align(Alignment.CenterHorizontally),

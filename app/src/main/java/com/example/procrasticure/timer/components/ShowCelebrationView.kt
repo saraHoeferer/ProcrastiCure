@@ -1,6 +1,7 @@
 package com.example.procrasticure.timer.components
 
 
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -17,21 +18,22 @@ fun ShowCelebration() {
     AndroidView(
 
         modifier = Modifier
-            .size(20.dp, 20.dp)
-            .padding(top = 10.dp),
+            .fillMaxWidth(),
 
         factory = { ctx ->
-
             KonfettiView(context = ctx).apply {
             }
         },
 
         update = {
+
             it.build()
                 .addColors(
                     android.graphics.Color.YELLOW,
                     android.graphics.Color.GREEN,
-                    android.graphics.Color.MAGENTA
+                    android.graphics.Color.MAGENTA,
+                    android.graphics.Color.CYAN,
+                    android.graphics.Color.RED
                 )
                 .setDirection(0.0, 359.0)
                 .setSpeed(1f, 5f)
@@ -39,7 +41,7 @@ fun ShowCelebration() {
                 .setTimeToLive(2000L)
                 .addShapes(Shape.Square, Shape.Circle)
                 .addSizes(Size(12))
-                .setPosition(-50f, -50f, -50f)
+                .setPosition(-50f, it.getWidth() + 50f, -50f)
                 .streamFor(300, 5000L)
         }
     )
