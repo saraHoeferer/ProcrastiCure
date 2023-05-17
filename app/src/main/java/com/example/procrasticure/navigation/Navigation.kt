@@ -33,6 +33,14 @@ fun Navigation(){
             AddSubGoalScreen(navController = navController)
         }
 
+        composable(route = Screen.ManageGoalsScreen.route){
+            ManageGoalsScreen(navController = navController, movieList = goalList)
+        }
+
+        composable(route = Screen.ManageSubGoalsScreen.route){
+            ManageSubgoalsScreen(navController = navController)
+        }
+
         composable(
             Screen.DetailScreen.route,
             arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
