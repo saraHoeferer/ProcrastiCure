@@ -29,7 +29,7 @@ import java.util.*
 
 // https://www.geeksforgeeks.org/date-picker-in-android-using-jetpack-compose/
 @Composable
-fun DatePickerWidget(dateText: String) {
+fun DatePickerWidget(dateText: String): String {
 
     var dateText by remember {
         mutableStateOf(dateText)
@@ -107,5 +107,5 @@ fun DatePickerWidget(dateText: String) {
         )
 
     }
-
+    return dateText
 }

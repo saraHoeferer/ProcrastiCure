@@ -26,7 +26,7 @@ import com.example.procrasticure.R
 import java.util.*
 
 @Composable
-fun TimePickerWidget(timeText: String){
+fun TimePickerWidget(timeText: String): String{
     var timeText by remember {
         mutableStateOf(timeText)
     }
@@ -77,4 +77,5 @@ fun TimePickerWidget(timeText: String){
             .width(40.dp)
             .height(40.dp), tint = Color.DarkGray)
     }
+    return timeText
 }
