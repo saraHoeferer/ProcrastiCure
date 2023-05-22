@@ -91,7 +91,8 @@ dependencies {
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:1.1.6"
 
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
-    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.0.0'
+
     implementation 'com.google.firebase:firebase-firestore-ktx'
 
 
