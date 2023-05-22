@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "486711385944",
+    "project_id": "procrasticure",
+    "storage_bucket": "procrasticure.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486711385944:android:d61fe1650dd9e08075cf2d",
+        "android_client_info": {
+          "package_name": "com.example.procrasticure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "486711385944-obk2k6sdptl0qmud04r5smsdsi9q7sic.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-KJaT5OByyJEz4Ut9XY4a-IgIMJK4SBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "486711385944-obk2k6sdptl0qmud04r5smsdsi9q7sic.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
