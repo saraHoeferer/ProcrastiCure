@@ -1,17 +1,14 @@
 package com.example.procrasticure.timer
 
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -63,52 +60,29 @@ fun CountDownView(
     celebrate: Boolean,
     optionSelected: () -> Unit
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
+    Box(modifier = Modifier.fillMaxSize()){
         if (celebrate) {
             ShowCelebration()
         }
 
-        Text(
-            text = "Timer",
-            color = androidx.compose.ui.graphics.Color.White,
-            fontSize = 25.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp),
-            fontFamily = FontFamily(Font(R.font.poppins_semibold))
+        Column(modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            CountDownIndicator(
+                Modifier.padding(top = 50.dp),
+                progress = progress,
+                time = time,
+                size = 300,
+                stroke = 12
+            )
 
-        )
-
-        Text(
-            text = "Click to start or stop countdown",
-            color = androidx.compose.ui.graphics.Color.White,
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth(),
-            fontFamily = FontFamily(Font(R.font.poppins_regular))
-        )
-
-        CountDownIndicator(
-            Modifier.padding(top = 50.dp),
-            progress = progress,
-            time = time,
-            size = 250,
-            stroke = 12
-        )
-
-        CountDownButton(
-            modifier = Modifier
-                .padding(top = 70.dp)
-                .size(70.dp),
-            isPlaying = isPlaying
-        ) {
-            optionSelected()
+            CountDownButton(
+                modifier = Modifier
+                    .padding(top = 70.dp)
+                    .size(70.dp),
+                isPlaying = isPlaying
+            ) {
+                optionSelected()
+            }
         }
     }
 }

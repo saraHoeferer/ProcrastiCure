@@ -12,7 +12,7 @@ val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = Screen.MainScreen.route){
+    NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.MainScreen.route){
             HomeScreen(movieList = goalList, navController = navController)
         }
@@ -39,6 +39,10 @@ fun Navigation(){
 
         composable(route = Screen.ManageSubGoalsScreen.route){
             ManageSubgoalsScreen(navController = navController)
+        }
+
+        composable(route = Screen.Login.route){
+            Login(navController = navController)
         }
 
         composable(

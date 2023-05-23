@@ -1,5 +1,6 @@
 package com.example.procrasticure.timer.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -16,9 +17,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.procrasticure.R
 
+@SuppressLint("InvalidColorHexValue")
 @Composable
 fun CountDownButton(
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
     isPlaying: Boolean,
     optionSelected: () -> Unit
 ) {
@@ -37,13 +39,13 @@ fun CountDownButton(
             },
             modifier =
             Modifier
-                .height(70.dp)
+                .height(50.dp)
                 .width(200.dp),
 
             shape = RoundedCornerShape(25.dp),
 
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.pink),
+                backgroundColor = Color(0xFF673AB7),
                 contentColor = colorResource(id = R.color.white),
             ),
 

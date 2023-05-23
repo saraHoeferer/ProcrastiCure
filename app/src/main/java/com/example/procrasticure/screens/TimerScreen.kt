@@ -1,8 +1,8 @@
 package com.example.procrasticure.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -10,13 +10,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.commandiron.wheel_picker_compose.WheelTimePicker
-import com.commandiron.wheel_picker_compose.core.TimeFormat
 import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.example.procrasticure.R
 import com.example.procrasticure.timer.CountDownView
@@ -46,50 +48,72 @@ fun getTimerInfo() {
         mutableStateOf("")
     }
 
-    Card(modifier = Modifier.padding(10.dp)) {
+    var enable by remember {
+        mutableStateOf(true)
+    }
+
+    Card(modifier = Modifier.padding(10.dp).fillMaxHeight()) {
         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Text(
-                text = "Type in the time in minutes!", fontSize = 25.sp, fontFamily = FontFamily(
-                    Font(R.font.poppins_semibold)
-                )
-            )
 
-            WheelTimePicker(
-                startTime = LocalTime.of(0,0),
-                rowCount = 3,
-                textStyle = MaterialTheme.typography.subtitle1,
-                textColor = Color.Black,
-                selectorProperties = WheelPickerDefaults.selectorProperties(
-                    enabled = true,
-                    shape = RoundedCornerShape(0.dp),
-                    color = Color(0xFFf1faee).copy(alpha = 0.2f),
-                    border = BorderStroke(2.dp, Color(0xFFf1faee))
-                )
-            ){snappedTime -> input = snappedTime.toString() }
+            AnimatedVisibility(visible = enable) {
 
-            /*OutlinedTextField(
-                value = input,
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                onValueChange = {
-                    input = it
-                },
-            )*/
+                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    
+                    Text(text = "Type in the time in minutes!", fontSize = 25.sp, fontWeight = FontWeight.Medium)
+                    
+                    Spacer(modifier = Modifier.size(10.dp))
 
-            Button(onClick = {
-                if (input != "") {
-                    checked = true
+                    WheelTimePicker(
+                        startTime = LocalTime.of(0,0),
+                        rowCount = 3,
+                        textStyle = MaterialTheme.typography.subtitle1,
+                        textColor = Color.Black,
+                        selectorProperties = WheelPickerDefaults.selectorProperties(
+                            enabled = true,
+                            shape = RoundedCornerShape(0.dp),
+                            color = Color(0xFFf1faee).copy(alpha = 0.2f),
+                            border = BorderStroke(2.dp, Color(0xFFf1faee))
+                        )
+                    ){snappedTime -> input = snappedTime.toString() }
+
+                    Spacer(modifier = Modifier.size(20.dp))
+
+                    Button(
+                        onClick = {
+                            if (input != "") {
+                                checked = true
+                                enable = false
+                            }
+                        },
+                        modifier =
+                        Modifier
+                            .height(50.dp)
+                            .width(200.dp),
+
+                        shape = RoundedCornerShape(25.dp),
+
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color(0xFF673AB7),
+                            contentColor = colorResource(id = R.color.white),
+                        ),
+
+                        ) {
+
+                        Text("Start timer!",
+                            fontSize = 20.sp,
+                            color = Color.White,
+                            fontWeight = FontWeight.Medium
+                        )
+                    }
                 }
-            }) {
-                Text(text = "Start Timer")
             }
+
 
             AnimatedVisibility(visible = checked) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.Red), horizontalArrangement = Arrangement.Center
+                        .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
                     Column {
                         val newinput = convertTime(input)
@@ -100,6 +124,7 @@ fun getTimerInfo() {
         }
     }
 }
+
 
 fun convertTime(input: String): Long {
     val hours = input.dropLast(3)
