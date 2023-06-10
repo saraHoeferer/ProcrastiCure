@@ -13,8 +13,8 @@ val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 fun Navigation(){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
-        composable(route = Screen.MainScreen.route){
-            HomeScreen(movieList = goalList, navController = navController)
+        composable(route = Screen.GoalsScreen.route){
+            GoalsScreen(navController = navController)
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -34,11 +34,11 @@ fun Navigation(){
         }
 
         composable(route = Screen.ManageGoalsScreen.route){
-            ManageGoalsScreen(navController = navController, movieList = goalList)
+            ManageGoalsScreen(navController = navController)
         }
 
         composable(route = Screen.ManageSubGoalsScreen.route){
-            ManageSubgoalsScreen(navController = navController)
+            ManageSubGoalsScreen(navController = navController)
         }
 
         composable(route = Screen.Login.route){
@@ -46,10 +46,10 @@ fun Navigation(){
         }
 
         composable(
-            Screen.DetailScreen.route,
+            Screen.SubGoalsScreen.route,
             arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
         ) { backStackEntry ->    // backstack contains all information from navhost
-                DetailScreen(
+                SubGoalsScreen(
                     navController = navController,
                     goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)
                 ) // get the argument from navhost that will be passed

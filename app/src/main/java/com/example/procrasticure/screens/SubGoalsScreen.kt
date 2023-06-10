@@ -26,7 +26,7 @@ import com.example.procrasticure.widgets.SubGoalsDisplay
 // Goal + Subgoal
 
 @Composable
-fun DetailScreen(navController: NavController, goalId: String?) {
+fun SubGoalsScreen(navController: NavController, goalId: String?) {
     var goal = "Goal"
     if (goalId != null) {
         goal = goalId

@@ -18,7 +18,7 @@ import com.example.procrasticure.widgets.SubGoalsDisplay
 import com.example.procrasticure.widgets.TopMenu
 
 @Composable
-fun ManageSubgoalsScreen(navController: NavController) {
+fun ManageSubGoalsScreen(navController: NavController) {
     val subGoalList = listOf(
         "1# Subgoal",
         "2# Subgoal",

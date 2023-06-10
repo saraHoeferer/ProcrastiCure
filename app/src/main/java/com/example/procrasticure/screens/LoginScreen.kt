@@ -1,7 +1,6 @@
 package com.example.procrasticure.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -81,7 +80,7 @@ fun LoginDetails(navController: NavController){
                 Button(onClick = {
 
                     if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
-                        navController.navigate(Screen.MainScreen.route)
+                        navController.navigate(Screen.GoalsScreen.route)
                     }else{
                         login = !login
                     }
@@ -117,7 +116,7 @@ fun LoginDetails(navController: NavController){
                 Button(onClick = {
 
                     if (SignUpName.isNotEmpty() && SignUpPW.isNotEmpty()){
-                        navController.navigate(Screen.MainScreen.route)
+                        navController.navigate(Screen.GoalsScreen.route)
                     }else{
                         signup = !signup
                     }

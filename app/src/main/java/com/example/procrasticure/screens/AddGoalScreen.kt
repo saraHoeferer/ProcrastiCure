@@ -12,16 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.data.model.Goal
-import com.example.procrasticure.viewModels.AddGoalViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
-
 import com.example.procrasticure.widgets.TopMenu
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -31,6 +27,12 @@ fun AddGoalScreen(navController: NavController) {
     val context = LocalContext.current
     val database = Firebase.database
     val myRef = database.getReference("Goals")
+
+    /*
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = MoviesViewModelFactory(repository = repository)
+    val viewModel: MoviesViewModel = viewModel(factory = factory)
+     */
 
     var name by remember { mutableStateOf("")}
     var description by remember{ mutableStateOf("") }
@@ -72,9 +74,9 @@ fun AddGoalScreen(navController: NavController) {
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
-                if(name.isNotEmpty()){
+                if(name.isNotEmpty() && date.isNotEmpty()){
                     val goal = Goal(name, description, date, time)
-                    myRef.child(name).setValue(goal)
+                    myRef.child(name).push().setValue(goal)
                         .addOnSuccessListener { 
                             name = ""
                             description = ""
@@ -96,17 +98,6 @@ fun AddGoalScreen(navController: NavController) {
     }
 }
 
-@Composable
-fun SimpleTextField(label: String, modifier: Modifier) {
-    var text by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text(label) },
-        modifier = modifier.width(320.dp)
-    )
-}
 
 
 

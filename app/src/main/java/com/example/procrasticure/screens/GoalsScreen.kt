@@ -18,17 +18,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.TopHomeMenu
 import com.example.procrasticure.widgets.CustomIcon
 
 import com.example.procrasticure.widgets.GoalsDisplay
 
 @Composable
-fun HomeScreen(movieList: List<String>, navController: NavController) {
+fun GoalsScreen(navController: NavController) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
 
+    val homeViewModel: GoalsViewModel = viewModel()
     var displayState by remember {
         mutableStateOf(true)
     }
@@ -75,12 +78,11 @@ fun HomeScreen(movieList: List<String>, navController: NavController) {
         }
 
         if (displayState) {
-            GoalList(goalList = movieList, navController = navController)
+            GoalList(navController = navController, homeViewModel = homeViewModel)
             buttonColorFinished = colorDisabled
             buttonColorCurrent = colorPrimary
 
         } else {
-            FinishedGoalList(goalList = movieList)
             buttonColorCurrent = colorDisabled
             buttonColorFinished = colorPrimary
         }
@@ -122,12 +124,17 @@ fun FinishedGoalList(goalList: List<String>) {
 }
 
 @Composable
-fun GoalList(goalList: List<String>, navController: NavController) {
+fun GoalList(
+    navController: NavController,
+    homeViewModel: GoalsViewModel
+) {
+
     LazyColumn {
-        items(items = goalList) { goal ->
+
+        items(items = homeViewModel.goals.value) { goal ->
             GoalsDisplay(
-                goal = goal,
-                onClick = { navController.navigate(Screen.DetailScreen.withId(goal)) },
+                goalName = goal.name,
+                onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.name)) },
                 onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
             ) {
                 CustomIcon(
@@ -135,7 +142,8 @@ fun GoalList(goalList: List<String>, navController: NavController) {
                     description = "Go to Goal Details",
                     color = Color.Gray
                 ) {
-                    navController.navigate(Screen.DetailScreen.withId(goal))
+
+                    navController.navigate(Screen.SubGoalsScreen.withId(goal.name))
                 }
             }
         }

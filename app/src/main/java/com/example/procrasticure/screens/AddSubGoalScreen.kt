@@ -1,25 +1,39 @@
 package com.example.procrasticure.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Card
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.procrasticure.data.model.SubGoal
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 // add a subgoal
 
 @Composable
 fun AddSubGoalScreen(navController: NavController){
+    val context = LocalContext.current
+    val database = Firebase.database
+    val mySubGoalRef = database.getReference("Goals/key/SubGoals")
+
+    var name by remember { mutableStateOf("") }
+    var description by remember{ mutableStateOf("") }
+    var date by remember{ mutableStateOf("") }
+    var time by remember{ mutableStateOf("") }
     Card(
         Modifier
             .background(color = Color.White)
@@ -33,25 +47,45 @@ fun AddSubGoalScreen(navController: NavController){
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Row() {
-                SimpleTextField(label = "Name", modifier = Modifier)
+                OutlinedTextField(label = { Text("Name") }, value = name, onValueChange = {name = it},
+                    modifier = Modifier.width(320.dp), placeholder = {
+                        Text(text = "Enter the name of your sub goal", fontSize = 14.sp)
+                    })
             }
             Row() {
-                SimpleTextField(
-                    label = "Description (Optional)",
-                    modifier = Modifier.defaultMinSize(minHeight = 120.dp)
-                )
+                OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
+                    modifier = Modifier.width(320.dp).defaultMinSize(minHeight = 120.dp), placeholder = {
+                        Text(text = "Write a description for your sub goal", fontSize = 14.sp)
+                    })
             }
             Spacer(modifier = Modifier.padding(4.dp))
             Row() {
-                DatePickerWidget(dateText = "Date (Optional)")
+                date = DatePickerWidget(dateText = date)
             }
             Spacer(modifier = Modifier.padding(4.dp))
 
             Row {
-                TimePickerWidget(timeText = "Time (Optional)")
+                time = TimePickerWidget(timeText = time)
             }
             Spacer(modifier = Modifier.padding(10.dp))
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                if(name.isNotEmpty()){
+                    val subGoal = SubGoal(name, description, date, time)
+                    mySubGoalRef.child(name).setValue(subGoal)
+                        .addOnSuccessListener {
+                            name = ""
+                            description = ""
+                            date = ""
+                            time = ""
+                            Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener{
+                            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                } else{
+                    Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()
+                }
+            }) {
                 Text(text = "Submit", fontSize = 18.sp)
             }
 

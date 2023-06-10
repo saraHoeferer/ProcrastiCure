@@ -13,11 +13,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.procrasticure.data.model.Goal
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GoalsDisplay(
-    goal: String,
+    goalName: String,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
     content: @Composable () -> Unit = {}){
@@ -28,18 +29,18 @@ fun GoalsDisplay(
             .background(Color(87, 87, 87, 22))
             .combinedClickable(onClick = { onClick() }, onLongClick = { onLongClick() })
     ) {
-       GoalDisplay(goal = goal, content)
+       GoalDisplay(goalName, content)
     }
 }
 @Composable
-fun GoalDisplay(goal:String, content: @Composable ()-> Unit = {}){
+fun GoalDisplay(goalName: String, content: @Composable ()-> Unit = {}){
     Row(
         modifier = Modifier
             .width(400.dp)
             .padding(5.dp)
     ) {
         Text(
-            text = goal,
+            text = goalName,
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
             modifier = Modifier
