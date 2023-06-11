@@ -27,10 +27,14 @@ fun ManageGoalsScreen(navController: NavController) {
 @Composable
 fun EditingGoalsDisplay(homeViewModel: GoalsViewModel) {
     LazyColumn {
-        items(items = homeViewModel.goals.value) { goal ->
-            GoalsDisplay(goalName = goal.name) {
-                CustomIcon(icon = Icons.Outlined.Edit, description = "Edit Goal")
-                CustomIcon(icon = Icons.Default.Delete, description = "Delete Goal")
+        items(items = homeViewModel.goals ){ goal ->
+            if (goal != null) {
+                goal.Name?.let {
+                    GoalsDisplay(goalName = it) {
+                        CustomIcon(icon = Icons.Outlined.Edit, description = "Edit Goal")
+                        CustomIcon(icon = Icons.Default.Delete, description = "Delete Goal")
+                    }
+                }
             }
         }
     }

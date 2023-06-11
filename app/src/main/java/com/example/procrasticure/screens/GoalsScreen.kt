@@ -131,19 +131,23 @@ fun GoalList(
 
     LazyColumn {
 
-        items(items = homeViewModel.goals.value) { goal ->
-            GoalsDisplay(
-                goalName = goal.name,
-                onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.name)) },
-                onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
-            ) {
-                CustomIcon(
-                    icon = Icons.Default.KeyboardArrowRight,
-                    description = "Go to Goal Details",
-                    color = Color.Gray
-                ) {
+        items(items = homeViewModel.goals) { goal ->
+            if (goal != null) {
+                goal.Name?.let {
+                    GoalsDisplay(
+                        goalName = it,
+                        onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!)) },
+                        onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
+                    ) {
+                        CustomIcon(
+                            icon = Icons.Default.KeyboardArrowRight,
+                            description = "Go to Goal Details",
+                            color = Color.Gray
+                        ) {
 
-                    navController.navigate(Screen.SubGoalsScreen.withId(goal.name))
+                            navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!))
+                        }
+                    }
                 }
             }
         }

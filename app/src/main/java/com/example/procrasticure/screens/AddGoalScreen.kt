@@ -1,5 +1,6 @@
 package com.example.procrasticure.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -20,11 +21,13 @@ import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 @Composable
 fun AddGoalScreen(navController: NavController) {
     val context = LocalContext.current
+    val db = FirebaseFirestore.getInstance()
     val database = Firebase.database
     val myRef = database.getReference("Goals")
 
@@ -75,17 +78,18 @@ fun AddGoalScreen(navController: NavController) {
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if(name.isNotEmpty() && date.isNotEmpty()){
-                    val goal = Goal(name, description, date, time)
-                    myRef.child(name).push().setValue(goal)
-                        .addOnSuccessListener { 
+                    val goal = Goal(Name=name, Description = description, Date = date, Time = time)
+                    db.collection("Goals")
+                        .add(goal)
+                        .addOnSuccessListener {
                             name = ""
                             description = ""
                             date = ""
                             time = ""
                             Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
-                    }
-                        .addOnFailureListener{
-                            Toast.makeText(context, it.toString(), Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener {
+                            println("Failure adding goal")
                         }
                 } else{
                     Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()

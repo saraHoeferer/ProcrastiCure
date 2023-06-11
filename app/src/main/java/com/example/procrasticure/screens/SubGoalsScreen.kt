@@ -47,7 +47,7 @@ fun SubGoalsScreen(navController: NavController, goalId: String?) {
         "13# Subgoal"
     )
     Column {
-        GoalMenu(heading = "$goal# Goal", arrowBackClicked = { navController.popBackStack() })
+        GoalMenu(heading = "$goal", arrowBackClicked = { navController.popBackStack() })
         DisplayMainGoal(goalId = goal, navController = navController)
         DisplaySubGoals(goalList = subGoalList, navController = navController)
         FinishGoal()
@@ -78,7 +78,7 @@ fun DisplayMainGoal(goalId: String, navController: NavController) {
         Row() {
             Text(
                 fontWeight = FontWeight.Bold,
-                text = "$goalId# Goal",
+                text = "$goalId",
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
