@@ -6,11 +6,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.procrasticure.data.repository.UserRepositoryImpl
+import com.example.procrasticure.data.repository.UserRespository
 import com.example.procrasticure.screens.*
+import com.example.procrasticure.viewModels.LoginViewModel
 
 val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 @Composable
 fun Navigation(){
+    val userRespository = UserRepositoryImpl()
+    val loginViewModel = LoginViewModel(userRespository)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.MainScreen.route){
@@ -42,7 +47,7 @@ fun Navigation(){
         }
 
         composable(route = Screen.Login.route){
-            Login(navController = navController)
+            Login(navController = navController, viewModel = loginViewModel)
         }
 
         composable(

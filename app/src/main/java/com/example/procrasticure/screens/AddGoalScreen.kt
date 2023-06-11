@@ -75,7 +75,8 @@ fun AddGoalScreen(navController: NavController) {
                 if(name.isNotEmpty()){
                     val goal = Goal(name, description, date, time)
                     myRef.child(name).setValue(goal)
-                        .addOnSuccessListener { 
+                        .addOnSuccessListener {
+
                             name = ""
                             description = ""
                             date = ""
