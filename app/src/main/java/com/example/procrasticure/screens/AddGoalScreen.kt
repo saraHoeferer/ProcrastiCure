@@ -15,8 +15,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
@@ -50,7 +52,9 @@ fun AddGoalScreen(navController: NavController) {
 
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             TopMenu(
-                arrowBackClicked = { navController.popBackStack() },
+                arrowBackClicked = {
+                    navController.popBackStack()
+                                   },
                 heading = "Add A New Goal"
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
@@ -62,7 +66,9 @@ fun AddGoalScreen(navController: NavController) {
             }
             Row() {
                 OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
-                    modifier = Modifier.width(320.dp).defaultMinSize(minHeight = 120.dp), placeholder = {
+                    modifier = Modifier
+                        .width(320.dp)
+                        .defaultMinSize(minHeight = 120.dp), placeholder = {
                         Text(text = "Write a description for your goal", fontSize = 14.sp)
                     })
             }

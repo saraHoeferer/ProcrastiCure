@@ -16,18 +16,18 @@ import com.example.procrasticure.widgets.GoalsDisplay
 
 @Composable
 fun ManageGoalsScreen(navController: NavController) {
-    val homeViewModel: GoalsViewModel = viewModel()
+    val goalsViewModel: GoalsViewModel = viewModel()
 
     Column {
         TopMenu(heading = "Editing Goals", arrowBackClicked = { navController.popBackStack() })
-        EditingGoalsDisplay(homeViewModel)
+        EditingGoalsDisplay(goalsViewModel)
     }
 }
 
 @Composable
-fun EditingGoalsDisplay(homeViewModel: GoalsViewModel) {
+fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel) {
     LazyColumn {
-        items(items = homeViewModel.goals ){ goal ->
+        items(items = goalsViewModel.goals ){ goal ->
             if (goal != null) {
                 goal.Name?.let {
                     GoalsDisplay(goalName = it) {

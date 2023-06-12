@@ -31,7 +31,8 @@ fun GoalsScreen(navController: NavController) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
 
-    val homeViewModel: GoalsViewModel = viewModel()
+    val goalsViewModel: GoalsViewModel = viewModel()
+
     var displayState by remember {
         mutableStateOf(true)
     }
@@ -47,7 +48,10 @@ fun GoalsScreen(navController: NavController) {
         TopHomeMenu(navController = navController)
         Row {
             Button(
-                onClick = { displayState = true },
+                onClick = {
+                    displayState = true
+
+                },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = buttonColorCurrent),
                 modifier = Modifier
@@ -78,7 +82,7 @@ fun GoalsScreen(navController: NavController) {
         }
 
         if (displayState) {
-            GoalList(navController = navController, homeViewModel = homeViewModel)
+            GoalList(navController = navController, goalsViewModel = goalsViewModel)
             buttonColorFinished = colorDisabled
             buttonColorCurrent = colorPrimary
 
@@ -126,30 +130,32 @@ fun FinishedGoalList(goalList: List<String>) {
 @Composable
 fun GoalList(
     navController: NavController,
-    homeViewModel: GoalsViewModel
+    goalsViewModel: GoalsViewModel
 ) {
+    val goalListState = remember {goalsViewModel.goals}
+
 
     LazyColumn {
 
-        items(items = homeViewModel.goals) { goal ->
-            if (goal != null) {
-                goal.Name?.let {
-                    GoalsDisplay(
-                        goalName = it,
-                        onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!)) },
-                        onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
-                    ) {
-                        CustomIcon(
-                            icon = Icons.Default.KeyboardArrowRight,
-                            description = "Go to Goal Details",
-                            color = Color.Gray
-                        ) {
+        items(items = goalListState) { goal ->
 
-                            navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!))
-                        }
+            goal.Name?.let {
+                GoalsDisplay(
+                    goalName = it,
+                    onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!)) },
+                    onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
+                ) {
+                    CustomIcon(
+                        icon = Icons.Default.KeyboardArrowRight,
+                        description = "Go to Goal Details",
+                        color = Color.Gray
+                    ) {
+
+                        navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!))
                     }
                 }
             }
         }
     }
 }
+

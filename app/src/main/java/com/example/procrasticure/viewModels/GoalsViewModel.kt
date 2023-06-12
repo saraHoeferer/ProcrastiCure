@@ -2,37 +2,23 @@ package com.example.procrasticure.viewModels
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.data.model.Goal
-import com.example.procrasticure.data.model.SubGoal
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 
 @Suppress("UNCHECKED_CAST")
 class GoalsViewModel() : ViewModel() {
     private val database = FirebaseFirestore.getInstance()
+    private var _goals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
 
-    // producer = responsible for updating MutableStateFlow
-    private val _goals = mutableStateListOf<Goal?>()
-    // consumer = all classes collecting from StateFlow
-    var goals: List<Goal?> = _goals
+    val goals: ArrayList<Goal> = ArrayList()
 
     init {
         Log.d(TAG, "init is started")
         getGoals()
+        listenToChanges()
     }
 
     private fun getGoals(){
@@ -40,13 +26,16 @@ class GoalsViewModel() : ViewModel() {
             .addOnSuccessListener { queryDocumentSnapshot ->
                 if (!queryDocumentSnapshot.isEmpty) {
                     val list = queryDocumentSnapshot.documents
-                    for (d in list) {
-                        var c: Goal? = d.toObject(Goal::class.java)
-                        if (c != null) {
-                            c.Id = d.id
+                    goals.clear() // without: would expand list all the time
+                    for (document in list) {
+                        val goal: Goal? = document.toObject(Goal::class.java)
+                        if (goal != null) {
+                            goal.Id = document.id
+                            goals.add(goal)
                         }
-                        _goals.add(c)
+
                     }
+                    _goals.value = goals
                 } else {
                     println("No Goals")
                 }
@@ -56,5 +45,27 @@ class GoalsViewModel() : ViewModel() {
             }
     }
 
+    private fun listenToChanges(){
+        val docRef = database.collection("Goals")
+        docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null) {
+                val documents = snapshot.documentChanges
+
+                for (change in documents) {
+                    val goal: Goal = change.document.toObject(Goal::class.java)
+                    goal.Id = change.document.id
+                    goals.add(goal)
+                }
+
+                _goals.value = goals
+
+            }
+        }
+    }
 
 }
