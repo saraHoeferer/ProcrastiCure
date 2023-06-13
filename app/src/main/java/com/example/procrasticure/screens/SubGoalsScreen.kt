@@ -18,38 +18,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.widgets.GoalMenu
 import com.example.procrasticure.widgets.CustomIcon
 import com.example.procrasticure.widgets.SubGoalsDisplay
+import com.google.firebase.firestore.FirebaseFirestore
 
 // Goal + Subgoal
 
 @Composable
 fun SubGoalsScreen(navController: NavController, goalId: String?) {
-    var goal = "Goal"
-    if (goalId != null) {
-        goal = goalId
-    }
-    val subGoalList = listOf(
-        "1# Subgoal",
-        "2# Subgoal",
-        "3# Subgoal",
-        "4# Subgoal",
-        "5# Subgoal",
-        "6# Subgoal",
-        "7# Subgoal",
-        "8# Subgoal",
-        "9# Subgoal",
-        "10# Subgoal",
-        "11# Subgoal",
-        "12# Subgoal",
-        "13# Subgoal"
-    )
+    var subGoalsViewModel = goalId?.let { SubGoalsViewModel(it) }
+
     Column {
-        GoalMenu(heading = "$goal", arrowBackClicked = { navController.popBackStack() })
-        DisplayMainGoal(goalId = goal, navController = navController)
-        DisplaySubGoals(goalList = subGoalList, navController = navController)
+        GoalMenu(heading = "Subgoals", arrowBackClicked = { navController.popBackStack() })
+        if (goalId != null) {
+            DisplayMainGoal(navController = navController, goalName = "") /*TODO: Überschrift anpassen*/
+        }
+        if (subGoalsViewModel != null) {
+            SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel)
+        }
         FinishGoal()
     }
 }
@@ -68,7 +58,8 @@ fun FinishGoal() {
 }
 
 @Composable
-fun DisplayMainGoal(goalId: String, navController: NavController) {
+fun DisplayMainGoal(navController: NavController, goalName: String) {
+
     Box(
         modifier = Modifier
             .padding(5.dp)
@@ -78,7 +69,7 @@ fun DisplayMainGoal(goalId: String, navController: NavController) {
         Row() {
             Text(
                 fontWeight = FontWeight.Bold,
-                text = "$goalId",
+                text = goalName,
                 fontSize = 30.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -97,12 +88,16 @@ fun DisplayMainGoal(goalId: String, navController: NavController) {
 }
 
 @Composable
-fun DisplaySubGoals(goalList: List<String>, navController: NavController) {
+fun SubGoalList(
+    navController: NavController,
+    subGoalsViewModel: SubGoalsViewModel
+) {
+    var subGoalListState = remember {subGoalsViewModel.subGoals}
     LazyColumn(modifier = Modifier.size(580.dp)) {
-        items(items = goalList) { goal ->
+        items(items = subGoalListState) { subgoal ->
             var checkedState = remember { mutableStateOf(false) }
             SubGoalsDisplay(
-                onClick = { navController.navigate(Screen.AddSubGoalScreen.route) },
+
                 onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.route) }) {
                 Checkbox(
                     checked = checkedState.value,
@@ -115,14 +110,17 @@ fun DisplaySubGoals(goalList: List<String>, navController: NavController) {
                     modifier = Modifier
                         .clip(shape = RoundedCornerShape(100.dp))
                 )
-                Text(
-                    text = goal,
-                    fontSize = 18.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(horizontal = 0.dp, vertical = 11.dp)
-                )
+                subgoal.Name?.let {
+                    Text(
+                        text = it,
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .padding(horizontal = 0.dp, vertical = 11.dp)
+                    )
+                }
             }
         }
     }
+
 }

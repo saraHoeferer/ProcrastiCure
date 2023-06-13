@@ -30,8 +30,6 @@ import com.google.firebase.ktx.Firebase
 fun AddGoalScreen(navController: NavController) {
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
-    val database = Firebase.database
-    val myRef = database.getReference("Goals")
 
     /*
     val repository = MovieRepository(movieDao = db.movieDao())

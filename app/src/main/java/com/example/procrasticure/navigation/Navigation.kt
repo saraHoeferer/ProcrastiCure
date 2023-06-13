@@ -1,6 +1,8 @@
 package com.example.procrasticure.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -8,7 +10,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.procrasticure.screens.*
 
-val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 @Composable
 fun Navigation(){
     val navController = rememberNavController()
@@ -48,11 +49,13 @@ fun Navigation(){
         composable(
             Screen.SubGoalsScreen.route,
             arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
-        ) { backStackEntry ->    // backstack contains all information from navhost
+        ) { backStackEntry ->
+            backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)?.let {
                 SubGoalsScreen(
                     navController = navController,
-                    goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)
-                ) // get the argument from navhost that will be passed
+                    goalId = it
+                )
+            }
 
         }
     }

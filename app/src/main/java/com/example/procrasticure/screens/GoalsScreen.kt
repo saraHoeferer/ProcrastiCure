@@ -131,6 +131,7 @@ fun FinishedGoalList(goalList: List<String>) {
 fun GoalList(
     navController: NavController,
     goalsViewModel: GoalsViewModel
+
 ) {
     val goalListState = remember {goalsViewModel.goals}
 
@@ -142,7 +143,7 @@ fun GoalList(
             goal.Name?.let {
                 GoalsDisplay(
                     goalName = it,
-                    onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!)) },
+                    onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Id!!)) },
                     onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
                 ) {
                     CustomIcon(
@@ -151,7 +152,7 @@ fun GoalList(
                         color = Color.Gray
                     ) {
 
-                        navController.navigate(Screen.SubGoalsScreen.withId(goal.Name!!))
+                        navController.navigate(Screen.SubGoalsScreen.withId(goal.Id!!))
                     }
                 }
             }
