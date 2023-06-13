@@ -1,5 +1,7 @@
 package com.example.procrasticure.viewModels
 
+import android.content.Context
+import androidx.compose.runtime.CompositionLocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.State
@@ -40,15 +42,17 @@ class UserViewModel @Inject constructor(private val userRespository: UserResposi
         }
     }
 
-    suspend fun editEmail(email: String, sessionViewModel: BigViewModel){
+    suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
         viewModelScope.launch {
-            userRespository.editEmail(email, sessionViewModel)
+            userRespository.editEmail(email, sessionViewModel, context)
+            resetUiState()
         }
     }
 
-    suspend fun editPassword(password: String, sessionViewModel: BigViewModel){
+    suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
         viewModelScope.launch {
-            userRespository.editPassword(password, sessionViewModel)
+            userRespository.editPassword(password, sessionViewModel, context)
+            resetUiState()
         }
     }
 

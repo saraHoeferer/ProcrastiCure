@@ -1,5 +1,7 @@
 package com.example.procrasticure.data.repository
 
+import android.content.Context
+import androidx.compose.runtime.CompositionLocalContext
 import com.example.procrasticure.data.State
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.android.gms.auth.api.Auth
@@ -17,9 +19,9 @@ interface UserRespository{
 
     suspend fun deleteUser(sessionViewModel: BigViewModel)
 
-    suspend fun editEmail(email: String, sessionViewModel: BigViewModel)
+    suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context)
 
-    suspend fun editPassword(password: String, sessionViewModel: BigViewModel)
+    suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context)
 
     suspend fun logOut(sessionViewModel: BigViewModel)
 }

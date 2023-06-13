@@ -1,5 +1,9 @@
 package com.example.procrasticure.data.repository
 
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.runtime.CompositionLocalContext
+import androidx.compose.ui.platform.LocalContext
 import com.example.procrasticure.data.State
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.auth.AuthResult
@@ -47,21 +51,21 @@ class UserRepositoryImpl(): UserRespository {
         }
     }
 
-    override suspend fun editEmail(email: String, sessionViewModel: BigViewModel){
+    override suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
         auth.currentUser?.updateEmail(email)?.addOnSuccessListener{
             sessionViewModel.currentUserId = auth.currentUser
-            println("worked edit")
+            Toast.makeText(context, "Your Email was successfully changed", Toast.LENGTH_SHORT).show()
         }?.addOnFailureListener{
-            println("didnt edit")
+            Toast.makeText(context, "Your Email could not be changed", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override suspend fun editPassword(password: String, sessionViewModel: BigViewModel){
+    override suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
         auth.currentUser?.updatePassword(password)?.addOnSuccessListener{
             sessionViewModel.currentUserId = auth.currentUser
-            println("worked edit")
+            Toast.makeText(context, "Your Password was successfully changed", Toast.LENGTH_SHORT).show()
         }?.addOnFailureListener{
-            println("didnt edit")
+            Toast.makeText(context, "Your Password could not be changed", Toast.LENGTH_SHORT).show()
         }
     }
 

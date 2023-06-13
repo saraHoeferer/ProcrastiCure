@@ -1,20 +1,15 @@
 package com.example.procrasticure.screens
 
-import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -23,14 +18,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.R
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.UserViewModel
 import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
-import kotlin.coroutines.coroutineContext
 
 // show user profile
 @Composable
@@ -44,6 +37,7 @@ fun ProfileScreen(navController: NavController, sessionViewModel: BigViewModel, 
 
 @Composable
 fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel, navController: NavController) {
+    val context = LocalContext.current
     Card(modifier = Modifier) {
         var emailshow by remember {
             mutableStateOf(false)
@@ -54,6 +48,8 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
         }
         var password by remember { mutableStateOf("")}
         val coroutineScope = rememberCoroutineScope()
+
+        var successEmail = 0
 
         Column(
             modifier = Modifier
@@ -86,7 +82,10 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                     emailshow = !emailshow
                 } else {
                     if (email.isNotEmpty()){
-                        coroutineScope.launch { userViewModel.editEmail(email, sessionViewModel) }
+                        coroutineScope.launch {
+                            userViewModel.editEmail(email, sessionViewModel, context)
+                        }
+                        navController.popBackStack()
                         navController.navigate(Screen.MainScreen.route)
                     } else {
                         emailshow = !emailshow
@@ -104,7 +103,8 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 passwordShow = !passwordShow
             } else {
                 if (password.isNotEmpty()){
-                    coroutineScope.launch { userViewModel.editPassword(password, sessionViewModel) }
+                    coroutineScope.launch { userViewModel.editPassword(password, sessionViewModel, context) }
+                    navController.popBackStack()
                     navController.navigate(Screen.MainScreen.route)
                 } else {
                     passwordShow = !passwordShow
@@ -113,7 +113,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 Text(text = "Change password", fontSize = 18.sp)
             }
             AnimatedVisibility(visible = passwordShow) {
-                password = SimpleTextField2(label = "Change your email", modifier = Modifier, KeyboardType.Password, PasswordVisualTransformation())
+                password = SimpleTextField2(label = "Change your Password", modifier = Modifier, KeyboardType.Password, PasswordVisualTransformation())
             }
 
             Spacer(modifier = Modifier.size(100.dp))
