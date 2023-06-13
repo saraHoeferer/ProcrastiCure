@@ -33,6 +33,32 @@ class UserViewModel @Inject constructor(private val userRespository: UserResposi
         }
     }
 
+    suspend fun delete(sessionViewModel: BigViewModel){
+        viewModelScope.launch {
+            userRespository.deleteUser(sessionViewModel = sessionViewModel)
+            resetUiState()
+        }
+    }
+
+    suspend fun editEmail(email: String, sessionViewModel: BigViewModel){
+        viewModelScope.launch {
+            userRespository.editEmail(email, sessionViewModel)
+        }
+    }
+
+    suspend fun editPassword(password: String, sessionViewModel: BigViewModel){
+        viewModelScope.launch {
+            userRespository.editPassword(password, sessionViewModel)
+        }
+    }
+
+    suspend fun logout(sessionViewModel: BigViewModel){
+        viewModelScope.launch {
+            userRespository.logOut(sessionViewModel)
+            resetUiState()
+        }
+    }
+
     fun resetUiState(){
         viewModelScope.launch{
             _uiState.emit(State())

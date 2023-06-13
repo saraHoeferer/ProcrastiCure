@@ -19,11 +19,11 @@ fun Navigation(sessionViewModel: BigViewModel){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.MainScreen.route){
-            HomeScreen(movieList = goalList, navController = navController)
+            HomeScreen(movieList = goalList, navController = navController, sessionViewModel = sessionViewModel, userViewModel = userViewModel)
         }
 
         composable(route = Screen.ProfileScreen.route){
-            ProfileScreen(navController = navController)
+            ProfileScreen(navController = navController, sessionViewModel = sessionViewModel, userViewModel= userViewModel)
         }
 
         composable(route = Screen.TimerScreen.route){
@@ -55,7 +55,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                HomeScreen(movieList = goalList, navController = navController)
+                HomeScreen(movieList = goalList, navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
             }
         }
 

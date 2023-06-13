@@ -14,4 +14,12 @@ interface UserRespository{
     suspend fun signUpUser(email: String, password: String, sessionViewModel: BigViewModel): Flow<State<AuthResult>>
 
     suspend fun signInUser(email: String, password: String, sessionViewModel: BigViewModel): Flow<State<AuthResult>>
+
+    suspend fun deleteUser(sessionViewModel: BigViewModel)
+
+    suspend fun editEmail(email: String, sessionViewModel: BigViewModel)
+
+    suspend fun editPassword(password: String, sessionViewModel: BigViewModel)
+
+    suspend fun logOut(sessionViewModel: BigViewModel)
 }

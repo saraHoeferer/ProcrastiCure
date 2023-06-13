@@ -13,6 +13,7 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(): UserRespository {
     override val auth = Firebase.auth
+    val auths = FirebaseAuth.getInstance()
 
     override suspend fun signUpUser(email: String, password: String, sessionViewModel: BigViewModel) = flow{
         emit(State.loading())
@@ -29,11 +30,45 @@ class UserRepositoryImpl(): UserRespository {
         emit(State.loading())
         auth.signInWithEmailAndPassword(email, password).await().run{
             emit(State.success(this))
-            sessionViewModel.currentUserId = FirebaseAuth.getInstance().currentUser
+            sessionViewModel.currentUserId = auth.currentUser
             sessionViewModel.signIn()
         }
     }.catch{
         emit(State.error(it.message ?: UNKNOWN_ERROR))
+    }
+
+    override suspend fun deleteUser(sessionViewModel: BigViewModel) {
+        auth.currentUser?.delete()?.addOnSuccessListener{
+            sessionViewModel.isLoggedIn = false
+            sessionViewModel.currentUserId = null
+            println("worked delete")
+        }?.addOnFailureListener{
+            println("didnt delete")
+        }
+    }
+
+    override suspend fun editEmail(email: String, sessionViewModel: BigViewModel){
+        auth.currentUser?.updateEmail(email)?.addOnSuccessListener{
+            sessionViewModel.currentUserId = auth.currentUser
+            println("worked edit")
+        }?.addOnFailureListener{
+            println("didnt edit")
+        }
+    }
+
+    override suspend fun editPassword(password: String, sessionViewModel: BigViewModel){
+        auth.currentUser?.updatePassword(password)?.addOnSuccessListener{
+            sessionViewModel.currentUserId = auth.currentUser
+            println("worked edit")
+        }?.addOnFailureListener{
+            println("didnt edit")
+        }
+    }
+
+    override suspend fun logOut(sessionViewModel: BigViewModel) {
+        auth.signOut()
+        sessionViewModel.isLoggedIn = false
+        sessionViewModel.currentUserId = null
     }
 
     companion object{

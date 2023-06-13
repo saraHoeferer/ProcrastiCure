@@ -81,7 +81,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
     }
 
     val coroutineScope = rememberCoroutineScope()
-    val boxSize = with(LocalDensity.current) { 320.dp.toPx() }
+    val boxSize = with(LocalDensity.current) { 250.dp.toPx() }
     Card() {
 
         Column(
@@ -91,7 +91,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                 , horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Box(modifier = Modifier
-                .height(320.dp)
+                .height(250.dp)
                 .background(brush = Brush.linearGradient(
                     colors = listOf(
                         MaterialTheme.colors.primary,
