@@ -12,7 +12,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -79,22 +81,40 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
     }
 
     val coroutineScope = rememberCoroutineScope()
-
+    val boxSize = with(LocalDensity.current) { 320.dp.toPx() }
     Card() {
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally
+                , horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Box(modifier = Modifier
+                .height(320.dp)
+                .background(brush = Brush.linearGradient(
+                    colors = listOf(
+                        MaterialTheme.colors.primary,
+                        MaterialTheme.colors.primarySurface,
+                        MaterialTheme.colors.primaryVariant,
 
-            Text(text = "ProcrastiCure", fontSize = 50.sp, fontWeight = FontWeight.Bold)
+                    ),
+                    start = Offset(0f, 0f), // top left corner
+                    end = Offset(boxSize, boxSize) // bottom right corner
+                ))
+                .fillMaxWidth()
+                .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "ProcrastiCure", fontSize = 50.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+
 
             Spacer(modifier = Modifier.size(50.dp))
 
             AnimatedVisibility(visible = login) {
-                Column {
+                Column (modifier = Modifier.padding(20.dp),){
                     CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -155,7 +175,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
             }
 
             AnimatedVisibility(visible = signup) {
-                Column {
+                Column(modifier = Modifier.padding(20.dp),) {
                     CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),
