@@ -12,14 +12,22 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(private val userRespository: UserRespository) : ViewModel() {
+class UserViewModel @Inject constructor(private val userRespository: UserRespository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(State<AuthResult>())
     val uiState: StateFlow<State<AuthResult>> = _uiState
 
-     suspend fun  signUp(email: String, password: String) {
+    suspend fun signIn(email: String, password: String, sessionViewModel: BigViewModel) {
         viewModelScope.launch {
-            userRespository.signUpUser(email, password).onEach { state ->
+            userRespository.signInUser(email, password, sessionViewModel).onEach { state ->
+                _uiState.emit(state)
+            }.launchIn(viewModelScope)
+        }
+    }
+
+    suspend fun signUp(email: String, password: String, sessionViewModel: BigViewModel) {
+        viewModelScope.launch {
+            userRespository.signUpUser(email, password, sessionViewModel).onEach { state ->
                 _uiState.emit(state)
             }.launchIn(viewModelScope)
         }

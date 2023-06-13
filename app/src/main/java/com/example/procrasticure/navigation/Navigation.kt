@@ -7,15 +7,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.procrasticure.data.repository.UserRepositoryImpl
-import com.example.procrasticure.data.repository.UserRespository
 import com.example.procrasticure.screens.*
-import com.example.procrasticure.viewModels.LoginViewModel
+import com.example.procrasticure.viewModels.BigViewModel
+import com.example.procrasticure.viewModels.UserViewModel
 
 val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 @Composable
-fun Navigation(){
+fun Navigation(sessionViewModel: BigViewModel){
     val userRespository = UserRepositoryImpl()
-    val loginViewModel = LoginViewModel(userRespository)
+    val userViewModel = UserViewModel(userRespository)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.MainScreen.route){
@@ -31,7 +31,7 @@ fun Navigation(){
         }
 
         composable(route = Screen.AddGoalScreen.route){
-            AddGoalScreen(navController = navController)
+            AddGoalScreen(navController = navController, sessionViewModel = sessionViewModel)
         }
 
         composable(route = Screen.AddSubGoalScreen.route){
@@ -47,7 +47,16 @@ fun Navigation(){
         }
 
         composable(route = Screen.Login.route){
-            Login(navController = navController, viewModel = loginViewModel)
+            println(sessionViewModel.currentUserId)
+            if (!sessionViewModel.isLoggedIn) {
+                Login(
+                    navController = navController,
+                    userViewModel = userViewModel,
+                    sessionViewModel = sessionViewModel
+                )
+            } else {
+                HomeScreen(movieList = goalList, navController = navController)
+            }
         }
 
         composable(
