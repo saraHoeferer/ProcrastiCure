@@ -60,5 +60,13 @@ fun Navigation(){
                 ) // get the argument from navhost that will be passed
 
         }
+
+        composable(route = Screen.AnimalShopScreen.route){
+            AnimalShopScreen(navController = navController)
+        }
+
+        composable(route = Screen.AnimalScreen.route){
+            AnimalScreen(navController = navController)
+        }
     }
 }

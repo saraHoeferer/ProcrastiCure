@@ -23,4 +23,8 @@ sealed class Screen(val route: String) {
     object ManageSubGoalsScreen : Screen("manageSubGoals")
 
     object Login : Screen("Login")
+
+    object AnimalScreen : Screen("AnimalScreen")
+
+    object AnimalShopScreen : Screen("AnimalShopScreen")
 }

@@ -84,6 +84,9 @@ fun TopHomeMenu(navController: NavController){
                     DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
                         Text(text = "Timer")
                     }
+                    DropdownMenuItem(onClick = { navController.navigate(Screen.AnimalScreen.route) }) {
+                        Text(text = "Animals")
+                    }
                 }
             }
         }
