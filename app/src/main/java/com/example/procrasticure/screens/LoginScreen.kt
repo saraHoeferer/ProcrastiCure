@@ -151,7 +151,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
 
                     if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
                         coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW, sessionViewModel) }
-                        navController.navigate(Screen.MainScreen.route)
+                        navController.navigate(Screen.GoalScreen.route)
                     }else{
                         login = !login
                     }

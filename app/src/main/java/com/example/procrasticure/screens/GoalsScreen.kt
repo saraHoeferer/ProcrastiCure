@@ -18,18 +18,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.UserViewModel
+import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.TopHomeMenu
 import com.example.procrasticure.widgets.CustomIcon
 
 import com.example.procrasticure.widgets.GoalsDisplay
 
 @Composable
-fun HomeScreen(movieList: List<String>, navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
+fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
+
+    val goalsViewModel: GoalsViewModel = viewModel()
 
     var displayState by remember {
         mutableStateOf(true)
@@ -46,7 +50,10 @@ fun HomeScreen(movieList: List<String>, navController: NavController, userViewMo
         TopHomeMenu(navController = navController, userViewModel = userViewModel, sessionViewModel= sessionViewModel)
         Row {
             Button(
-                onClick = { displayState = true },
+                onClick = {
+                    displayState = true
+
+                },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(backgroundColor = buttonColorCurrent),
                 modifier = Modifier
@@ -77,12 +84,11 @@ fun HomeScreen(movieList: List<String>, navController: NavController, userViewMo
         }
 
         if (displayState) {
-            GoalList(goalList = movieList, navController = navController)
+            GoalList(navController = navController, goalsViewModel = goalsViewModel)
             buttonColorFinished = colorDisabled
             buttonColorCurrent = colorPrimary
 
         } else {
-            FinishedGoalList(goalList = movieList)
             buttonColorCurrent = colorDisabled
             buttonColorFinished = colorPrimary
         }
@@ -124,22 +130,36 @@ fun FinishedGoalList(goalList: List<String>) {
 }
 
 @Composable
-fun GoalList(goalList: List<String>, navController: NavController) {
+fun GoalList(
+    navController: NavController,
+    goalsViewModel: GoalsViewModel
+
+) {
+    val goalListState = remember {goalsViewModel.goals}
+
+
     LazyColumn {
-        items(items = goalList) { goal ->
-            GoalsDisplay(
-                goal = goal,
-                onClick = { navController.navigate(Screen.DetailScreen.withId(goal)) },
-                onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
-            ) {
-                CustomIcon(
-                    icon = Icons.Default.KeyboardArrowRight,
-                    description = "Go to Goal Details",
-                    color = Color.Gray
+
+        items(items = goalListState) { goal ->
+            goal.Name?.let {
+                GoalsDisplay(
+                    goalName = it,
+                    onClick = { navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!,
+                        goal.Name!!
+                    )) },
+                    onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
                 ) {
-                    navController.navigate(Screen.DetailScreen.withId(goal))
+                    CustomIcon(
+                        icon = Icons.Default.KeyboardArrowRight,
+                        description = "Go to Goal Details",
+                        color = Color.Gray
+                    ) {
+
+                        navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!, goal.Name!!))
+                    }
                 }
             }
         }
     }
 }
+

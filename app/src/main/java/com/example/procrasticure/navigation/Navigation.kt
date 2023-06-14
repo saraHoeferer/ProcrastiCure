@@ -1,6 +1,8 @@
 package com.example.procrasticure.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -11,15 +13,14 @@ import com.example.procrasticure.screens.*
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.UserViewModel
 
-val goalList = listOf("1# Goal", "2# Goal", "3# Goal")
 @Composable
 fun Navigation(sessionViewModel: BigViewModel){
     val userRespository = UserRepositoryImpl()
     val userViewModel = UserViewModel(userRespository)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
-        composable(route = Screen.MainScreen.route){
-            HomeScreen(movieList = goalList, navController = navController, sessionViewModel = sessionViewModel, userViewModel = userViewModel)
+        composable(route = Screen.GoalsScreen.route){
+            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel)
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -39,11 +40,11 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.ManageGoalsScreen.route){
-            ManageGoalsScreen(navController = navController, movieList = goalList)
+            ManageGoalsScreen(navController = navController)
         }
 
         composable(route = Screen.ManageSubGoalsScreen.route){
-            ManageSubgoalsScreen(navController = navController)
+            ManageSubGoalsScreen(navController = navController)
         }
 
         composable(route = Screen.Login.route){
@@ -60,13 +61,14 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(
-            Screen.DetailScreen.route,
-            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
-        ) { backStackEntry ->    // backstack contains all information from navhost
-                DetailScreen(
+            Screen.SubGoalsScreen.route,
+            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType}, navArgument(name= ARGUMENT_KEY_2) {type = NavType.StringType})
+        ) { backStackEntry ->
+                SubGoalsScreen(
                     navController = navController,
-                    goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)
-                ) // get the argument from navhost that will be passed
+                    goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
+                    goalName = backStackEntry.arguments?.getString(ARGUMENT_KEY_2)
+                )
 
         }
 
