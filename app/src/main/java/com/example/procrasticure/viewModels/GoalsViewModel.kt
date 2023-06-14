@@ -30,7 +30,7 @@ class GoalsViewModel() : ViewModel() {
                     for (document in list) {
                         val goal: Goal? = document.toObject(Goal::class.java)
                         if (goal != null) {
-                            goal.Id = document.id
+                            goal.setId(document.id)
                             goals.add(goal)
                         }
 
@@ -58,7 +58,11 @@ class GoalsViewModel() : ViewModel() {
 
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.Id = change.document.id
+                    goal.setId(change.document.id)
+                    val oldGoal = getGoalById(goal.getId()!!)
+                    if (oldGoal != null){
+                        goals.remove(oldGoal)
+                    }
                     goals.add(goal)
                 }
 
@@ -66,6 +70,15 @@ class GoalsViewModel() : ViewModel() {
 
             }
         }
+    }
+
+    fun getGoalById(id: String): Goal?{
+        for (goal in goals){
+            if (goal.getId() == id){
+                return goal
+            }
+        }
+        return null
     }
 
 }

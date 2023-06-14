@@ -53,7 +53,8 @@ class SubGoalsViewModel(id: String) : ViewModel() {
 
             if (snapshot != null) {
                 val documents = snapshot.documentChanges
-
+                //Wenns wirklich nur changes sind - jetzt spielt die ganze subgoal liste einfach nochmal rein
+                subGoals.clear()
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
                     goal.Id = change.document.id

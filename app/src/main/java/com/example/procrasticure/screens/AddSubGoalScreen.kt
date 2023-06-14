@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 // add a subgoal
 
 @Composable
-fun AddSubGoalScreen(navController: NavController){
+fun AddSubGoalScreen(navController: NavController, goalId: String = "BzA1Tkky3Y3IHX7iKGHT"){
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
 
@@ -71,25 +71,15 @@ fun AddSubGoalScreen(navController: NavController){
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if (name.isNotEmpty()) {
-                    val subGoal = SubGoal(name, description, date, time)
-                    db.collection("Goals/BzA1Tkky3Y3IHX7iKGHT/SubGoals")/*TODO: Variable richtig übergeben*/
+                    val subGoal = SubGoal(Name = name, Description = description, Date = date, Time = time)
+                    db.collection("Goals/$goalId/SubGoals")/*TODO: Variable richtig übergeben*/
                         .add(subGoal)           // $goalId statt dem String
                         .addOnSuccessListener { documentReference ->
-                            val subGoalId = documentReference.id
-                            val subGoalWithId = subGoal.copy(Id = subGoalId)
-                            db.collection("Goals/BzA1Tkky3Y3IHX7iKGHT/SubGoals")
-                                .document(subGoalId)
-                                .set(subGoalWithId)
-                                .addOnSuccessListener {
                                     name = ""
                                     description = ""
                                     date = ""
                                     time = ""
                                     Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
-                                }
-                                .addOnFailureListener { e ->
-                                    Toast.makeText(context, "Failed to insert record: $e", Toast.LENGTH_SHORT).show()
-                                }
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(context, "Failed to insert record: $e", Toast.LENGTH_SHORT).show()

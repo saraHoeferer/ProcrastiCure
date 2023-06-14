@@ -139,11 +139,12 @@ fun GoalList(
     LazyColumn {
 
         items(items = goalListState) { goal ->
-
             goal.Name?.let {
                 GoalsDisplay(
                     goalName = it,
-                    onClick = { navController.navigate(Screen.SubGoalsScreen.withId(goal.Id!!)) },
+                    onClick = { navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!,
+                        goal.Name!!
+                    )) },
                     onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
                 ) {
                     CustomIcon(
@@ -152,7 +153,7 @@ fun GoalList(
                         color = Color.Gray
                     ) {
 
-                        navController.navigate(Screen.SubGoalsScreen.withId(goal.Id!!))
+                        navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!, goal.Name!!))
                     }
                 }
             }

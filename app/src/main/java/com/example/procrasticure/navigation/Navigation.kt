@@ -48,14 +48,13 @@ fun Navigation(){
 
         composable(
             Screen.SubGoalsScreen.route,
-            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
+            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType}, navArgument(name= ARGUMENT_KEY_2) {type = NavType.StringType})
         ) { backStackEntry ->
-            backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)?.let {
                 SubGoalsScreen(
                     navController = navController,
-                    goalId = it
+                    goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
+                    goalName = backStackEntry.arguments?.getString(ARGUMENT_KEY_2)
                 )
-            }
 
         }
     }

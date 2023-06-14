@@ -29,13 +29,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 // Goal + Subgoal
 
 @Composable
-fun SubGoalsScreen(navController: NavController, goalId: String?) {
+fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?) {
     var subGoalsViewModel = goalId?.let { SubGoalsViewModel(it) }
 
     Column {
-        GoalMenu(heading = "Subgoals", arrowBackClicked = { navController.popBackStack() })
+        GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
         if (goalId != null) {
-            DisplayMainGoal(navController = navController, goalName = "") /*TODO: Überschrift anpassen*/
+            DisplayMainGoal(navController = navController, goalName = "$goalName") /*TODO: Überschrift anpassen*/
         }
         if (subGoalsViewModel != null) {
             SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel)
