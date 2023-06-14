@@ -95,7 +95,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 Text(text = "Change e-mail", fontSize = 18.sp)
             }
             AnimatedVisibility(visible = emailshow) {
-                email = SimpleTextField2(label = "Change your email", modifier = Modifier)
+                email = simpleTextField2(label = "Change your email", modifier = Modifier)
             }
             Spacer(modifier = Modifier.size(25.dp))
 
@@ -113,7 +113,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 Text(text = "Change password", fontSize = 18.sp)
             }
             AnimatedVisibility(visible = passwordShow) {
-                password = SimpleTextField2(label = "Change your Password", modifier = Modifier, KeyboardType.Password, PasswordVisualTransformation())
+                password = simpleTextField2(label = "Change your Password", modifier = Modifier, KeyboardType.Password, PasswordVisualTransformation())
             }
 
             Spacer(modifier = Modifier.size(100.dp))
@@ -129,7 +129,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
 }
 
 @Composable
-fun SimpleTextField2(label: String, modifier: Modifier, keyboardoptions: KeyboardType = KeyboardType.Email, animation: VisualTransformation = VisualTransformation.None): String {
+fun simpleTextField2(label: String, modifier: Modifier, keyboardoptions: KeyboardType = KeyboardType.Email, animation: VisualTransformation = VisualTransformation.None): String {
     var text by remember { mutableStateOf("") }
 
     OutlinedTextField(
