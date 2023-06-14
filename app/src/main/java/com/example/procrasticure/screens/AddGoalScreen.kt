@@ -19,6 +19,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.AddGoalViewModel
+import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 
@@ -27,7 +28,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 @Composable
-fun AddGoalScreen(navController: NavController) {
+fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel) {
     val context = LocalContext.current
     val database = Firebase.database
     val myRef = database.getReference("Goals")
@@ -73,7 +74,8 @@ fun AddGoalScreen(navController: NavController) {
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if(name.isNotEmpty()){
-                    val goal = Goal(name, description, date, time)
+                    val goal =
+                        sessionViewModel.currentUserId?.let { Goal(name, description, date, time, it.uid) }
                     myRef.child(name).setValue(goal)
                         .addOnSuccessListener {
 

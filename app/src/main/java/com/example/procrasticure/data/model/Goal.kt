@@ -4,5 +4,6 @@ data class Goal(
     val name: String,
     val description: String,
     val date: String,
-    val time: String
+    val time: String,
+    val userId: String,
 )

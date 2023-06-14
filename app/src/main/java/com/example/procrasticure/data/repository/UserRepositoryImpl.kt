@@ -1,6 +1,11 @@
 package com.example.procrasticure.data.repository
 
+import android.content.Context
+import android.widget.Toast
+import androidx.compose.runtime.CompositionLocalContext
+import androidx.compose.ui.platform.LocalContext
 import com.example.procrasticure.data.State
+import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -12,14 +17,62 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(): UserRespository {
     override val auth = Firebase.auth
+    val auths = FirebaseAuth.getInstance()
 
-    override suspend fun signUpUser(email: String, password: String) = flow{
+    override suspend fun signUpUser(email: String, password: String, sessionViewModel: BigViewModel) = flow{
         emit(State.loading())
         auth.createUserWithEmailAndPassword(email, password). await().run {
             emit(State.success(this))
+            sessionViewModel.currentUserId = FirebaseAuth.getInstance().currentUser
+            sessionViewModel.signIn()
         }
     }.catch {
         emit(State.error(it.message ?: UNKNOWN_ERROR))
+    }
+
+    override suspend fun signInUser(email: String, password: String, sessionViewModel: BigViewModel)= flow {
+        emit(State.loading())
+        auth.signInWithEmailAndPassword(email, password).await().run{
+            emit(State.success(this))
+            sessionViewModel.currentUserId = auth.currentUser
+            sessionViewModel.signIn()
+        }
+    }.catch{
+        emit(State.error(it.message ?: UNKNOWN_ERROR))
+    }
+
+    override suspend fun deleteUser(sessionViewModel: BigViewModel) {
+        auth.currentUser?.delete()?.addOnSuccessListener{
+            sessionViewModel.isLoggedIn = false
+            sessionViewModel.currentUserId = null
+            println("worked delete")
+        }?.addOnFailureListener{
+            println("didnt delete")
+        }
+    }
+
+    override suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
+        auth.currentUser?.updateEmail(email)?.addOnSuccessListener{
+            sessionViewModel.currentUserId = auth.currentUser
+            Toast.makeText(context, "Your Email was successfully changed", Toast.LENGTH_SHORT).show()
+        }?.addOnFailureListener{
+            Toast.makeText(context, "Your Email could not be changed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
+        auth.currentUser?.updatePassword(password)?.addOnSuccessListener{
+            sessionViewModel.currentUserId = auth.currentUser
+            Toast.makeText(context, "Your Password was successfully changed", Toast.LENGTH_SHORT).show()
+        }?.addOnFailureListener{
+            Toast.makeText(context, "Your Password could not be changed", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override suspend fun logOut(sessionViewModel: BigViewModel) {
+        auth.signOut()
+        sessionViewModel.isLoggedIn = false
+        sessionViewModel.currentUserId = null
     }
 
     companion object{

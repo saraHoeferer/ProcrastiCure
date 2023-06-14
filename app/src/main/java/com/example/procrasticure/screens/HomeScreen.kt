@@ -19,13 +19,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.procrasticure.viewModels.BigViewModel
+import com.example.procrasticure.viewModels.UserViewModel
 import com.example.procrasticure.widgets.TopHomeMenu
 import com.example.procrasticure.widgets.CustomIcon
 
 import com.example.procrasticure.widgets.GoalsDisplay
 
 @Composable
-fun HomeScreen(movieList: List<String>, navController: NavController) {
+fun HomeScreen(movieList: List<String>, navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
 
@@ -41,7 +43,7 @@ fun HomeScreen(movieList: List<String>, navController: NavController) {
         mutableStateOf(colorDisabled)
     }
     Column {
-        TopHomeMenu(navController = navController)
+        TopHomeMenu(navController = navController, userViewModel = userViewModel, sessionViewModel= sessionViewModel)
         Row {
             Button(
                 onClick = { displayState = true },

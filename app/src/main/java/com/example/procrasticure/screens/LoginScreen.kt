@@ -5,50 +5,47 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.R
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.procrasticure.viewModels.LoginViewModel
-import com.example.procrasticure.widgets.InputFieldWithErrorLabel
+import com.example.procrasticure.R
+import com.example.procrasticure.viewModels.BigViewModel
+import com.example.procrasticure.viewModels.UserViewModel
+import com.example.procrasticure.widgets.InputFieldWithErrorLabelEmail
+import com.example.procrasticure.widgets.InputFieldWithErrorLabelPassword
 import com.example.procrasticure.widgets.InputState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.checkerframework.checker.units.qual.UnitsMultiple
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 
 @Composable
-fun Login(navController: NavController, viewModel: LoginViewModel){
+fun Login(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel){
 
     Column() {
-        LoginDetails(navController, viewModel)
+        LoginDetails(navController, userViewModel, sessionViewModel)
     }
 
 }
 
 
 @Composable
-fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
+fun LoginDetails(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel
+){
 
-    val uiState by viewModel.uiState.collectAsState()
+    val uiState by userViewModel.uiState.collectAsState()
 
     val localFocusManager = LocalFocusManager.current
 
@@ -84,23 +81,63 @@ fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
     }
 
     val coroutineScope = rememberCoroutineScope()
-
+    val boxSize = with(LocalDensity.current) { 250.dp.toPx() }
     Card() {
 
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight()
-                .padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally
+                , horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "ProcrastiCure", fontSize = 50.sp, fontWeight = FontWeight.Bold)
+            Box(modifier = Modifier
+                .height(250.dp)
+                .background(brush = Brush.linearGradient(
+                    colors = listOf(
+                        MaterialTheme.colors.primary,
+                        MaterialTheme.colors.primarySurface,
+                        MaterialTheme.colors.primaryVariant,
+
+                    ),
+                    start = Offset(0f, 0f), // top left corner
+                    end = Offset(boxSize, boxSize) // bottom right corner
+                ))
+                .fillMaxWidth()
+                .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "ProcrastiCure", fontSize = 50.sp, fontWeight = FontWeight.Bold, color = Color.White)
+            }
+
+
 
             Spacer(modifier = Modifier.size(50.dp))
 
             AnimatedVisibility(visible = login) {
-                Column() {
-                    LoginName = SimpleTextFieldLogin("username", modifier = Modifier)
-                    LoginPW = SimpleTextFieldLogin("password", modifier = Modifier)
+                Column (modifier = Modifier.padding(20.dp),){
+                    CreateAccountSection(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        text="Log into your Account",
+                        textButton = "Login",
+                        focusManager = localFocusManager,
+                        email = LoginName,
+                        onEmailChange = {
+                            LoginName = it
+                            userViewModel.resetUiState()
+                        },
+                        password = LoginPW,
+                        onPasswordChange = {
+                            LoginPW = it
+                            userViewModel.resetUiState()
+                        } ,
+                        error = uiState.error
+                    ) {
+                        localFocusManager.clearFocus()
+                        coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW,sessionViewModel) }
+                    }
+                    /*LoginName = SimpleTextFieldLogin("username", modifier = Modifier)
+                    LoginPW = SimpleTextFieldLogin("password", modifier = Modifier)*/
                 }
             }
 
@@ -113,6 +150,7 @@ fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
                 Button(onClick = {
 
                     if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
+                        coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW, sessionViewModel) }
                         navController.navigate(Screen.MainScreen.route)
                     }else{
                         login = !login
@@ -121,7 +159,11 @@ fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
 
                     , modifier = Modifier.size(150.dp, 50.dp)
                     , colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
-                    Text(text = "Login", color = Color.White)
+                    if (login) {
+                        Text(text = "Go back", color = Color.White)
+                    } else {
+                        Text(text = "Login", color = Color.White)
+                    }
                 }
             }
 
@@ -133,28 +175,28 @@ fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
             }
 
             AnimatedVisibility(visible = signup) {
-                Column() {
-                    /*CreateAccountSection(
+                Column(modifier = Modifier.padding(20.dp),) {
+                    CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),
+                        text = "Create a new Account",
+                        textButton = "Sign Up",
                         focusManager = localFocusManager,
                         email = SignUpName,
                         onEmailChange = {
                             SignUpName = it
-                            viewModel.resetUiState()
+                            userViewModel.resetUiState()
                         },
                         password = SignUpPW ,
                         onPasswordChange = {
                             SignUpPW = it
-                            viewModel.resetUiState()
+                            userViewModel.resetUiState()
                         } ,
                         error = uiState.error
                     ) {
                         localFocusManager.clearFocus()
-                        coroutineScope.launch { viewModel.signUp(SignUpName, SignUpPW) }
-                    }*/
-                    SignUpName = SimpleTextFieldLogin("username", modifier = Modifier)
-                    SignUpPW = SimpleTextFieldLogin("password", modifier = Modifier)
+                        coroutineScope.launch { userViewModel.signUp(SignUpName, SignUpPW,sessionViewModel) }
+                    }
                 }
             }
 
@@ -164,44 +206,25 @@ fun LoginDetails(navController: NavController, viewModel: LoginViewModel){
             }
 
             AnimatedVisibility(visible = !login) {
-
-                Button(onClick = {
-
-                    if (SignUpName.isNotEmpty() && SignUpPW.isNotEmpty()){
-                        coroutineScope.launch { viewModel.signUp(SignUpName, SignUpPW) }
-                        navController.navigate(Screen.MainScreen.route)
-                    }else{
-                        signup = !signup
-                    }
-
-                                 }
-                    , modifier = Modifier.size(150.dp, 50.dp)
-                    , colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
-                    Text(text = "Sign up", color = Color.White)
+                    Button(onClick = {signup = !signup},
+                        modifier = Modifier.size(150.dp, 50.dp),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
+                        if (signup) {
+                            Text(text = "Go back", color = Color.White)
+                        } else {
+                            Text(text = "Sign up", color = Color.White)
+                        }
                 }
             }
         }
     }
 }
 
-
-@Composable
-fun SimpleTextFieldLogin(label: String, modifier: Modifier): String {
-    var text by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = text,
-        onValueChange = { text = it },
-        label = { Text(label) },
-        modifier = modifier.width(320.dp)
-    )
-
-    return text
-}
-
 @Composable
 fun CreateAccountSection(
     modifier: Modifier,
+    text: String,
+    textButton: String,
     focusManager: FocusManager,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     email: String,
@@ -229,9 +252,9 @@ fun CreateAccountSection(
            modifier = Modifier
                .fillMaxWidth()
                .padding(top = 30.dp, bottom = 12.dp),
-           text = "Create a new Account"
+           text = text
        )
-        InputFieldWithErrorLabel(
+        InputFieldWithErrorLabelEmail(
             modifier = Modifier.fillMaxWidth(),
             input = email,
             onInputChange = {
@@ -247,12 +270,9 @@ fun CreateAccountSection(
                     }
             } ,
             inputState = emailValidityState,
-            keyboardType = KeyboardType.Email,
             imeAction = ImeAction.Done ,
-            leadingIcon = Icons.Filled.Email,
-            label = "Email"
         )
-        InputFieldWithErrorLabel(
+        InputFieldWithErrorLabelPassword(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
@@ -267,10 +287,7 @@ fun CreateAccountSection(
                                    if (password.isNotEmpty()) InputState.VALID else InputState.INVALID
             },
             inputState = passwordValidityState,
-            keyboardType = KeyboardType.Password,
             imeAction = ImeAction.Done,
-            leadingIcon = Icons.Filled.Lock,
-            label = "Password"
         )
 
         Button(
@@ -281,7 +298,7 @@ fun CreateAccountSection(
             enabled = isButtonEnabled
         ) {
             Text(modifier = Modifier.padding(6.dp),
-                text = "Sign Up")
+                text = textButton)
         }
 
         if (!error.isNullOrEmpty()) Row(
