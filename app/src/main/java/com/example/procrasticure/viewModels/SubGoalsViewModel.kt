@@ -29,7 +29,7 @@ class SubGoalsViewModel(id: String) : ViewModel() {
                     for (document in list) {
                         val subgoal: Goal? = document.toObject(Goal::class.java)
                         if (subgoal != null) {
-                            subgoal.Id = document.id
+                            subgoal.setId(document.id)
                             subGoals.add(subgoal)
                         }
 
@@ -57,7 +57,7 @@ class SubGoalsViewModel(id: String) : ViewModel() {
                 subGoals.clear()
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.Id = change.document.id
+                    goal.setId(change.document.id)
                     subGoals.add(goal)
                 }
 
