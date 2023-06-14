@@ -25,7 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 // add a subgoal
 
 @Composable
-fun AddSubGoalScreen(navController: NavController, goalId: String = "BzA1Tkky3Y3IHX7iKGHT"){
+fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y3IHX7iKGHT"){
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
 

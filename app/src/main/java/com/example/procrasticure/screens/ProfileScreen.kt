@@ -86,7 +86,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                             userViewModel.editEmail(email, sessionViewModel, context)
                         }
                         navController.popBackStack()
-                        navController.navigate(Screen.MainScreen.route)
+                        navController.navigate(Screen.GoalsScreen.route)
                     } else {
                         emailshow = !emailshow
                     }
@@ -105,7 +105,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 if (password.isNotEmpty()){
                     coroutineScope.launch { userViewModel.editPassword(password, sessionViewModel, context) }
                     navController.popBackStack()
-                    navController.navigate(Screen.MainScreen.route)
+                    navController.navigate(Screen.GoalsScreen.route)
                 } else {
                     passwordShow = !passwordShow
                 }

@@ -35,12 +35,17 @@ fun Navigation(sessionViewModel: BigViewModel){
             AddGoalScreen(navController = navController, sessionViewModel = sessionViewModel)
         }
 
-        composable(route = Screen.AddSubGoalScreen.route){
-            AddSubGoalScreen(navController = navController)
+        composable(route = Screen.AddSubGoalScreen.route,
+            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
+        ){ backStackEntry ->
+                    AddSubGoalScreen(
+                        navController = navController,
+                        goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)
+                    )
         }
 
         composable(route = Screen.ManageGoalsScreen.route){
-            ManageGoalsScreen(navController = navController)
+            ManageGoalsScreen(navController = navController, )
         }
 
         composable(route = Screen.ManageSubGoalsScreen.route){
@@ -56,7 +61,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                HomeScreen(movieList = goalList, navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
+                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
             }
         }
 

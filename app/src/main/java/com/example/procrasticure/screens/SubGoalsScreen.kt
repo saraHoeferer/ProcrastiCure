@@ -35,7 +35,7 @@ fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: Stri
     Column {
         GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
         if (goalId != null) {
-            DisplayMainGoal(navController = navController, goalName = "$goalName") /*TODO: Überschrift anpassen*/
+            DisplayMainGoal(navController = navController, goalName = "$goalName", goalId=goalId) /*TODO: Überschrift anpassen*/
         }
         if (subGoalsViewModel != null) {
             SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel)
@@ -58,7 +58,7 @@ fun FinishGoal() {
 }
 
 @Composable
-fun DisplayMainGoal(navController: NavController, goalName: String) {
+fun DisplayMainGoal(navController: NavController, goalName: String, goalId: String) {
 
     Box(
         modifier = Modifier
@@ -81,7 +81,7 @@ fun DisplayMainGoal(navController: NavController, goalName: String) {
                 description = "Add Subgoal",
                 color = MaterialTheme.colors.primary
             ) {
-                navController.navigate(Screen.AddSubGoalScreen.route)
+                navController.navigate(Screen.AddSubGoalScreen.withGoalId(goalId))
             }
         }
     }

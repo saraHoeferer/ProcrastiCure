@@ -18,7 +18,11 @@ sealed class Screen(val route: String) {
 
     object AddGoalScreen : Screen("addGoal")
 
-    object AddSubGoalScreen : Screen("addSubGoal")
+    object AddSubGoalScreen : Screen("addSubGoal/{$DETAIL_ARGUMENT_KEY}") {
+        fun withGoalId(id: String): String{
+            return this.route.replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id)
+        }
+    }
 
     object ManageGoalsScreen : Screen("manageGoals")
 

@@ -9,6 +9,7 @@ data class Goal(
     var Name: String? = "",
     var Description: String? = "",
     var Time: String? = "",
+    var UserId: String? = ""
 
 ){
     fun getId(): String? {
