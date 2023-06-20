@@ -52,7 +52,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
     uiState.data?.let {
         navController.apply {
             popBackStack()
-            navigate(Screen.MainScreen.route)
+            navigate(Screen.GoalsScreen.route)
         }
     }
 
@@ -151,7 +151,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
 
                     if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
                         coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW, sessionViewModel) }
-                        navController.navigate(Screen.GoalScreen.route)
+                        navController.navigate(Screen.GoalsScreen.route)
                     }else{
                         login = !login
                     }

@@ -56,7 +56,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                HomeScreen(movieList = goalList, navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
+                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
             }
         }
 
