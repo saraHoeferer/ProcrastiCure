@@ -29,7 +29,11 @@ import com.example.procrasticure.widgets.CustomIcon
 import com.example.procrasticure.widgets.GoalsDisplay
 
 @Composable
-fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
+fun GoalsScreen(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    sessionViewModel: BigViewModel
+) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
 
@@ -47,7 +51,11 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
         mutableStateOf(colorDisabled)
     }
     Column {
-        TopHomeMenu(navController = navController, userViewModel = userViewModel, sessionViewModel= sessionViewModel)
+        TopHomeMenu(
+            navController = navController,
+            userViewModel = userViewModel,
+            sessionViewModel = sessionViewModel
+        )
         Row {
             Button(
                 onClick = {
@@ -135,31 +143,43 @@ fun GoalList(
     goalsViewModel: GoalsViewModel
 
 ) {
-    val goalListState = remember {goalsViewModel.goals}
+    val goalListState = remember { goalsViewModel.goals }
 
 
     LazyColumn {
 
         items(items = goalListState) { goal ->
-            goal.Name?.let {
-                GoalsDisplay(
-                    goalName = it,
-                    onClick = { navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!,
-                        goal.Name!!
-                    )) },
-                    onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
-                ) {
-                    CustomIcon(
-                        icon = Icons.Default.KeyboardArrowRight,
-                        description = "Go to Goal Details",
-                        color = Color.Gray
-                    ) {
 
-                        navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!, goal.Name!!))
-                    }
+
+            GoalsDisplay(
+                goal = goal,
+                onClick = {
+                    navController.navigate(
+                        Screen.SubGoalsScreen.withIdandName(
+                            goal.getId()!!,
+                            goal.Name!!
+                        )
+                    )
+                },
+                onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
+            ) {
+                CustomIcon(
+                    icon = Icons.Default.KeyboardArrowRight,
+                    description = "Go to Goal Details",
+                    color = Color.Gray
+                ) {
+
+                    navController.navigate(
+                        Screen.SubGoalsScreen.withIdandName(
+                            goal.getId()!!,
+                            goal.Name!!
+                        )
+                    )
                 }
             }
         }
     }
+
+
 }
 

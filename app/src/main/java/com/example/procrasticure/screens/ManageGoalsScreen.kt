@@ -30,9 +30,11 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel) {
         items(items = goalsViewModel.goals ){ goal ->
             if (goal != null) {
                 goal.Name?.let {
-                    GoalsDisplay(goalName = it) {
-                        CustomIcon(icon = Icons.Outlined.Edit, description = "Edit Goal")
-                        CustomIcon(icon = Icons.Default.Delete, description = "Delete Goal")
+                    goal.Date?.let { it1 ->
+                        GoalsDisplay(goal = goal) {
+                            CustomIcon(icon = Icons.Outlined.Edit, description = "Edit Goal")
+                            CustomIcon(icon = Icons.Default.Delete, description = "Delete Goal")
+                        }
                     }
                 }
             }
