@@ -134,7 +134,9 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                         error = uiState.error
                     ) {
                         localFocusManager.clearFocus()
-                        coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW,sessionViewModel) }
+                        coroutineScope.launch {
+                            userViewModel.signIn(LoginName, LoginPW,sessionViewModel)
+                        }
                     }
                     /*LoginName = SimpleTextFieldLogin("username", modifier = Modifier)
                     LoginPW = SimpleTextFieldLogin("password", modifier = Modifier)*/
@@ -150,7 +152,9 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                 Button(onClick = {
 
                     if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
-                        coroutineScope.launch { userViewModel.signIn(LoginName, LoginPW, sessionViewModel) }
+                        coroutineScope.launch {
+                            userViewModel.signIn(LoginName, LoginPW, sessionViewModel)
+                        }
                         navController.navigate(Screen.GoalsScreen.route)
                     }else{
                         login = !login

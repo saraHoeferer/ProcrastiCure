@@ -20,6 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.procrasticure.data.repository.GoalRepository
+import com.example.procrasticure.data.repository.GoalRepositoryImpl
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.UserViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
@@ -27,13 +29,12 @@ import com.example.procrasticure.widgets.TopHomeMenu
 import com.example.procrasticure.widgets.CustomIcon
 
 import com.example.procrasticure.widgets.GoalsDisplay
+import kotlinx.coroutines.launch
 
 @Composable
-fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
+fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
-
-    val goalsViewModel: GoalsViewModel = viewModel()
 
     var displayState by remember {
         mutableStateOf(true)
@@ -46,6 +47,9 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
     var buttonColorFinished by remember {
         mutableStateOf(colorDisabled)
     }
+
+    var goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
+
     Column {
         TopHomeMenu(navController = navController, userViewModel = userViewModel, sessionViewModel= sessionViewModel)
         Row {
@@ -89,6 +93,7 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
             buttonColorCurrent = colorPrimary
 
         } else {
+            FinishedGoalList(goalsViewModel = goalsViewModel)
             buttonColorCurrent = colorDisabled
             buttonColorFinished = colorPrimary
         }
@@ -98,31 +103,36 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
 
 
 @Composable
-fun FinishedGoalList(goalList: List<String>) {
+fun FinishedGoalList(goalsViewModel: GoalsViewModel) {
+    val goalListState = remember {goalsViewModel.goals}
     LazyColumn {
-        items(items = goalList) { goal ->
-            Box(
-                modifier = Modifier
-                    .padding(5.dp)
-                    .clip(shape = RoundedCornerShape(18.dp))
-                    .background(Color(87, 87, 87, 22))
-                    .width(400.dp)
-            ) {
-                Column(
+        items(items = goalListState) { goal ->
+            if (goal.Finished!!) {
+                Box(
                     modifier = Modifier
-                        .padding(horizontal = 18.dp, vertical = 10.dp)
+                        .padding(5.dp)
+                        .clip(shape = RoundedCornerShape(18.dp))
+                        .background(Color(87, 87, 87, 22))
+                        .width(400.dp)
                 ) {
-                    Text(
-                        text = goal,
-                        fontSize = 20.sp,
-                        textAlign = TextAlign.Center,
-                    )
-                    Text(
-                        text = "Points earned: 200",
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                        color = Color.Gray
-                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 18.dp, vertical = 10.dp)
+                    ) {
+                        goal.Name?.let {
+                            Text(
+                                text = it,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
+                        Text(
+                            text = "Points earned: 200",
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray
+                        )
+                    }
                 }
             }
         }
@@ -135,27 +145,40 @@ fun GoalList(
     goalsViewModel: GoalsViewModel
 
 ) {
+    println(goalsViewModel.goals)
     val goalListState = remember {goalsViewModel.goals}
 
 
     LazyColumn {
 
         items(items = goalListState) { goal ->
-            goal.Name?.let {
-                GoalsDisplay(
-                    goalName = it,
-                    onClick = { navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!,
-                        goal.Name!!
-                    )) },
-                    onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
-                ) {
-                    CustomIcon(
-                        icon = Icons.Default.KeyboardArrowRight,
-                        description = "Go to Goal Details",
-                        color = Color.Gray
+            if (!goal.Finished!!) {
+                goal.Name?.let {
+                    GoalsDisplay(
+                        goalName = it,
+                        onClick = {
+                            navController.navigate(
+                                Screen.SubGoalsScreen.withIdandName(
+                                    goal.getId()!!,
+                                    goal.Name!!
+                                )
+                            )
+                        },
+                        onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
                     ) {
+                        CustomIcon(
+                            icon = Icons.Default.KeyboardArrowRight,
+                            description = "Go to Goal Details",
+                            color = Color.Gray
+                        ) {
 
-                        navController.navigate(Screen.SubGoalsScreen.withIdandName(goal.getId()!!, goal.Name!!))
+                            navController.navigate(
+                                Screen.SubGoalsScreen.withIdandName(
+                                    goal.getId()!!,
+                                    goal.Name!!
+                                )
+                            )
+                        }
                     }
                 }
             }

@@ -14,20 +14,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
-import com.example.procrasticure.data.model.SubGoal
+import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 // add a subgoal
 
 @Composable
-fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y3IHX7iKGHT"){
+fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y3IHX7iKGHT", subGoalsViewModel: SubGoalsViewModel){
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
+    val coroutineScope = rememberCoroutineScope()
 
     var name by remember { mutableStateOf("") }
     var description by remember{ mutableStateOf("") }
@@ -71,19 +73,16 @@ fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if (name.isNotEmpty()) {
-                    val subGoal = SubGoal(Name = name, Description = description, Date = date, Time = time)
-                    db.collection("Goals/$goalId/SubGoals")/*TODO: Variable richtig übergeben*/
-                        .add(subGoal)           // $goalId statt dem String
-                        .addOnSuccessListener { documentReference ->
-                                    name = ""
-                                    description = ""
-                                    date = ""
-                                    time = ""
-                                    Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
+                    val subGoal = Goal(Name = name, Description = description, Date = date, Time = time, Finished = false)
+                    coroutineScope.launch {
+                        if (goalId != null) {
+                            subGoalsViewModel.addSubGoal(goalId = goalId, subGoal = subGoal, context = context)
                         }
-                        .addOnFailureListener { e ->
-                            Toast.makeText(context, "Failed to insert record: $e", Toast.LENGTH_SHORT).show()
-                        }
+                    }
+                    name = ""
+                    description = ""
+                    date = ""
+                    time = ""
                 } else {
                     Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()
                 }

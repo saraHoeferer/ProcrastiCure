@@ -1,84 +1,47 @@
 package com.example.procrasticure.viewModels
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.data.repository.GoalRepositoryImpl
+import com.example.procrasticure.data.repository.UserRespository
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-@Suppress("UNCHECKED_CAST")
-class GoalsViewModel() : ViewModel() {
-    private val database = FirebaseFirestore.getInstance()
+class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewModel, private val goalRepositoryImpl: GoalRepositoryImpl): ViewModel() {
     private var _goals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
 
     val goals: ArrayList<Goal> = ArrayList()
 
     init {
         Log.d(TAG, "init is started")
-        getGoals()
-        listenToChanges()
-    }
-
-    private fun getGoals(){
-        database.collection("Goals").get()
-            .addOnSuccessListener { queryDocumentSnapshot ->
-                if (!queryDocumentSnapshot.isEmpty) {
-                    val list = queryDocumentSnapshot.documents
-                    goals.clear() // without: would expand list all the time
-                    for (document in list) {
-                        val goal: Goal? = document.toObject(Goal::class.java)
-                        if (goal != null) {
-                            goal.setId(document.id)
-                            goals.add(goal)
-                        }
-
-                    }
-                    _goals.value = goals
-                } else {
-                    println("No Goals")
-                }
-            }
-            .addOnFailureListener{
-                println("Failure")
-            }
-    }
-
-    private fun listenToChanges(){
-        val docRef = database.collection("Goals")
-        docRef.addSnapshotListener { snapshot, e ->
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e)
-                return@addSnapshotListener
-            }
-
-            if (snapshot != null) {
-                val documents = snapshot.documentChanges
-
-                for (change in documents) {
-                    val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.setId(change.document.id)
-                    val oldGoal = getGoalById(goal.getId()!!)
-                    if (oldGoal != null){
-                        goals.remove(oldGoal)
-                    }
-                    goals.add(goal)
-                }
-
-                _goals.value = goals
-
-            }
+        viewModelScope.launch {
+            getGoals(sessionViewModel)
+            listenToChanges(sessionViewModel)
         }
     }
 
-    fun getGoalById(id: String): Goal?{
-        for (goal in goals){
-            if (goal.getId() == id){
-                return goal
-            }
-        }
-        return null
+    suspend fun getGoals(sessionViewModel: BigViewModel){
+        _goals.value = goalRepositoryImpl.getGoals(sessionViewModel = sessionViewModel, goalArrayList = goals)
     }
+
+    suspend fun listenToChanges(sessionViewModel: BigViewModel){
+        _goals.value = goalRepositoryImpl.listenToChange(sessionViewModel = sessionViewModel, goalArrayList = goals)
+    }
+
+    suspend fun finishGoal(goalId: String, sessionViewModel: BigViewModel){
+        goalRepositoryImpl.finishGoal(goalId = goalId, sessionViewModel = sessionViewModel)
+    }
+
+    suspend fun addGoal(goal: Goal, context: Context){
+        goalRepositoryImpl.addGoal(goal = goal, context = context)
+    }
+
 
 }
