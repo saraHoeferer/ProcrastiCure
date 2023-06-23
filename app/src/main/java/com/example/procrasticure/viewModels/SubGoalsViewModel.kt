@@ -5,14 +5,15 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.data.model.SubGoal
 import com.google.firebase.firestore.FirebaseFirestore
 
 class SubGoalsViewModel(id: String) : ViewModel() {
     private val id = id
     private val database = FirebaseFirestore.getInstance()
-    private var _subGoals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
+    private var _subGoals : MutableLiveData<ArrayList<SubGoal>> = MutableLiveData<ArrayList<SubGoal>>()
 
-    val subGoals: ArrayList<Goal> = ArrayList()
+    val subGoals: ArrayList<SubGoal> = ArrayList()
 
     init {
         Log.d(ContentValues.TAG, "init is started")
@@ -27,7 +28,7 @@ class SubGoalsViewModel(id: String) : ViewModel() {
                     val list = queryDocumentSnapshot.documents
                     subGoals.clear() // without: would expand list all the time
                     for (document in list) {
-                        val subgoal: Goal? = document.toObject(Goal::class.java)
+                        val subgoal: SubGoal? = document.toObject(SubGoal::class.java)
                         if (subgoal != null) {
                             subgoal.setId(document.id)
                             subGoals.add(subgoal)
@@ -56,9 +57,9 @@ class SubGoalsViewModel(id: String) : ViewModel() {
                 //Wenns wirklich nur changes sind - jetzt spielt die ganze subgoal liste einfach nochmal rein
                 subGoals.clear()
                 for (change in documents) {
-                    val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.setId(change.document.id)
-                    subGoals.add(goal)
+                    val subgoal: SubGoal = change.document.toObject(SubGoal::class.java)
+                    subgoal.setId(change.document.id)
+                    subGoals.add(subgoal)
                 }
 
                 _subGoals.value = subGoals

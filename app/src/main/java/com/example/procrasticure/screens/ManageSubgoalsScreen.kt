@@ -8,46 +8,37 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.procrasticure.viewModels.GoalsViewModel
+import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.widgets.CustomIcon
 import com.example.procrasticure.widgets.SubGoalsDisplay
 import com.example.procrasticure.widgets.TopMenu
 
 @Composable
 fun ManageSubGoalsScreen(navController: NavController) {
-    val subGoalList = listOf(
-        "1# Subgoal",
-        "2# Subgoal",
-        "3# Subgoal",
-        "4# Subgoal",
-        "5# Subgoal",
-        "6# Subgoal",
-        "7# Subgoal",
-        "8# Subgoal",
-        "9# Subgoal",
-        "10# Subgoal",
-        "11# Subgoal",
-        "12# Subgoal",
-        "13# Subgoal"
-    )
+    val subGoalsViewModel: SubGoalsViewModel = viewModel()
+
     Column {
         TopMenu(heading = "Editing Subgoals", arrowBackClicked = { navController.popBackStack() })
-        EditingSubgoalsDisplay(goalList = subGoalList)
+        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel)
     }
 }
 
 @Composable
-fun EditingSubgoalsDisplay(goalList: List<String>) {
+fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel) {
     LazyColumn() {
-        items(items = goalList) { goal ->
-            SubGoalsDisplay{
+        items(items = subGoalsViewModel.subGoals) { subgoal ->
+            SubGoalsDisplay(subgoal = subgoal){
                 Row {
                     Text(
-                        text = goal,
+                        text = subgoal.Name!!,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier

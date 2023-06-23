@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.data.model.Goal
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 
 @Suppress("UNCHECKED_CAST")
@@ -70,6 +71,77 @@ class GoalsViewModel() : ViewModel() {
 
             }
         }
+    }
+
+    fun sortGoalsAlphabetically(){
+        database.collection("Goals").orderBy("name", Query.Direction.ASCENDING).get()
+            .addOnSuccessListener { queryDocumentSnapshot ->
+                if (!queryDocumentSnapshot.isEmpty) {
+                    val list = queryDocumentSnapshot.documents
+                    goals.clear() // without: would expand list all the time
+                    for (document in list) {
+                        val goal: Goal? = document.toObject(Goal::class.java)
+                        if (goal != null) {
+                            goal.setId(document.id)
+                            goals.add(goal)
+                        }
+                    }
+                    _goals.value = goals
+                } else {
+                    println("No Goals")
+                }
+            }
+            .addOnFailureListener{
+                println("Failure")
+            }
+    }
+
+    fun sortGoalsByDeadlineAscending(){
+        database.collection("Goals").orderBy("date", Query.Direction.ASCENDING).get()
+            .addOnSuccessListener { queryDocumentSnapshot ->
+                if (!queryDocumentSnapshot.isEmpty) {
+                    val list = queryDocumentSnapshot.documents
+                    goals.clear() // without: would expand list all the time
+                    for (document in list) {
+                        val goal: Goal? = document.toObject(Goal::class.java)
+                        if (goal != null) {
+                            goal.setId(document.id)
+                            goals.add(goal)
+                        }
+
+                    }
+                    _goals.value = goals
+                } else {
+                    println("No Goals")
+                }
+            }
+            .addOnFailureListener{
+                println("Failure")
+            }
+    }
+
+    fun sortGoalsByDeadlineDescending(){
+        database.collection("Goals").orderBy("date", Query.Direction.DESCENDING).get()
+            .addOnSuccessListener { queryDocumentSnapshot ->
+                if (!queryDocumentSnapshot.isEmpty) {
+                    val list = queryDocumentSnapshot.documents
+                    goals.clear() // without: would expand list all the time
+                    for (document in list) {
+                        val goal: Goal? = document.toObject(Goal::class.java)
+                        if (goal != null) {
+                            goal.setId(document.id)
+                            goals.add(goal)
+                        }
+
+                    }
+                    _goals.value = goals
+                } else {
+                    println("No Goals")
+                }
+            }
+            .addOnFailureListener{
+                println("Failure")
+            }
     }
 
     fun getGoalById(id: String): Goal?{

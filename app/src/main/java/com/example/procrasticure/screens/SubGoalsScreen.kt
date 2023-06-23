@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.procrasticure.data.model.SubGoal
 import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.widgets.GoalMenu
 import com.example.procrasticure.widgets.CustomIcon
@@ -97,7 +98,7 @@ fun SubGoalList(
         items(items = subGoalListState) { subgoal ->
             var checkedState = remember { mutableStateOf(false) }
             SubGoalsDisplay(
-
+                subgoal = subgoal,
                 onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.route) }) {
                 Checkbox(
                     checked = checkedState.value,

@@ -111,14 +111,13 @@ fun GoalDisplay(goal: Goal, content: @Composable () -> Unit = {}) {
                 Text(buildAnnotatedString {
                     withStyle(style = SpanStyle(fontSize = 15.sp)) {
                         append("Description: ")
+
+                            append(goal.Description!!)
+
                     }
                 })
 
-                Text(buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontSize = 15.sp)) {
-                        append(goal.Description!!)
-                    }
-                })
+
 
 
 
