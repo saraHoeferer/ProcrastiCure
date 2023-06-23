@@ -5,8 +5,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.procrasticure.data.model.Goal
+import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
 
 
 @Suppress("UNCHECKED_CAST")
@@ -23,27 +26,7 @@ class GoalsViewModel() : ViewModel() {
     }
 
     private fun getGoals(){
-        database.collection("Goals").get()
-            .addOnSuccessListener { queryDocumentSnapshot ->
-                if (!queryDocumentSnapshot.isEmpty) {
-                    val list = queryDocumentSnapshot.documents
-                    goals.clear() // without: would expand list all the time
-                    for (document in list) {
-                        val goal: Goal? = document.toObject(Goal::class.java)
-                        if (goal != null) {
-                            goal.setId(document.id)
-                            goals.add(goal)
-                        }
-
-                    }
-                    _goals.value = goals
-                } else {
-                    println("No Goals")
-                }
-            }
-            .addOnFailureListener{
-                println("Failure")
-            }
+        makeQuery(database.collection("Goals").get())
     }
 
     private fun listenToChanges(){
@@ -74,74 +57,16 @@ class GoalsViewModel() : ViewModel() {
     }
 
     fun sortGoalsAlphabetically(){
-        database.collection("Goals").orderBy("name", Query.Direction.ASCENDING).get()
-            .addOnSuccessListener { queryDocumentSnapshot ->
-                if (!queryDocumentSnapshot.isEmpty) {
-                    val list = queryDocumentSnapshot.documents
-                    goals.clear() // without: would expand list all the time
-                    for (document in list) {
-                        val goal: Goal? = document.toObject(Goal::class.java)
-                        if (goal != null) {
-                            goal.setId(document.id)
-                            goals.add(goal)
-                        }
-                    }
-                    _goals.value = goals
-                } else {
-                    println("No Goals")
-                }
-            }
-            .addOnFailureListener{
-                println("Failure")
-            }
+        makeQuery(database.collection("Goals").orderBy("name", Query.Direction.ASCENDING).get())
+
     }
 
     fun sortGoalsByDeadlineAscending(){
-        database.collection("Goals").orderBy("date", Query.Direction.ASCENDING).get()
-            .addOnSuccessListener { queryDocumentSnapshot ->
-                if (!queryDocumentSnapshot.isEmpty) {
-                    val list = queryDocumentSnapshot.documents
-                    goals.clear() // without: would expand list all the time
-                    for (document in list) {
-                        val goal: Goal? = document.toObject(Goal::class.java)
-                        if (goal != null) {
-                            goal.setId(document.id)
-                            goals.add(goal)
-                        }
-
-                    }
-                    _goals.value = goals
-                } else {
-                    println("No Goals")
-                }
-            }
-            .addOnFailureListener{
-                println("Failure")
-            }
+        makeQuery(database.collection("Goals").orderBy("date", Query.Direction.ASCENDING).get())
     }
 
     fun sortGoalsByDeadlineDescending(){
-        database.collection("Goals").orderBy("date", Query.Direction.DESCENDING).get()
-            .addOnSuccessListener { queryDocumentSnapshot ->
-                if (!queryDocumentSnapshot.isEmpty) {
-                    val list = queryDocumentSnapshot.documents
-                    goals.clear() // without: would expand list all the time
-                    for (document in list) {
-                        val goal: Goal? = document.toObject(Goal::class.java)
-                        if (goal != null) {
-                            goal.setId(document.id)
-                            goals.add(goal)
-                        }
-
-                    }
-                    _goals.value = goals
-                } else {
-                    println("No Goals")
-                }
-            }
-            .addOnFailureListener{
-                println("Failure")
-            }
+        makeQuery(database.collection("Goals").orderBy("date", Query.Direction.DESCENDING).get())
     }
 
     fun getGoalById(id: String): Goal?{
@@ -151,6 +76,28 @@ class GoalsViewModel() : ViewModel() {
             }
         }
         return null
+    }
+
+    private fun makeQuery(querySnapshot: Task<QuerySnapshot>){
+        querySnapshot.addOnSuccessListener { queryDocumentSnapshot ->
+            if (!queryDocumentSnapshot.isEmpty) {
+                val list = queryDocumentSnapshot.documents
+                goals.clear() // without: would expand list all the time
+                for (document in list) {
+                    val goal: Goal? = document.toObject(Goal::class.java)
+                    if (goal != null) {
+                        goal.setId(document.id)
+                        goals.add(goal)
+                    }
+                }
+                _goals.value = goals
+            } else {
+                println("No Goals")
+            }
+        }
+            .addOnFailureListener{
+                println("Failure")
+            }
     }
 
 }

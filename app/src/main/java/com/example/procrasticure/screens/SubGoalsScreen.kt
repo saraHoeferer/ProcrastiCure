@@ -111,15 +111,7 @@ fun SubGoalList(
                     modifier = Modifier
                         .clip(shape = RoundedCornerShape(100.dp))
                 )
-                subgoal.Name?.let {
-                    Text(
-                        text = it,
-                        fontSize = 18.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .padding(horizontal = 0.dp, vertical = 11.dp)
-                    )
-                }
+
             }
         }
     }
