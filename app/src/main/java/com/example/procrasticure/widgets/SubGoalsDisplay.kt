@@ -25,12 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.procrasticure.data.model.SubGoal
+import com.example.procrasticure.data.model.Goal
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SubGoalsDisplay(
-    subgoal: SubGoal,
+    subgoal: Goal,
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {},
     content: @Composable () -> Unit = {}
@@ -51,7 +51,7 @@ fun SubGoalsDisplay(
 }
 
 @Composable
-fun SubGoalDisplay(subgoal: SubGoal, content: @Composable () -> Unit = {}) {
+fun SubGoalDisplay(subgoal: Goal, content: @Composable () -> Unit = {}) {
     var expanded by remember {
         mutableStateOf(false)
     }

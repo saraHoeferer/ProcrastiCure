@@ -55,7 +55,7 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.ManageGoalsScreen.route){
-            ManageGoalsScreen(navController = navController, )
+            ManageGoalsScreen(navController = navController, sessionViewModel = sessionViewModel, goalsRepository = goalRepository )
         }
 
         composable(route = Screen.ManageSubGoalsScreen.route){

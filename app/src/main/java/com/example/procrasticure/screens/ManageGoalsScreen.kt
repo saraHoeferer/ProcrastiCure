@@ -24,14 +24,16 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.data.repository.GoalRepositoryImpl
+import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.*
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 @Composable
-fun ManageGoalsScreen(navController: NavController) {
-    val goalsViewModel: GoalsViewModel = viewModel()
+fun ManageGoalsScreen(navController: NavController, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
+    var goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
 
     Column {
         TopMenu(heading = "Editing Goals", arrowBackClicked = { navController.popBackStack() })
@@ -43,10 +45,10 @@ fun ManageGoalsScreen(navController: NavController) {
 fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavController) {
 
     val context = LocalContext.current
-
+    val goalListState = remember {goalsViewModel.goals}
     LazyColumn {
-        items(items = goalsViewModel.goals ){ goal ->
-            if (goal != null) {
+        items(items = goalListState ){ goal ->
+            if (!goal.Finished!!) {
                 goal.Name?.let {
                     goal.Date?.let { it1 ->
                         GoalsDisplay(goal = goal) {

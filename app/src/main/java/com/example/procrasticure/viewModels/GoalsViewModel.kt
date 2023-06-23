@@ -51,6 +51,7 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
                 if (!queryDocumentSnapshot.isEmpty) {
                     val list = queryDocumentSnapshot.documents
                     goals.clear() // without: would expand list all the time
+                    println("hier")
                     for (document in list) {
                         val goal: Goal? = document.toObject(Goal::class.java)
                         if (goal != null) {
