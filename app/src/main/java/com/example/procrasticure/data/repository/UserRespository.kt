@@ -24,4 +24,6 @@ interface UserRespository{
     suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context)
 
     suspend fun logOut(sessionViewModel: BigViewModel)
+
+    suspend fun getPoints(sessionViewModel: BigViewModel)
 }
