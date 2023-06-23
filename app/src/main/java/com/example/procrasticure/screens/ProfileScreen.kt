@@ -1,5 +1,6 @@
 package com.example.procrasticure.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -39,6 +40,7 @@ fun ProfileScreen(navController: NavController, sessionViewModel: BigViewModel, 
 fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel, navController: NavController) {
     val context = LocalContext.current
     Card(modifier = Modifier) {
+
         var emailshow by remember {
             mutableStateOf(false)
         }
@@ -48,7 +50,6 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
         }
         var password by remember { mutableStateOf("")}
         val coroutineScope = rememberCoroutineScope()
-
         var successEmail = 0
 
         Column(
@@ -66,14 +67,14 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
 
             Spacer(modifier = Modifier.size(25.dp))
 
-            sessionViewModel.currentUserId?.email?.let {
+            sessionViewModel.user.getFirebaseUser()?.email?.let {
                 Text(
                     text = it,
                     fontSize = 25.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
-            Text(text = "points: xxx", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+            Text(text = "points: ${sessionViewModel.user.getPoints()}", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
 
             Spacer(modifier = Modifier.size(80.dp))
 

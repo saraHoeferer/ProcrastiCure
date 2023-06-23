@@ -1,6 +1,5 @@
 package com.example.procrasticure.screens
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,29 +14,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.procrasticure.data.model.Goal
-import com.example.procrasticure.viewModels.AddGoalViewModel
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.launch
 
 @Composable
-fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel) {
+fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, goalsViewModel: GoalsViewModel) {
     val context = LocalContext.current
-    val db = FirebaseFirestore.getInstance()
-
-    /*
-    val repository = MovieRepository(movieDao = db.movieDao())
-    val factory = MoviesViewModelFactory(repository = repository)
-    val viewModel: MoviesViewModel = viewModel(factory = factory)
-     */
+    val coroutineScope = rememberCoroutineScope()
 
     var name by remember { mutableStateOf("")}
     var description by remember{ mutableStateOf("") }
@@ -84,19 +74,12 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel) 
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if(name.isNotEmpty() && date.isNotEmpty()){
-                    val goal = Goal(Name=name, Description = description, Date = date, Time = time)
-                    db.collection("Goals")
-                        .add(goal)
-                        .addOnSuccessListener {
-                            name = ""
-                            description = ""
-                            date = ""
-                            time = ""
-                            Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            println("Failure adding goal")
-                        }
+                    val goal = Goal(Name=name, Description = description, Date = date, Time = time, UserId = sessionViewModel.user.getId(), Finished = false)
+                    coroutineScope.launch { goalsViewModel.addGoal(goal, context) }
+                    name = ""
+                    description = ""
+                    date = ""
+                    time = ""
                 } else{
                     Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()
                 }

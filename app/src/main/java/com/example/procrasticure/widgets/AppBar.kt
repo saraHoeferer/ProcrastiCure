@@ -91,6 +91,7 @@ fun TopHomeMenu(navController: NavController, userViewModel: UserViewModel, sess
 
                     DropdownMenuItem(onClick = {
                         coroutineScope.launch { userViewModel.logout(sessionViewModel) }
+                        navController.popBackStack()
                         navController.navigate(Screen.Login.route)
                     }) {
                         Text(text = "LogOut")

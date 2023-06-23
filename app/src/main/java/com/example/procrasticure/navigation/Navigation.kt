@@ -3,24 +3,33 @@ package com.example.procrasticure.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.procrasticure.data.repository.GoalRepositoryImpl
+import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
 import com.example.procrasticure.data.repository.UserRepositoryImpl
 import com.example.procrasticure.screens.*
 import com.example.procrasticure.viewModels.BigViewModel
+import com.example.procrasticure.viewModels.GoalsViewModel
+import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.viewModels.UserViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun Navigation(sessionViewModel: BigViewModel){
     val userRespository = UserRepositoryImpl()
     val userViewModel = UserViewModel(userRespository)
+    val goalRepository = GoalRepositoryImpl()
+    val subGoalRepository = SubGoalRepositoryImpl()
+    val goalViewModel = GoalsViewModel(sessionViewModel, goalRepository)
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.GoalsScreen.route){
-            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel)
+            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel, goalsRepository = goalRepository)
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -32,15 +41,21 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.AddGoalScreen.route){
-            AddGoalScreen(navController = navController, sessionViewModel = sessionViewModel)
+            AddGoalScreen(navController = navController, sessionViewModel = sessionViewModel, goalsViewModel= goalViewModel)
         }
 
-        composable(route = Screen.AddGoalScreen.route){
-            AddGoalScreen(navController = navController, sessionViewModel = sessionViewModel)
+        composable(route = Screen.AddSubGoalScreen.route,
+            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
+        ){ backStackEntry ->
+                    AddSubGoalScreen(
+                        navController = navController,
+                        goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
+                        subGoalsViewModel = SubGoalsViewModel(backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)!!, subGoalRepository)
+                    )
         }
 
         composable(route = Screen.ManageGoalsScreen.route){
-            ManageGoalsScreen(navController = navController)
+            ManageGoalsScreen(navController = navController, )
         }
 
         composable(route = Screen.ManageSubGoalsScreen.route){
@@ -48,15 +63,15 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.Login.route){
-            println(sessionViewModel.currentUserId)
-            if (!sessionViewModel.isLoggedIn) {
+            println(sessionViewModel.user.getId())
+            if (!sessionViewModel.user.getLoggedIn()!!) {
                 Login(
                     navController = navController,
                     userViewModel = userViewModel,
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel)
+                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel, goalRepository)
             }
         }
 
@@ -67,7 +82,10 @@ fun Navigation(sessionViewModel: BigViewModel){
                 SubGoalsScreen(
                     navController = navController,
                     goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY),
-                    goalName = backStackEntry.arguments?.getString(ARGUMENT_KEY_2)
+                    goalName = backStackEntry.arguments?.getString(ARGUMENT_KEY_2),
+                    goalsViewModel = goalViewModel,
+                    sessionViewModel = sessionViewModel,
+                    subGoalRepository = subGoalRepository
                 )
 
         }
