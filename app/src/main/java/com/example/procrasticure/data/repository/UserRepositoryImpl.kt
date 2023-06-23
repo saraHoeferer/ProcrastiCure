@@ -51,6 +51,7 @@ class UserRepositoryImpl(): UserRespository {
     override suspend fun deleteUser(sessionViewModel: BigViewModel) {
         auth.currentUser?.delete()?.addOnSuccessListener{
             sessionViewModel.user.setId("")
+            sessionViewModel.user.setPoints(0)
             sessionViewModel.user.setFirebaseUser(null)
             sessionViewModel.user.setLoggedIn(false)
             println("worked delete")
@@ -82,6 +83,7 @@ class UserRepositoryImpl(): UserRespository {
     override suspend fun logOut(sessionViewModel: BigViewModel) {
         auth.signOut()
         sessionViewModel.user.setId("")
+        sessionViewModel.user.setPoints(0)
         sessionViewModel.user.setFirebaseUser(null)
         sessionViewModel.user.setLoggedIn(false)
     }
