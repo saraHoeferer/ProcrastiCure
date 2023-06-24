@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 interface GoalRepository {
     val database: FirebaseFirestore
@@ -18,6 +19,5 @@ interface GoalRepository {
 
     suspend fun addGoal(goal: Goal, context: Context)
 
-    suspend fun sortGoalsByName(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>): ArrayList<Goal>
-
+    suspend fun sortByCriteria(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>, criteria: String, order: Query.Direction): ArrayList<Goal>
 }

@@ -51,7 +51,7 @@ fun DatePickerWidget(dateText: String): String {
     mMonth = mCalendar.get(Calendar.MONTH)
     mDay = mCalendar.get(Calendar.DAY_OF_MONTH)
 
-    mCalendar.time = Date()
+    mCalendar.time = Date(4,2,2)
 
     // Declaring a string value to
     // store date in string format
@@ -62,7 +62,7 @@ fun DatePickerWidget(dateText: String): String {
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            dateText = "$mDayOfMonth/${mMonth + 1}/$mYear"
+            dateText = "$mYear/${if (mMonth < 10){"0"+(mMonth + 1)}else{mMonth + 1}}/${if (mDayOfMonth < 10){"0"+(mDayOfMonth + 1)}else{mDayOfMonth + 1}}"
         }, mYear, mMonth, mDay
     )
     Box() {

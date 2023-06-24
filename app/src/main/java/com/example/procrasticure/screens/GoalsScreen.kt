@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,11 +42,10 @@ import kotlinx.coroutines.launch
 @SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
+fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl, goalsViewModel: GoalsViewModel) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
     val coroutineScope = rememberCoroutineScope()
-
 
     var displayState by remember {
         mutableStateOf(true)
@@ -60,8 +60,8 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
     }
     var showMenu by remember { mutableStateOf(false) }
 
-    var goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
-
+    //var goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
+    coroutineScope.launch { goalsViewModel.getGoals(sessionViewModel) }
     Column {
         TopHomeMenu(
             navController = navController,
@@ -121,63 +121,10 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
                 }
             }
         }
-        val options = listOf("Alphabetically", "Deadline: Ascending", "Deadline: Descending")
-        var selectedOptionText by remember { mutableStateOf(options[0]) }
-
-        ExposedDropdownMenuBox(
-            expanded = showMenu,
-            modifier = Modifier.fillMaxWidth(),
-            onExpandedChange = {
-                showMenu = !showMenu
-            }
-        ) {
-            TextField(
-                readOnly = true,
-                value = selectedOptionText,
-                onValueChange = { },
-                modifier = Modifier.fillMaxWidth(),
-                label = { Text("Sort By") },
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_filter_alt_24),
-                        contentDescription = "filter menu",
-                        tint = MaterialTheme.colors.primary,
-                        modifier = Modifier
-                            .padding(horizontal = 13.dp, vertical = 12.dp)
-                            .size(30.dp)
-                            .clickable { showMenu = !showMenu })
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors()
-            )
-            ExposedDropdownMenu(
-                expanded = showMenu,
-                onDismissRequest = {
-                    showMenu = false
-                }
-            ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedOptionText = selectionOption
-                            showMenu = false
-                        }
-                    ) {
-                        Text(text = selectionOption)
-                        if(selectionOption=="Alphabetically") {
-                            coroutineScope.launch { goalsViewModel.sortGoalsByName(sessionViewModel = sessionViewModel) }
-                        } else if(selectionOption=="Deadline: Ascending"){
-                            goalsViewModel.sortGoalsByDeadlineAscending()
-                        } else if(selectionOption == "Deadline: Descending"){
-                            goalsViewModel.sortGoalsByDeadlineDescending()
-                        }
-                    }
-                }
-            }
-        }
 
         if (displayState) {
 
-            GoalList(navController = navController, goalsViewModel = goalsViewModel)
+            GoalList(navController = navController, goalsViewModel = goalsViewModel, sessionViewModel = sessionViewModel)
             buttonColorFinished = colorDisabled
             buttonColorCurrent = colorPrimary
 
@@ -228,22 +175,80 @@ fun FinishedGoalList(goalsViewModel: GoalsViewModel) {
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GoalList(
     navController: NavController,
-    goalsViewModel: GoalsViewModel
+    goalsViewModel: GoalsViewModel,
+    sessionViewModel: BigViewModel
 
 ) {
-    val goalListState = remember { goalsViewModel.goals }
+    val goalListState = remember {goalsViewModel.goals}
+    val coroutineScope = rememberCoroutineScope()
+    var option by remember {
+        mutableStateOf(3)
+    }
 
-
+    if (option == 0) {
+        coroutineScope.launch { goalsViewModel.sortGoalsByName(sessionViewModel = sessionViewModel) }
+    } else if (option == 1) {
+        coroutineScope.launch { goalsViewModel.sortGoalsByDeadlineAscending(sessionViewModel = sessionViewModel) }
+    } else if (option == 2) {
+        coroutineScope.launch { goalsViewModel.sortGoalsByDeadlineDescending(sessionViewModel = sessionViewModel) }
+    }
+    Row() {
+        Button(
+            onClick = { option = 0 }, colors = if (option != 0) {
+                ButtonDefaults.buttonColors(backgroundColor = Color.White)
+            } else {
+                ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            },
+            modifier = Modifier.padding(2.dp)
+        )
+        {
+            Text(text = "Name Asc")
+        }
+        Spacer(modifier = Modifier.weight(.5f))
+        Button(
+            onClick = { option = 1 }, colors = if (option != 1) {
+                ButtonDefaults.buttonColors(backgroundColor = Color.White)
+            } else {
+                ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            },
+            modifier = Modifier.padding(2.dp)
+        )
+        {
+            Text(text = "Date Asc")
+        }
+        Spacer(modifier = Modifier.weight(.5f))
+        Button(
+            onClick = { option = 2 }, colors = if (option != 2) {
+                ButtonDefaults.buttonColors(backgroundColor = Color.White)
+            } else {
+                ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary)
+            },
+            modifier = Modifier.padding(2.dp)
+        ) {
+            Text(text = "Date Desc")
+        }
+        Spacer(modifier = Modifier.weight(.5f))
+        Button(onClick = { option = 3 }, colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)) {
+            Icon(
+                painter = painterResource(id = R.drawable.baseline_filter_alt_24),
+                contentDescription = "filter menu",
+                tint = MaterialTheme.colors.primary,
+                modifier = Modifier
+                    .size(30.dp)
+                )
+        }
+    }
     LazyColumn {
 
         items(items = goalListState) { goal ->
             if (!goal.Finished!!) {
                 goal.Name?.let {
                     GoalsDisplay(
-                        goal= goal,
+                        goal = goal,
                         onClick = {
                             navController.navigate(
                                 Screen.SubGoalsScreen.withIdandName(
@@ -274,6 +279,5 @@ fun GoalList(
             }
         }
     }
-
 
 }

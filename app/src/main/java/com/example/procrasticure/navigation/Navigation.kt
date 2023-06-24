@@ -30,9 +30,10 @@ fun Navigation(sessionViewModel: BigViewModel){
     val goalRepository = GoalRepositoryImpl()
     val subGoalRepository = SubGoalRepositoryImpl()
     val navController = rememberNavController()
+    val goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.GoalsScreen.route){
-            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel, goalsRepository = goalRepository)
+            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel, goalsRepository = goalRepository, goalsViewModel = goalsViewModel)
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -81,7 +82,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel, goalRepository)
+                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel, goalRepository, goalsViewModel = goalsViewModel)
             }
         }
 
