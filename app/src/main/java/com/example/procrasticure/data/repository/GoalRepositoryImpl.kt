@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class GoalRepositoryImpl(): GoalRepository {
     override val database = FirebaseFirestore.getInstance()
@@ -104,5 +105,15 @@ class GoalRepositoryImpl(): GoalRepository {
                 database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
             }
         }
+    }
+
+    override suspend fun sortGoalsByName(
+        sessionViewModel: BigViewModel,
+        goalArrayList: ArrayList<Goal>
+    ): ArrayList<Goal> {
+
+        goalArrayList.sortBy { it.Name }
+        print("GOAls:$goalArrayList")
+      return goalArrayList
     }
 }

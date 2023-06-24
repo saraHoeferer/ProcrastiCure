@@ -48,8 +48,8 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
         goalRepositoryImpl.addGoal(goal = goal, context = context)
     }
 
-    fun sortGoalsAlphabetically(){
-        makeQuery(database.collection("Goals").orderBy("name", Query.Direction.ASCENDING).get())
+    suspend fun sortGoalsByName(sessionViewModel: BigViewModel){
+        _goals.value = goalRepositoryImpl.sortGoalsByName(sessionViewModel = sessionViewModel, goalArrayList = goals)
 
     }
 
@@ -83,6 +83,7 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
                     }
                 }
                 _goals.value = goals
+
             } else {
                 println("No Goals")
             }

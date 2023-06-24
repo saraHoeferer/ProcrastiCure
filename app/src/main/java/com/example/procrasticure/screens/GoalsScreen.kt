@@ -1,6 +1,7 @@
 package com.example.procrasticure.screens
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 
@@ -34,13 +35,17 @@ import com.example.procrasticure.widgets.TopHomeMenu
 import com.example.procrasticure.widgets.CustomIcon
 
 import com.example.procrasticure.widgets.GoalsDisplay
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
     val colorPrimary = Color(98, 0, 238)
     val colorDisabled = Color(87, 87, 87, 13)
+    val coroutineScope = rememberCoroutineScope()
+
 
     var displayState by remember {
         mutableStateOf(true)
@@ -159,7 +164,7 @@ fun GoalsScreen(navController: NavController, userViewModel: UserViewModel, sess
                     ) {
                         Text(text = selectionOption)
                         if(selectionOption=="Alphabetically") {
-                            goalsViewModel.sortGoalsAlphabetically()
+                            coroutineScope.launch { goalsViewModel.sortGoalsByName(sessionViewModel = sessionViewModel) }
                         } else if(selectionOption=="Deadline: Ascending"){
                             goalsViewModel.sortGoalsByDeadlineAscending()
                         } else if(selectionOption == "Deadline: Descending"){
@@ -270,4 +275,3 @@ fun GoalList(
 
 
 }
-

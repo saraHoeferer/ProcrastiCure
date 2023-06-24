@@ -18,4 +18,6 @@ interface GoalRepository {
 
     suspend fun addGoal(goal: Goal, context: Context)
 
+    suspend fun sortGoalsByName(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>): ArrayList<Goal>
+
 }
