@@ -23,7 +23,7 @@ class GoalRepositoryImpl(): GoalRepository {
                     for (document in list) {
                         val goal: Goal? = document.toObject(Goal::class.java)
                         if (goal != null) {
-                            goal.setId(document.id)
+                            goal.Id = document.id
                             goalArrayList.add(goal)
                         }
 
@@ -55,8 +55,8 @@ class GoalRepositoryImpl(): GoalRepository {
 
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.setId(change.document.id)
-                    val oldGoal = getGoalsById(goal.getId()!!, goalArrayList)
+                    goal.Id = change.document.id
+                    val oldGoal = getGoalsById(goal.Id!!, goalArrayList)
                     if (oldGoal != null){
                         goalArrayList.remove(oldGoal)
                     }
@@ -69,7 +69,7 @@ class GoalRepositoryImpl(): GoalRepository {
 
     override fun getGoalsById(goalId: String, goalArrayList: ArrayList<Goal>): Goal? {
         for (goal in goalArrayList){
-            if (goal.getId() == goalId){
+            if (goal.Id == goalId){
                 return goal
             }
         }
@@ -87,13 +87,13 @@ class GoalRepositoryImpl(): GoalRepository {
             }
     }
 
-    override suspend fun finishGoal(goalId: String, sessionViewModel: BigViewModel) {
+    override suspend fun finishGoal(goalId: String, goalPoints: Long, sessionViewModel: BigViewModel) {
         val docRef = database.collection("Goals").document(goalId)
         docRef
             .update("finished",true)
             .addOnSuccessListener { println("Goal check updated") }
             .addOnFailureListener { println("Failure check Goal") }
-        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +(200))
+        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +(200)+goalPoints)
 
         val user = hashMapOf(
             "points" to sessionViewModel.user.getPoints()

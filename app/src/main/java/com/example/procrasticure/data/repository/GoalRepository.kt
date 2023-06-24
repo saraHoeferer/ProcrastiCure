@@ -14,7 +14,7 @@ interface GoalRepository {
 
     fun getGoalsById(goalId: String, goalArrayList: ArrayList<Goal>): Goal?
 
-    suspend fun finishGoal(goalId: String, sessionViewModel: BigViewModel)
+    suspend fun finishGoal(goalId: String, goalPoints: Long, sessionViewModel: BigViewModel)
 
     suspend fun addGoal(goal: Goal, context: Context)
 
