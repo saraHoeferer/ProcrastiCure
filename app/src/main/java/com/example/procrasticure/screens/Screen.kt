@@ -7,13 +7,18 @@ const val DESCRIPTION = "description"
 const val DATE = "date"
 const val TIME= "time"
 
+const val POINTS = "points"
+
 sealed class Screen(val route: String) {
     object GoalsScreen : Screen("main")
     object ProfileScreen : Screen("profile")
 
-    object SubGoalsScreen : Screen("detail/{$DETAIL_ARGUMENT_KEY}/{$ARGUMENT_KEY_2}") {
-        fun withIdandName(id: String, name: String): String {
-            return this.route.replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id).replace(oldValue = "{$ARGUMENT_KEY_2}", newValue = name)
+    object SubGoalsScreen : Screen("detail/{$DETAIL_ARGUMENT_KEY}/{$ARGUMENT_KEY_2}/{$POINTS}") {
+        fun withIdandName(id: String, name: String, points: String): String {
+            return this.route
+                .replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id)
+                .replace(oldValue = "{$ARGUMENT_KEY_2}", newValue = name)
+                .replace(oldValue = "{$POINTS}", newValue = points)
         }
 
     }
@@ -40,7 +45,11 @@ sealed class Screen(val route: String) {
 
     object ManageGoalsScreen : Screen("manageGoals")
 
-    object ManageSubGoalsScreen : Screen("manageSubGoals")
+    object ManageSubGoalsScreen : Screen("manageSubGoals/{$DETAIL_ARGUMENT_KEY}"){
+        fun withGoalId(id: String): String{
+            return this.route.replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id)
+        }
+    }
 
     object Login : Screen("Login")
 

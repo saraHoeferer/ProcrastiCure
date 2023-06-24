@@ -247,8 +247,9 @@ fun GoalList(
                         onClick = {
                             navController.navigate(
                                 Screen.SubGoalsScreen.withIdandName(
-                                    goal.getId()!!,
-                                    goal.Name!!
+                                    goal.Id!!,
+                                    goal.Name!!,
+                                    goal.Points!!.toString()
                                 )
                             )
                         },
@@ -262,8 +263,9 @@ fun GoalList(
 
                             navController.navigate(
                                 Screen.SubGoalsScreen.withIdandName(
-                                    goal.getId()!!,
-                                    goal.Name!!
+                                    goal.Id!!,
+                                    goal.Name!!,
+                                    goal.Points!!.toString()
                                 )
                             )
                         }

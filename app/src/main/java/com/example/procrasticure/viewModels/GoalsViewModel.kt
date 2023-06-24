@@ -40,8 +40,8 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
         _goals.value = goalRepositoryImpl.listenToChange(sessionViewModel = sessionViewModel, goalArrayList = goals)
     }
 
-    suspend fun finishGoal(goalId: String, sessionViewModel: BigViewModel){
-        goalRepositoryImpl.finishGoal(goalId = goalId, sessionViewModel = sessionViewModel)
+    suspend fun finishGoal(goalId: String, goalPoints: Long, sessionViewModel: BigViewModel){
+        goalRepositoryImpl.finishGoal(goalId = goalId, sessionViewModel = sessionViewModel, goalPoints = goalPoints)
     }
 
     suspend fun addGoal(goal: Goal, context: Context){
@@ -63,7 +63,7 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
 
     fun getGoalById(id: String): Goal?{
         for (goal in goals){
-            if (goal.getId() == id){
+            if (goal.Id == id){
                 return goal
             }
         }
@@ -78,7 +78,7 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
                 for (document in list) {
                     val goal: Goal? = document.toObject(Goal::class.java)
                     if (goal != null) {
-                        goal.setId(document.id)
+                        goal.Id = document.id
                         goals.add(goal)
                     }
                 }

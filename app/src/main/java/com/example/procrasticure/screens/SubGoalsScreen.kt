@@ -8,6 +8,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
@@ -31,29 +33,31 @@ import kotlinx.coroutines.launch
 // Goal + Subgoal
 
 @Composable
-fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, subGoalRepository: SubGoalRepositoryImpl) {
+fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?, goalPoints: String?, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, subGoalRepository: SubGoalRepositoryImpl) {
     var subGoalsViewModel = goalId?.let { SubGoalsViewModel(it, subGoalRepository) }
 
     Column {
         GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
         if (goalId != null) {
-            DisplayMainGoal(navController = navController, goalName = "$goalName", goalId=goalId) /*TODO: Überschrift anpassen*/
+            goalId?.let { DisplayMainGoal(navController = navController, goalName = "$goalName", goalId= it) } /*TODO: Überschrift anpassen*/
         }
         if (subGoalsViewModel != null) {
             if (goalId != null) {
-                SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel, goalId = goalId)
+                if (goalPoints != null) {
+                    SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel, goalId = goalId, goalPoints = goalPoints.toLong())
+                }
             }
         }
         if (subGoalsViewModel != null) {
             if (goalId != null) {
-                FinishGoal(subGoalsViewModel, goalId = goalId, goalsViewModel = goalsViewModel, sessionViewModel = sessionViewModel)
+                goalId?.let { FinishGoal(subGoalsViewModel, goalId = it, goalPoints = goalPoints!!.toLong(), goalsViewModel = goalsViewModel, sessionViewModel = sessionViewModel) }
             }
         }
     }
 }
 
 @Composable
-fun FinishGoal(subGoalsViewModel: SubGoalsViewModel, goalId: String, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel) {
+fun FinishGoal(subGoalsViewModel: SubGoalsViewModel, goalId: String, goalPoints:Long, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel) {
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
         var subGoalListState = remember {subGoalsViewModel.subGoals}
         val coroutineScope = rememberCoroutineScope()
@@ -70,7 +74,9 @@ fun FinishGoal(subGoalsViewModel: SubGoalsViewModel, goalId: String, goalsViewMo
                     enabled = true
                 }
                 if (enabled){
-                    coroutineScope.launch{goalsViewModel.finishGoal(goalId = goalId, sessionViewModel)}
+                    coroutineScope.launch{
+                         goalsViewModel.finishGoal(goalId = goalId, goalPoints = goalPoints, sessionViewModel = sessionViewModel)
+                    }
                 }
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -115,30 +121,31 @@ fun DisplayMainGoal(navController: NavController, goalName: String, goalId: Stri
 fun SubGoalList(
     navController: NavController,
     subGoalsViewModel: SubGoalsViewModel,
-    goalId: String
+    goalId: String,
+    goalPoints: Long,
 ) {
     var subGoalListState = remember {subGoalsViewModel.subGoals}
-
+    var goalP = goalPoints
     LazyColumn(modifier = Modifier.size(580.dp)) {
         items(items = subGoalListState) { subgoal ->
             val coroutineScope = rememberCoroutineScope()
-            var checked = remember {subgoal.Finished}
+            var checked = remember { mutableStateOf(subgoal.Finished) }
             SubGoalsDisplay(
                 subgoal = subgoal,
-                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.route) }) {
+                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalId(goalId)) }) {
                 Checkbox(
-                    checked = checked!!,
+                    checked = checked.value!!,
                     onCheckedChange = {
-                        if (checked){
+                        if (checked.value == true){
                             subgoal.Finished = false
-                            coroutineScope.launch { subgoal.getId()
-                                ?.let { it1 -> subGoalsViewModel.uncheckSubGoal(goalId = goalId, subGoalId = it1) }
+                            coroutineScope.launch { subgoal.Id
+                                ?.let { it1 -> goalP = subGoalsViewModel.uncheckSubGoal(goalId = goalId, subGoalId = it1, goalPoints = goalP) }
                             }
 
-                        } else if (!checked) {
+                        } else {
                             subgoal.Finished = true
-                            coroutineScope.launch { subgoal.getId()
-                                ?.let { it1 -> subGoalsViewModel.checkSubGoal(goalId = goalId, subGoalId = it1) } }
+                            coroutineScope.launch { subgoal.Id
+                                ?.let { it1 -> goalP = subGoalsViewModel.checkSubGoal(goalId = goalId, subGoalId = it1, goalPoints = goalP) } }
 
                         }
                     },

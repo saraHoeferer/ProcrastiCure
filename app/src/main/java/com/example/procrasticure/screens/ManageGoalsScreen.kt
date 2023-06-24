@@ -60,7 +60,7 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                             CustomIcon(
                                 icon = Icons.Default.Delete,
                                 description = "Delete Goal",
-                                clickEvent = { deleteDataFromFirebase(courseID = goal.getId(), context = context) })
+                                clickEvent = { deleteDataFromFirebase(courseID = goal.Id, context = context) })
                         }
                     }
                 }

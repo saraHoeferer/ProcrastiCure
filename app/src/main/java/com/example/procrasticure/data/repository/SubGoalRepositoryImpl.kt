@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.procrasticure.data.model.Goal
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
 
 class SubGoalRepositoryImpl: SubGoalRepository {
     override val database = FirebaseFirestore.getInstance()
@@ -20,7 +21,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
                     for (document in list) {
                         val subgoal: Goal? = document.toObject(Goal::class.java)
                         if (subgoal != null) {
-                            subgoal.setId(document.id)
+                            subgoal.Id = document.id
                             subGoalList.add(subgoal)
                         }
 
@@ -52,7 +53,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
                 subGoalList.clear()
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.setId(change.document.id)
+                    goal.Id = change.document.id
                     subGoalList.add(goal)
                 }
 
@@ -72,19 +73,33 @@ class SubGoalRepositoryImpl: SubGoalRepository {
             }
     }
 
-    override suspend fun checkSubGoal(goalId: String, subGoalId: String) {
-        val docRef = database.collection("Goals/$goalId/SubGoals").document(subGoalId)
+    override suspend fun checkSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long {
+        val docRef = database.collection("Goals/${goalId}/SubGoals").document(subGoalId)
         docRef
             .update("finished",true)
             .addOnSuccessListener { println("Subgoal check updated") }
             .addOnFailureListener { println("Failure check subgoal") }
+
+        val docRef2 = goalId.let { database.collection("Goals").document(it) }
+        docRef2
+            .update("points", goalPoints + 50)
+            .addOnSuccessListener { println("Subgoal points updated") }
+            .addOnFailureListener { println("Failure points subgoal") }
+        return goalPoints + 50
     }
 
-    override suspend fun uncheckSubGoal(goalId: String, subGoalId: String) {
-        val docRef = database.collection("Goals/$goalId/SubGoals").document(subGoalId)
+    override suspend fun uncheckSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long {
+        val docRef = database.collection("Goals/${goalId}/SubGoals").document(subGoalId)
         docRef
             .update("finished",false)
-            .addOnSuccessListener { println("Subgoal check updated") }
-            .addOnFailureListener { println("Failure check subgoal") }
+            .addOnSuccessListener { println("Subgoal points updated") }
+            .addOnFailureListener { println("Failure points subgoal") }
+
+        val docRef2 = goalId.let { database.collection("Goals").document(it) }
+        docRef2
+            .update("points", goalPoints - 50)
+            .addOnSuccessListener { println("Subgoal points updated") }
+            .addOnFailureListener { println("Failure points subgoal") }
+        return goalPoints - 50
     }
 }

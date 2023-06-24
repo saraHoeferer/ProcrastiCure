@@ -74,7 +74,7 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if(name.isNotEmpty() && date.isNotEmpty()){
-                    val goal = Goal(Name=name, Description = description, Date = date, Time = time, UserId = sessionViewModel.user.getId(), Finished = false)
+                    val goal = Goal(Name=name, Description = description, Date = date, Time = time, UserId = sessionViewModel.user.getId())
                     coroutineScope.launch { goalsViewModel.addGoal(goal, context) }
                     name = ""
                     description = ""
