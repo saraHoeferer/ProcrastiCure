@@ -41,7 +41,7 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.TimerScreen.route){
-            Timer(navController = navController)
+            Timer(navController = navController, userViewModel = userViewModel, sessionViewModel)
         }
 
         composable(route = Screen.AddGoalScreen.route){

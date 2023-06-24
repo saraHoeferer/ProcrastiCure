@@ -62,10 +62,11 @@ class UserViewModel @Inject constructor(private val userRespository: UserResposi
             resetUiState()
         }
     }
-
-    suspend fun getPoints(sessionViewModel: BigViewModel){
-        userRespository.getPoints(sessionViewModel)
-        resetUiState()
+    suspend fun givePointstoUser(sessionViewModel: BigViewModel, points: Long){
+        viewModelScope.launch {
+            userRespository.givePointsToUser(sessionViewModel, points)
+            resetUiState()
+        }
     }
 
     fun resetUiState(){

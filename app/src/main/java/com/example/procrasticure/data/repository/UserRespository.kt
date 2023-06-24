@@ -26,4 +26,6 @@ interface UserRespository{
     suspend fun logOut(sessionViewModel: BigViewModel)
 
     suspend fun getPoints(sessionViewModel: BigViewModel)
+
+    suspend fun givePointsToUser(sessionViewModel: BigViewModel, points:Long)
 }

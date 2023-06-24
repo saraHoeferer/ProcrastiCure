@@ -18,24 +18,26 @@ import com.commandiron.wheel_picker_compose.WheelTimePicker
 import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
 import com.example.procrasticure.R
 import com.example.procrasticure.timer.CountDownView
+import com.example.procrasticure.viewModels.BigViewModel
+import com.example.procrasticure.viewModels.UserViewModel
 import com.example.procrasticure.widgets.TopMenu
 import java.time.LocalTime
 
 
 @Composable
-fun Timer(navController: NavController) {
+fun Timer(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
 
     Column {
         TopMenu(
             arrowBackClicked = { navController.popBackStack() },
             heading = "Timer"
         )
-        getTimerInfo()
+        getTimerInfo(userViewModel = userViewModel, sessionViewModel)
     }
 }
 
 @Composable
-fun getTimerInfo() {
+fun getTimerInfo(userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
 
     var checked by remember {
         mutableStateOf(false)
@@ -77,7 +79,7 @@ fun getTimerInfo() {
 
                     Button(
                         onClick = {
-                            if (input != "") {
+                            if (input != "00:00") {
                                 checked = true
                                 enable = false
                             }
@@ -112,8 +114,10 @@ fun getTimerInfo() {
                         .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
                     Column {
+                        println(input)
+                        println(convertTime(input))
                         val newinput = convertTime(input)
-                        CountDownView(newinput)
+                        CountDownView(newinput, userViewModel = userViewModel, sessionViewModel)
                     }
                 }
             }
