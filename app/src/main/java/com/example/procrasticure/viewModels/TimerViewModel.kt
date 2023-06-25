@@ -1,13 +1,18 @@
 package com.example.procrasticure.viewModels
 
 import android.os.CountDownTimer
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procrasticure.timer.SingleLiveEvent
 import com.example.procrasticure.timer.formatTime
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
-class TimerViewModel(private val input: Long) : ViewModel() {
+class TimerViewModel(private val input: Long, private val userViewModel: UserViewModel, private val sessionViewModel: BigViewModel) : ViewModel() {
 
     //region Properties
     private var countDownTimer: CountDownTimer? = null
@@ -47,6 +52,22 @@ class TimerViewModel(private val input: Long) : ViewModel() {
     //region Private methods
     private fun pauseTimer() {
         countDownTimer?.cancel()
+        println(progress.value)
+        println(input)
+        val timeSpent = (input - input* progress.value!!.toFloat())/60000f
+        if (timeSpent > 1.0f || progress.value!! < 0.1f){
+            println("hier")
+            var collectedPoints: Int
+            if (progress.value!! < 0.1f){
+                collectedPoints = (input/60000L).toFloat().roundToInt() * 100
+                println(collectedPoints)
+                viewModelScope.launch { userViewModel.givePointstoUser(sessionViewModel, collectedPoints.toLong()) }
+            } else {
+                collectedPoints = timeSpent.roundToInt() * 100
+                println(collectedPoints)
+                viewModelScope.launch { userViewModel.givePointstoUser(sessionViewModel, collectedPoints.toLong()) }
+            }
+        }
         handleTimerValues(false, input.formatTime(), 1.0F, false)
     }
 

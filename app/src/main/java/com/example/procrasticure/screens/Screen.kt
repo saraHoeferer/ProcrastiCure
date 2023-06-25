@@ -8,13 +8,18 @@ const val DATE = "date"
 const val TIME= "time"
 const val FINISHED= "finished"
 
+const val POINTS = "points"
+
 sealed class Screen(val route: String) {
     object GoalsScreen : Screen("main")
     object ProfileScreen : Screen("profile")
 
-    object SubGoalsScreen : Screen("detail/{$GOAL_ID}/{$GOAL_NAME}") {
-        fun withIdandName(id: String, name: String): String {
-            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id).replace(oldValue = "{$GOAL_NAME}", newValue = name)
+    object SubGoalsScreen : Screen("detail/{$GOAL_ID}/{$GOAL_NAME}/{$POINTS}") {
+        fun withIdandName(id: String, name: String, points: String): String {
+            return this.route
+                .replace(oldValue = "{$GOAL_ID}", newValue = id)
+                .replace(oldValue = "{$GOAL_NAME}", newValue = name)
+                .replace(oldValue = "{$POINTS}", newValue = points)
         }
 
     }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
+import com.google.android.gms.common.GooglePlayServicesUtilLight
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -35,12 +36,12 @@ class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepos
         subGoalsRepository.addSubGoal(goalId = goalId, subGoal = subGoal, context = context)
     }
 
-    suspend fun checkSubGoal(goalId: String, subGoalId: String){
-       subGoalsRepository.checkSubGoal(goalId = goalId, subGoalId = subGoalId)
+    suspend fun checkSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long{
+       return subGoalsRepository.checkSubGoal(goalId = goalId, subGoalId = subGoalId, goalPoints = goalPoints)
     }
 
-    suspend fun uncheckSubGoal(goalId: String, subGoalId: String){
-        subGoalsRepository.uncheckSubGoal(goalId = goalId, subGoalId = subGoalId)
+    suspend fun uncheckSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long{
+        return subGoalsRepository.uncheckSubGoal(goalId = goalId, subGoalId = subGoalId, goalPoints = goalPoints)
     }
 
 

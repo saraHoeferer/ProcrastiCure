@@ -13,7 +13,7 @@ interface SubGoalRepository {
 
     suspend fun addSubGoal(goalId: String, subGoal: Goal, context: Context)
 
-    suspend fun checkSubGoal(goalId: String, subGoalId: String)
+    suspend fun checkSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long
 
-    suspend fun uncheckSubGoal(goalId: String, subGoalId: String)
+    suspend fun uncheckSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long
 }

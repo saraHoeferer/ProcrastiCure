@@ -19,15 +19,17 @@ import com.example.procrasticure.R
 import com.example.procrasticure.timer.components.CountDownButton
 import com.example.procrasticure.timer.components.CountDownIndicator
 import com.example.procrasticure.timer.components.ShowCelebration
+import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.TimerViewModel
 import com.example.procrasticure.viewModels.TimerViewModelFactory
+import com.example.procrasticure.viewModels.UserViewModel
 import java.util.concurrent.TimeUnit
 
 
 @Composable
-fun CountDownView(input: Long) {
+fun CountDownView(input: Long, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
 
-    val factoryTimer = TimerViewModelFactory(input)
+    val factoryTimer = TimerViewModelFactory(input, userViewModel, sessionViewModel)
     val timerViewModel: TimerViewModel = viewModel(factory = factoryTimer)
 
 

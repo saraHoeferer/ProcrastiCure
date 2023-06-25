@@ -104,6 +104,20 @@ class UserRepositoryImpl(): UserRespository {
             .addOnFailureListener{ println("no points") }
     }
 
+    override suspend fun givePointsToUser(sessionViewModel: BigViewModel, points: Long) {
+        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +points)
+
+        val user = hashMapOf(
+            "points" to sessionViewModel.user.getPoints()
+        )
+
+        sessionViewModel.user.getId().let {
+            if (it != null) {
+                database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
+            }
+        }
+    }
+
     companion object{
         const val UNKNOWN_ERROR = "An unknown error occurred. Please try again later."
     }

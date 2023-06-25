@@ -7,6 +7,12 @@ import android.widget.Toast
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class GoalRepositoryImpl(): GoalRepository {
     override val database = FirebaseFirestore.getInstance()
@@ -23,7 +29,7 @@ class GoalRepositoryImpl(): GoalRepository {
                     for (document in list) {
                         val goal: Goal? = document.toObject(Goal::class.java)
                         if (goal != null) {
-                            goal.setId(document.id)
+                            goal.Id = document.id
                             goalArrayList.add(goal)
                         }
 
@@ -34,7 +40,8 @@ class GoalRepositoryImpl(): GoalRepository {
             }
             .addOnFailureListener{
                 println("Failure")
-            }
+            }.await()
+        println(goalArrayList.toString())
         return goalArrayList
     }
 
@@ -55,8 +62,8 @@ class GoalRepositoryImpl(): GoalRepository {
 
                 for (change in documents) {
                     val goal: Goal = change.document.toObject(Goal::class.java)
-                    goal.setId(change.document.id)
-                    val oldGoal = getGoalsById(goal.getId()!!, goalArrayList)
+                    goal.Id = change.document.id
+                    val oldGoal = getGoalsById(goal.Id!!, goalArrayList)
                     if (oldGoal != null){
                         goalArrayList.remove(oldGoal)
                     }
@@ -69,7 +76,7 @@ class GoalRepositoryImpl(): GoalRepository {
 
     override fun getGoalsById(goalId: String, goalArrayList: ArrayList<Goal>): Goal? {
         for (goal in goalArrayList){
-            if (goal.getId() == goalId){
+            if (goal.Id == goalId){
                 return goal
             }
         }
@@ -87,13 +94,13 @@ class GoalRepositoryImpl(): GoalRepository {
             }
     }
 
-    override suspend fun finishGoal(goalId: String, sessionViewModel: BigViewModel) {
+    override suspend fun finishGoal(goalId: String, goalPoints: Long, sessionViewModel: BigViewModel) {
         val docRef = database.collection("Goals").document(goalId)
         docRef
             .update("finished",true)
             .addOnSuccessListener { println("Goal check updated") }
             .addOnFailureListener { println("Failure check Goal") }
-        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +(200))
+        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +(200)+goalPoints)
 
         val user = hashMapOf(
             "points" to sessionViewModel.user.getPoints()
@@ -104,5 +111,35 @@ class GoalRepositoryImpl(): GoalRepository {
                 database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
             }
         }
+    }
+    override suspend fun sortByCriteria(
+        sessionViewModel: BigViewModel,
+        goalArrayList: ArrayList<Goal>,
+        criteria: String,
+        order: Query.Direction
+    ): ArrayList<Goal> {
+        database.collection("Goals").orderBy(criteria, order).get()
+            .addOnSuccessListener { queryDocumentSnapshot ->
+                if (!queryDocumentSnapshot.isEmpty) {
+                    val list = queryDocumentSnapshot.documents
+                    goalArrayList.clear() // without: would expand list all the time
+                    for (document in list) {
+                        val goal: Goal? = document.toObject(Goal::class.java)
+                        if (goal != null) {
+                            if (goal.UserId == sessionViewModel.user.getId()) {
+                                goal.Id = document.id
+                                goalArrayList.add(goal)
+                            }
+                        }
+
+                    }
+                } else {
+                    println("No Goals")
+                }
+            }
+            .addOnFailureListener{
+                println("Failure")
+            }.await()
+        return goalArrayList
     }
 }

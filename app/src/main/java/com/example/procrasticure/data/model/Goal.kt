@@ -4,20 +4,14 @@ import com.google.firebase.database.Exclude
 import org.checkerframework.checker.nullness.qual.NonNull
 
 data class Goal(
-    private var Id: String? = "",
+    var Id: String? = "",
     var Date: String? = "",
     var Name: String? = "",
     var Description: String? = "",
     var Time: String? = "",
     var UserId: String? = "",
-    var Finished: Boolean? = false
+    var Finished: Boolean? = false,
+    var Points: Long = 0,
+    var WarningPreference: Int = 0
 
-){
-    fun getId(): String? {
-        return this.Id
-    }
-
-    fun setId(id: String){
-        this.Id = id
-    }
-}
+)
