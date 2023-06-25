@@ -7,10 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,7 +32,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?, goalPoints: String?, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, subGoalRepository: SubGoalRepositoryImpl) {
     var subGoalsViewModel = goalId?.let { SubGoalsViewModel(it, subGoalRepository) }
-
     Column {
         GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
         if (goalId != null) {
@@ -124,7 +120,8 @@ fun SubGoalList(
     goalId: String,
     goalPoints: Long,
 ) {
-    var subGoalListState = remember {subGoalsViewModel.subGoals}
+    val subGoalListState by subGoalsViewModel.subGoalsState.collectAsState()
+    println(subGoalListState)
     var goalP = goalPoints
     LazyColumn(modifier = Modifier.size(580.dp)) {
         items(items = subGoalListState) { subgoal ->

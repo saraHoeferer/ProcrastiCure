@@ -9,12 +9,8 @@ import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
-import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
-class GoalRepositoryImpl(): GoalRepository {
+class GoalRepositoryImpl: GoalRepository {
     override val database = FirebaseFirestore.getInstance()
 
     override suspend fun getGoals(
@@ -108,7 +104,7 @@ class GoalRepositoryImpl(): GoalRepository {
 
         sessionViewModel.user.getId().let {
             if (it != null) {
-                database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
+                database.collection("Users").document(it).set(user).addOnSuccessListener { println("Updated User Points") }.addOnFailureListener { println("Failure when trying to update user Points") }
             }
         }
     }
@@ -118,7 +114,8 @@ class GoalRepositoryImpl(): GoalRepository {
         criteria: String,
         order: Query.Direction
     ): ArrayList<Goal> {
-        database.collection("Goals").orderBy(criteria, order).get()
+        database.collection("Goals").orderBy(criteria, order)
+            .get()
             .addOnSuccessListener { queryDocumentSnapshot ->
                 if (!queryDocumentSnapshot.isEmpty) {
                     val list = queryDocumentSnapshot.documents
@@ -134,12 +131,21 @@ class GoalRepositoryImpl(): GoalRepository {
 
                     }
                 } else {
-                    println("No Goals")
+                    println("Couldn't find goals while ordering by $criteria")
                 }
             }
             .addOnFailureListener{
-                println("Failure")
-            }.await()
+                println("Failure when trying to order by $criteria")
+            }
+            .await()
         return goalArrayList
+    }
+
+    override suspend fun deleteGoal(goalId: String, context: Context) {
+        database.collection("Goals").document(goalId).delete().addOnSuccessListener {
+            Toast.makeText(context, "Goal was deleted successfully", Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {
+            Toast.makeText(context, "Fail to delete goal", Toast.LENGTH_SHORT).show()
+        }
     }
 }

@@ -9,12 +9,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
 import com.google.android.gms.common.GooglePlayServicesUtilLight
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepository: SubGoalRepositoryImpl) : ViewModel() {
     private val id = id
-    private var _subGoals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
+
+    private var _subGoals = MutableStateFlow(ArrayList<Goal>())
+    val subGoalsState: StateFlow<ArrayList<Goal>> = _subGoals.asStateFlow()
 
     val subGoals: ArrayList<Goal> = ArrayList()
 

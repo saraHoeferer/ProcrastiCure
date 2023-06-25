@@ -2,7 +2,6 @@ package com.example.procrasticure.screens
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -30,6 +29,7 @@ import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.*
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 import java.util.*
 
 @Composable
@@ -44,7 +44,7 @@ fun ManageGoalsScreen(navController: NavController, sessionViewModel: BigViewMod
 
 @Composable
 fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavController) {
-
+    val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     val goalListState = remember {goalsViewModel.goals}
     LazyColumn {
@@ -69,6 +69,10 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                                 description = "Delete Goal",
                                 clickEvent = {
                                     Log.d("GOAl ID", goal.Id.toString())
+                                    coroutineScope.launch {
+                                        goal.Id?.let { it2 -> goalsViewModel.deleteGoal(goalId = it2, context) }
+                                        navController.navigate(Screen.GoalsScreen.route)
+                                    }
                                     deleteGoal(courseID = goal.Id, context = context)
                                 })
                         }

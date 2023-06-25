@@ -3,35 +3,34 @@ package com.example.procrasticure.navigation
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.data.repository.*
 import com.example.procrasticure.screens.*
 import com.example.procrasticure.viewModels.*
-import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun Navigation(sessionViewModel: BigViewModel){
-    val userRespository = UserRepositoryImpl()
-    val userViewModel = UserViewModel(userRespository)
+    val userRepository = UserRepositoryImpl()
+    val userViewModel = UserViewModel(userRepository)
     val goalRepository = GoalRepositoryImpl()
     val subGoalRepository = SubGoalRepositoryImpl()
     val navController = rememberNavController()
-    val goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
     val animalRepository = AnimalRepositoryImpl()
     val animalViewModel = AnimalViewModel(sessionViewModel, animalRepository)
 
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.GoalsScreen.route){
-            GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel, goalsRepository = goalRepository, goalsViewModel = goalsViewModel)
+            GoalsScreen(
+                navController = navController,
+                userViewModel = userViewModel,
+                sessionViewModel = sessionViewModel,
+                goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
+            )
         }
 
         composable(route = Screen.ProfileScreen.route){
@@ -79,7 +78,12 @@ fun Navigation(sessionViewModel: BigViewModel){
                     sessionViewModel = sessionViewModel
                 )
             } else {
-                GoalsScreen(navController = navController, userViewModel = userViewModel, sessionViewModel = sessionViewModel, goalRepository, goalsViewModel = goalsViewModel)
+                GoalsScreen(
+                    navController = navController,
+                    userViewModel = userViewModel,
+                    sessionViewModel = sessionViewModel,
+                    goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
+                )
             }
         }
 
