@@ -62,7 +62,7 @@ fun DatePickerWidget(dateText: String): String {
     val mDatePickerDialog = DatePickerDialog(
         mContext,
         { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-            dateText = "$mYear/${if (mMonth < 10){"0"+(mMonth + 1)}else{mMonth + 1}}/${if (mDayOfMonth < 10){"0"+(mDayOfMonth + 1)}else{mDayOfMonth + 1}}"
+            dateText = "$mYear/${if (mMonth < 10){"0"+(mMonth + 1)}else{mMonth + 1}}/${if (mDayOfMonth < 10){"0"+(mDayOfMonth)}else{mDayOfMonth}}"
         }, mYear, mMonth, mDay
     )
     Box {
