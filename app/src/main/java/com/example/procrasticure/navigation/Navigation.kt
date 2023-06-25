@@ -12,14 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.procrasticure.data.model.Goal
-import com.example.procrasticure.data.repository.GoalRepositoryImpl
-import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
-import com.example.procrasticure.data.repository.UserRepositoryImpl
+import com.example.procrasticure.data.repository.*
 import com.example.procrasticure.screens.*
-import com.example.procrasticure.viewModels.BigViewModel
-import com.example.procrasticure.viewModels.GoalsViewModel
-import com.example.procrasticure.viewModels.SubGoalsViewModel
-import com.example.procrasticure.viewModels.UserViewModel
+import com.example.procrasticure.viewModels.*
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -31,6 +26,9 @@ fun Navigation(sessionViewModel: BigViewModel){
     val subGoalRepository = SubGoalRepositoryImpl()
     val navController = rememberNavController()
     val goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
+    val animalRepository = AnimalRepositoryImpl()
+    val animalViewModel = AnimalViewModel(sessionViewModel, animalRepository)
+
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.GoalsScreen.route){
             GoalsScreen(navController = navController,  sessionViewModel = sessionViewModel, userViewModel = userViewModel, goalsRepository = goalRepository, goalsViewModel = goalsViewModel)
@@ -74,7 +72,6 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.Login.route){
-            println(sessionViewModel.user.getId())
             if (!sessionViewModel.user.getLoggedIn()!!) {
                 Login(
                     navController = navController,
@@ -121,11 +118,11 @@ fun Navigation(sessionViewModel: BigViewModel){
         }
 
         composable(route = Screen.AnimalShopScreen.route){
-            AnimalShopScreen(navController = navController)
+            AnimalShopScreen(navController = navController, animalViewModel = animalViewModel, sessionViewModel = sessionViewModel)
         }
 
         composable(route = Screen.AnimalScreen.route){
-            AnimalScreen(navController = navController)
+            AnimalScreen(navController = navController, animalViewModel = animalViewModel, sessionViewModel = sessionViewModel)
         }
     }
 }
