@@ -32,7 +32,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
             }
             .addOnFailureListener{
                 println("Failure")
-            }
+            }.await()
         return subGoalList
     }
 

@@ -3,18 +3,11 @@ package com.example.procrasticure.viewModels
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
-import androidx.core.os.persistableBundleOf
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.model.Goal
-import com.google.android.gms.tasks.Task
 import com.example.procrasticure.data.repository.GoalRepositoryImpl
-import com.example.procrasticure.data.repository.UserRespository
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -23,9 +16,11 @@ import javax.inject.Inject
 
 
 class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewModel, private val goalRepositoryImpl: GoalRepositoryImpl): ViewModel() {
-   private var _goals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
-
+    private var _goals = MutableStateFlow(ArrayList<Goal>())
     val goals: ArrayList<Goal> = ArrayList()
+
+    val goalsState: StateFlow<ArrayList<Goal>> = _goals.asStateFlow()
+
 
     init {
         Log.d(TAG, "init is started")
@@ -56,10 +51,14 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
     }
 
     suspend fun sortGoalsByDeadlineAscending(sessionViewModel: BigViewModel){
-        _goals.value = goalRepositoryImpl.sortByCriteria(sessionViewModel=sessionViewModel, goalArrayList = goals, criteria = "date", order = Query.Direction.ASCENDING)
+        _goals.value =goalRepositoryImpl.sortByCriteria(sessionViewModel=sessionViewModel, goalArrayList = goals, criteria = "date", order = Query.Direction.ASCENDING)
     }
 
     suspend fun sortGoalsByDeadlineDescending(sessionViewModel: BigViewModel){
         _goals.value = goalRepositoryImpl.sortByCriteria(sessionViewModel=sessionViewModel, goalArrayList = goals, criteria = "date", order = Query.Direction.DESCENDING)
+    }
+
+    suspend fun deleteGoal(goalId: String, context: Context){
+        goalRepositoryImpl.deleteGoal(goalId = goalId, context)
     }
 }

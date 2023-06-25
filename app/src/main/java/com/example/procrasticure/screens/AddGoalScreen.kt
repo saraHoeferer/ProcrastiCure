@@ -21,7 +21,6 @@ import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,13 +47,13 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
                 heading = "Add A New Goal"
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
-            Row() {
+            Row {
                 OutlinedTextField(label = { Text("Name") }, value = name, onValueChange = {name = it},
                     modifier = Modifier.width(320.dp), placeholder = {
                         Text(text = "Enter the name of your goal", fontSize = 14.sp)
                     })
             }
-            Row() {
+            Row {
                 OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
                     modifier = Modifier
                         .width(320.dp)
@@ -63,7 +62,7 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
                     })
             }
             Spacer(modifier = Modifier.padding(4.dp))
-            Row() {
+            Row {
                 date = DatePickerWidget(dateText = date)
             }
             Spacer(modifier = Modifier.padding(4.dp))
@@ -80,6 +79,7 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
                     description = ""
                     date = ""
                     time = ""
+                    navController.navigate(Screen.GoalsScreen.route)
                 } else{
                     Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()
                 }
