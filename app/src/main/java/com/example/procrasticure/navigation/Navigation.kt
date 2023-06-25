@@ -95,7 +95,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                     navController = navController,
                     goalId = backStackEntry.arguments?.getString(GOAL_ID),
                     goalName = backStackEntry.arguments?.getString(GOAL_NAME),
-                    goalsViewModel = goalsViewModel,
+                    goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository),
                     sessionViewModel = sessionViewModel,
                     subGoalRepository = subGoalRepository,
                     goalPoints = backStackEntry.arguments?.getString(POINTS)
