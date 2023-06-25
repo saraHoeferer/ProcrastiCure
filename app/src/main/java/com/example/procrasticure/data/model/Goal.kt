@@ -12,6 +12,6 @@ data class Goal(
     var UserId: String? = "",
     var Finished: Boolean? = false,
     var Points: Long = 0,
-    var WarningPreference: Long = 0
+    var WarningPreference: Int = 0
 
 )

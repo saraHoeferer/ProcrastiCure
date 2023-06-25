@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
 import com.example.procrasticure.data.model.Goal
-import com.example.procrasticure.data.notifications.FCMMessage
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.viewModels.UserViewModel
@@ -208,7 +207,7 @@ fun FinishedGoalList(goalListState: ArrayList<Goal>) {
                                 )
                             }
                             Text(
-                                text = "Points earned: 200",
+                                text = "Points earned: ${goal.Points + 200}",
                                 fontSize = 12.sp,
                                 textAlign = TextAlign.Center,
                                 color = Color.Gray
