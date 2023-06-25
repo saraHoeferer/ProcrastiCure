@@ -2,6 +2,7 @@ package com.example.procrasticure.screens
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -55,14 +56,20 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                             CustomIcon(
                                 icon = Icons.Outlined.Edit,
                                 description = "Edit Goal",
-                                clickEvent = { navController.navigate(Screen.UpdateGoalScreen.withDetails(name = goal.Name!!, description = goal.Description!!, date = goal.Date!!, time = goal.Time!!, goalID = goal.getId()!!)) })
+                                clickEvent = { navController.navigate(Screen.UpdateGoalScreen
+                                    .withDetails(
+                                        name = goal.Name!!,
+                                        description = goal.Description!!,
+                                        date = goal.Date!!,
+                                        time = goal.Time!!,
+                                        goalID = goal.Id!!)) })
 
                             CustomIcon(
                                 icon = Icons.Default.Delete,
                                 description = "Delete Goal",
                                 clickEvent = {
-                                    Log.d("GOAl ID", goal.getId().toString())
-                                    deleteGoal(courseID = goal.getId(), context = context)
+                                    Log.d("GOAl ID", goal.Id.toString())
+                                    deleteGoal(courseID = goal.Id, context = context)
                                 })
                         }
                     }

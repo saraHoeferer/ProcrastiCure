@@ -62,12 +62,12 @@ fun Navigation(sessionViewModel: BigViewModel){
 
         composable(
             route = Screen.ManageSubGoalsScreen.route,
-            arguments = listOf(navArgument(name = DETAIL_ARGUMENT_KEY) {type = NavType.StringType})
+            arguments = listOf(navArgument(name = GOAL_ID) {type = NavType.StringType})
         ){backStackEntry ->
             ManageSubGoalsScreen(
                 navController = navController,
                 goalRepository = subGoalRepository,
-                goalId = backStackEntry.arguments?.getString(DETAIL_ARGUMENT_KEY)
+                goalID = backStackEntry.arguments?.getString(GOAL_ID)
             )
         }
 
@@ -85,15 +85,16 @@ fun Navigation(sessionViewModel: BigViewModel){
 
         composable(
             Screen.SubGoalsScreen.route,
-            arguments = listOf(navArgument(name = GOAL_ID) {type = NavType.StringType}, navArgument(name= GOAL_NAME) {type = NavType.StringType})
+            arguments = listOf(navArgument(name = GOAL_ID) {type = NavType.StringType}, navArgument(name= GOAL_NAME) {type = NavType.StringType}, navArgument(name= POINTS) {type = NavType.StringType})
         ) { backStackEntry ->
                 SubGoalsScreen(
                     navController = navController,
                     goalId = backStackEntry.arguments?.getString(GOAL_ID),
                     goalName = backStackEntry.arguments?.getString(GOAL_NAME),
-                    goalsViewModel = goalViewModel,
+                    goalsViewModel = goalsViewModel,
                     sessionViewModel = sessionViewModel,
-                    subGoalRepository = subGoalRepository
+                    subGoalRepository = subGoalRepository,
+                    goalPoints = backStackEntry.arguments?.getString(POINTS)
                 )
         }
 
@@ -113,7 +114,30 @@ fun Navigation(sessionViewModel: BigViewModel){
                 name = backStackEntry.arguments?.getString(GOAL_NAME),
                 description = backStackEntry.arguments?.getString(DESCRIPTION),
                 date = backStackEntry.arguments?.getString(DATE),
+                time = backStackEntry.arguments?.getString(TIME)
+            )
+
+        }
+
+        composable(
+            Screen.UpdateSubGoalScreen.route,
+            arguments = listOf(
+                navArgument("goalID") {type = NavType.StringType},
+                navArgument("goalName") {type = NavType.StringType},
+                navArgument("description") {type = NavType.StringType},
+                navArgument("date") {type = NavType.StringType},
+                navArgument("time") {type = NavType.StringType},
+                navArgument("SubGoalID") {type = NavType.StringType}
+            )
+        ) { backStackEntry ->
+            UpdateSubGoalScreen(
+                goalID = backStackEntry.arguments?.getString(GOAL_ID)!!,
+                navController = navController,
+                name = backStackEntry.arguments?.getString(GOAL_NAME),
+                description = backStackEntry.arguments?.getString(DESCRIPTION),
+                date = backStackEntry.arguments?.getString(DATE),
                 time = backStackEntry.arguments?.getString(TIME),
+                subGoalID = backStackEntry.arguments?.getString(SUBGOAL_ID)
             )
 
         }
