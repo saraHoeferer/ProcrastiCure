@@ -1,12 +1,10 @@
 package com.example.procrasticure.viewModels
 
 import android.os.CountDownTimer
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.procrasticure.timer.SingleLiveEvent
 import com.example.procrasticure.timer.formatTime
 import kotlinx.coroutines.launch
@@ -57,7 +55,7 @@ class TimerViewModel(private val input: Long, private val userViewModel: UserVie
         val timeSpent = (input - input* progress.value!!.toFloat())/60000f
         if (timeSpent > 1.0f || progress.value!! < 0.1f){
             println("hier")
-            var collectedPoints: Int
+            val collectedPoints: Int
             if (progress.value!! < 0.1f){
                 collectedPoints = (input/60000L).toFloat().roundToInt() * 100
                 println(collectedPoints)
@@ -74,10 +72,10 @@ class TimerViewModel(private val input: Long, private val userViewModel: UserVie
     private fun startTimer() {
 
         _isPlaying.value = true
-        countDownTimer = object : CountDownTimer(input.toLong(), 1000) {
+        countDownTimer = object : CountDownTimer(input, 1000) {
 
             override fun onTick(millisRemaining: Long) {
-                val progressValue = millisRemaining.toFloat() / input.toLong()
+                val progressValue = millisRemaining.toFloat() / input
                 handleTimerValues(true, millisRemaining.formatTime(), progressValue, false)
                 _celebrate.postValue(false)
             }

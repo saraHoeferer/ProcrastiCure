@@ -61,20 +61,11 @@ fun SubGoalDisplay(subgoal: Goal, content: @Composable () -> Unit = {}) {
             .padding(5.dp)
     ) {
 
-        Row() {
+        Row {
             content()
-            Text(
-                text = subgoal.Name!!,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Left,
-                modifier = Modifier
-                    .padding(horizontal = 15.dp, vertical = 12.dp)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-
         }
         Divider(modifier = Modifier.fillMaxWidth())
-        Row() {
+        Row {
 
 
             Text(

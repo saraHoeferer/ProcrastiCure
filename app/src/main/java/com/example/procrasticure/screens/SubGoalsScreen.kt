@@ -1,5 +1,6 @@
 package com.example.procrasticure.screens
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,7 +35,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?, goalPoints: String?, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, subGoalRepository: SubGoalRepositoryImpl) {
     val subGoalsViewModel = SubGoalsViewModel(goalId!!, subGoalRepository)
-    val subGoalListState by subGoalsViewModel.subGoalsState.collectAsState()
+    val subGoalListState = remember {subGoalsViewModel.subGoals}
+    println(subGoalListState)
     Column {
         GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
         DisplayMainGoal(navController = navController, goalName = "$goalName", goalId= goalId)
@@ -45,6 +47,7 @@ fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: Stri
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun FinishGoal(subGoalListState: ArrayList<Goal>, goalId: String, goalPoints:Long, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, navController: NavController) {
     val context = LocalContext.current
@@ -89,7 +92,7 @@ fun DisplayMainGoal(navController: NavController, goalName: String, goalId: Stri
             .fillMaxWidth()
     )
     {
-        Row() {
+        Row {
             Text(
                 fontWeight = FontWeight.Bold,
                 text = goalName,
@@ -126,7 +129,8 @@ fun SubGoalList(
             val checked = remember { mutableStateOf(subgoal.Finished) }
             SubGoalsDisplay(
                 subgoal = subgoal,
-                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId)) }) {
+                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId)) }
+            ) {
                 Checkbox(
                     checked = checked.value!!,
                     onCheckedChange = {
@@ -156,6 +160,13 @@ fun SubGoalList(
                     ),
                     modifier = Modifier
                         .clip(shape = RoundedCornerShape(100.dp))
+                )
+                Text(
+                    text = subgoal.Name!!,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .padding(horizontal = 0.dp, vertical = 11.dp)
                 )
 
             }

@@ -1,11 +1,10 @@
 package com.example.procrasticure.viewModels
 
 import android.content.Context
-import androidx.compose.runtime.CompositionLocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.procrasticure.data.State
-import com.example.procrasticure.data.repository.UserRespository
+import com.example.procrasticure.data.repository.UserRepository
 import com.google.firebase.auth.AuthResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,14 +13,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class UserViewModel @Inject constructor(private val userRespository: UserRespository) : ViewModel() {
+class UserViewModel @Inject constructor(private val userRepository: UserRepository) : ViewModel() {
 
     private val _uiState = MutableStateFlow(State<AuthResult>())
     val uiState: StateFlow<State<AuthResult>> = _uiState
 
     suspend fun signIn(email: String, password: String, sessionViewModel: BigViewModel) {
         viewModelScope.launch {
-            userRespository.signInUser(email, password, sessionViewModel).onEach { state ->
+            userRepository.signInUser(email, password, sessionViewModel).onEach { state ->
                 _uiState.emit(state)
             }.launchIn(viewModelScope)
         }
@@ -29,7 +28,7 @@ class UserViewModel @Inject constructor(private val userRespository: UserResposi
 
     suspend fun signUp(email: String, password: String, sessionViewModel: BigViewModel) {
         viewModelScope.launch {
-            userRespository.signUpUser(email, password, sessionViewModel).onEach { state ->
+            userRepository.signUpUser(email, password, sessionViewModel).onEach { state ->
                 _uiState.emit(state)
             }.launchIn(viewModelScope)
         }
@@ -37,34 +36,34 @@ class UserViewModel @Inject constructor(private val userRespository: UserResposi
 
     suspend fun delete(sessionViewModel: BigViewModel){
         viewModelScope.launch {
-            userRespository.deleteUser(sessionViewModel = sessionViewModel)
+            userRepository.deleteUser(sessionViewModel = sessionViewModel)
             resetUiState()
         }
     }
 
     suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
         viewModelScope.launch {
-            userRespository.editEmail(email, sessionViewModel, context)
+            userRepository.editEmail(email, sessionViewModel, context)
             resetUiState()
         }
     }
 
     suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
         viewModelScope.launch {
-            userRespository.editPassword(password, sessionViewModel, context)
+            userRepository.editPassword(password, sessionViewModel, context)
             resetUiState()
         }
     }
 
     suspend fun logout(sessionViewModel: BigViewModel){
         viewModelScope.launch {
-            userRespository.logOut(sessionViewModel)
+            userRepository.logOut(sessionViewModel)
             resetUiState()
         }
     }
     suspend fun givePointstoUser(sessionViewModel: BigViewModel, points: Long){
         viewModelScope.launch {
-            userRespository.givePointsToUser(sessionViewModel, points)
+            userRepository.givePointsToUser(sessionViewModel, points)
             resetUiState()
         }
     }

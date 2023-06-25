@@ -2,22 +2,17 @@ package com.example.procrasticure.data.repository
 
 import android.content.Context
 import android.widget.Toast
-import androidx.compose.runtime.CompositionLocalContext
-import androidx.compose.ui.platform.LocalContext
 import com.example.procrasticure.data.State
-import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl(): UserRespository {
+class UserRepositoryImpl: UserRepository {
     override val auth = Firebase.auth
     private val database = FirebaseFirestore.getInstance()
 

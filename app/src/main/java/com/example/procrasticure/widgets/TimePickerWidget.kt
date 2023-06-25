@@ -48,7 +48,7 @@ fun TimePickerWidget(timeText: String): String{
         }, mHour, mMinute, false
     )
 
-    Box() {
+    Box {
 
         // On button click, TimePicker is
         // displayed, user can select a time

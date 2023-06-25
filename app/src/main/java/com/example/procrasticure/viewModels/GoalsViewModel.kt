@@ -25,8 +25,8 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
     init {
         Log.d(TAG, "init is started")
         viewModelScope.launch {
-            getGoals(sessionViewModel)
-            listenToChanges(sessionViewModel)
+                getGoals(sessionViewModel)
+                listenToChanges(sessionViewModel)
         }
     }
 
@@ -34,7 +34,7 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
         _goals.value = goalRepositoryImpl.getGoals(sessionViewModel = sessionViewModel, goalArrayList = goals)
     }
 
-    suspend fun listenToChanges(sessionViewModel: BigViewModel){
+    private suspend fun listenToChanges(sessionViewModel: BigViewModel){
         _goals.value = goalRepositoryImpl.listenToChange(sessionViewModel = sessionViewModel, goalArrayList = goals)
     }
 
@@ -60,5 +60,9 @@ class GoalsViewModel @Inject constructor(private val sessionViewModel: BigViewMo
 
     suspend fun deleteGoal(goalId: String, context: Context){
         goalRepositoryImpl.deleteGoal(goalId = goalId, context)
+    }
+
+    suspend fun modifyGoal(goalId: String, name: String, description: String, date: String, time: String, context: Context){
+        goalRepositoryImpl.modifyGoal(goalId, name, description, date, time, context)
     }
 }

@@ -129,7 +129,7 @@ fun InputFieldWithErrorLabelPassword(
             )
         },
         trailingIcon = {
-            Row() {
+            Row {
                 if(inputState == InputState.INITIAL && input.isNotEmpty()) Icon(
                 modifier = Modifier
                     .clickable {

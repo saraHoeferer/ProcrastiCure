@@ -2,7 +2,6 @@ package com.example.procrasticure.data.repository
 
 import android.content.Context
 import com.example.procrasticure.data.Animals
-import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 

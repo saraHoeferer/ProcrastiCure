@@ -65,7 +65,7 @@ fun DatePickerWidget(dateText: String): String {
             dateText = "$mYear/${if (mMonth < 10){"0"+(mMonth + 1)}else{mMonth + 1}}/${if (mDayOfMonth < 10){"0"+(mDayOfMonth + 1)}else{mDayOfMonth + 1}}"
         }, mYear, mMonth, mDay
     )
-    Box() {
+    Box {
 
 
         // Creating a button that on click displays DatePickerDialog

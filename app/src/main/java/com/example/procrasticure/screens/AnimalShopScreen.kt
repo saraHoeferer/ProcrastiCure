@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun AnimalShopScreen(navController: NavController, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
-    Column() {
+    Column {
         TopMenu(arrowBackClicked = { navController.popBackStack() },
             heading = "My Shop")
         AnimalShop(listOf(
@@ -46,7 +46,6 @@ fun AnimalShopScreen(navController: NavController, animalViewModel: AnimalViewMo
 
 @Composable
 fun AnimalShop(animals: List<Animals>, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
-
     LazyColumn(
         modifier = Modifier
             .padding(20.dp),
@@ -72,15 +71,20 @@ fun AnimalRow(animal: Animals, animalViewModel: AnimalViewModel, sessionViewMode
         Image(
             painter = painterResource(
                 id =
-                    if (animal.url == "chicken") {
+                when (animal.url) {
+                    "chicken" -> {
                         R.drawable.chicken
-                    } else if (animal.url == "pig") {
+                    }
+                    "pig" -> {
                         R.drawable.pig
-                    } else if (animal.url == "cow"){
+                    }
+                    "cow" -> {
                         R.drawable.cow
-                    } else {
+                    }
+                    else -> {
                         R.drawable.sheep
                     }
+                }
             ),
             contentDescription = "...",
             modifier = Modifier.size(150.dp,150.dp)

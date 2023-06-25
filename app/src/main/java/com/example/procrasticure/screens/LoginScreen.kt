@@ -1,7 +1,6 @@
 package com.example.procrasticure.screens
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -13,16 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.procrasticure.R
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.UserViewModel
 import com.example.procrasticure.widgets.InputFieldWithErrorLabelEmail
@@ -34,7 +32,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun Login(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel){
 
-    Column() {
+    Column {
         LoginDetails(navController, userViewModel, sessionViewModel)
     }
 
@@ -82,7 +80,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
 
     val coroutineScope = rememberCoroutineScope()
     val boxSize = with(LocalDensity.current) { 250.dp.toPx() }
-    Card() {
+    Card {
 
         Column(
             modifier = Modifier
@@ -114,7 +112,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
             Spacer(modifier = Modifier.size(50.dp))
 
             AnimatedVisibility(visible = login) {
-                Column (modifier = Modifier.padding(20.dp),){
+                Column(modifier = Modifier.padding(20.dp)){
                     CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),
@@ -179,7 +177,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
             }
 
             AnimatedVisibility(visible = signup) {
-                Column(modifier = Modifier.padding(20.dp),) {
+                Column(modifier = Modifier.padding(20.dp)) {
                     CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),

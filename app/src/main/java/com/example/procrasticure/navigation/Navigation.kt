@@ -22,6 +22,7 @@ fun Navigation(sessionViewModel: BigViewModel){
     val navController = rememberNavController()
     val animalRepository = AnimalRepositoryImpl()
     val animalViewModel = AnimalViewModel(sessionViewModel, animalRepository)
+    val goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
 
     NavHost(navController = navController, startDestination = Screen.Login.route){
         composable(route = Screen.GoalsScreen.route){
@@ -29,7 +30,7 @@ fun Navigation(sessionViewModel: BigViewModel){
                 navController = navController,
                 userViewModel = userViewModel,
                 sessionViewModel = sessionViewModel,
-                goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
+                goalsViewModel = goalsViewModel
             )
         }
 
@@ -75,14 +76,14 @@ fun Navigation(sessionViewModel: BigViewModel){
                 Login(
                     navController = navController,
                     userViewModel = userViewModel,
-                    sessionViewModel = sessionViewModel
+                    sessionViewModel = sessionViewModel,
                 )
             } else {
                 GoalsScreen(
                     navController = navController,
                     userViewModel = userViewModel,
                     sessionViewModel = sessionViewModel,
-                    goalsViewModel = GoalsViewModel(sessionViewModel, goalRepository)
+                    goalsViewModel = goalsViewModel
                 )
             }
         }
@@ -118,7 +119,8 @@ fun Navigation(sessionViewModel: BigViewModel){
                 name = backStackEntry.arguments?.getString(GOAL_NAME),
                 description = backStackEntry.arguments?.getString(DESCRIPTION),
                 date = backStackEntry.arguments?.getString(DATE),
-                time = backStackEntry.arguments?.getString(TIME)
+                time = backStackEntry.arguments?.getString(TIME),
+                goalsViewModel = goalsViewModel
             )
 
         }
@@ -141,7 +143,8 @@ fun Navigation(sessionViewModel: BigViewModel){
                 description = backStackEntry.arguments?.getString(DESCRIPTION),
                 date = backStackEntry.arguments?.getString(DATE),
                 time = backStackEntry.arguments?.getString(TIME),
-                subGoalID = backStackEntry.arguments?.getString(SUBGOAL_ID)
+                subGoalID = backStackEntry.arguments?.getString(SUBGOAL_ID),
+                subGoalsViewModel = SubGoalsViewModel(backStackEntry.arguments?.getString(GOAL_ID)!!, subGoalRepository)
             )
 
         }

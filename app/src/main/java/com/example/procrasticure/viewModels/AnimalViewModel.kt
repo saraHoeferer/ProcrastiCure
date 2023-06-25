@@ -30,7 +30,7 @@ class AnimalViewModel  @Inject constructor(private val sessionViewModel: BigView
         _animals.value = animalRepositoryImpl.getUserAnimals(sessionViewModel = sessionViewModel, animalList = animals)
     }
 
-    suspend fun listenToChanges(sessionViewModel: BigViewModel){
+    private suspend fun listenToChanges(sessionViewModel: BigViewModel){
         _animals.value = animalRepositoryImpl.listenToChanges(sessionViewModel = sessionViewModel, animalList = animals)
     }
 

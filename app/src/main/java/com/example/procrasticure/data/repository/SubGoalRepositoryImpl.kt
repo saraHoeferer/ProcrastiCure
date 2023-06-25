@@ -12,7 +12,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
     override val database = FirebaseFirestore.getInstance()
 
     override suspend fun getSubGoals(goalId: String, subGoalList: ArrayList<Goal>): ArrayList<Goal> {
-        var docRef = database.collection("Goals/$goalId/SubGoals")
+        val docRef = database.collection("Goals/$goalId/SubGoals")
         docRef.get()
             .addOnSuccessListener { queryDocumentSnapshot ->
                 if (!queryDocumentSnapshot.isEmpty) {
@@ -102,4 +102,39 @@ class SubGoalRepositoryImpl: SubGoalRepository {
             .addOnFailureListener { println("Failure points subgoal") }
         return goalPoints - 50
     }
+
+    override suspend fun modifySubGoal(
+        goalId: String,
+        subGoalId: String,
+        name: String,
+        description: String,
+        date: String,
+        time: String,
+        context: Context
+    ) {
+        database.collection("Goals")
+            .document(goalId)
+            .collection("SubGoals")
+            .document(subGoalId)
+            .update("name", name, "description", description, "time", time, "date", date)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Goal Updated", Toast.LENGTH_SHORT).show()
+
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Couldn't modify SubGoal", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    override suspend fun deleteSubGoal(goalId: String, subGoalId: String, context: Context) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("Goals")
+            .document(goalId)
+            .collection("SubGoals")
+            .document(subGoalId)
+            .delete()
+            .addOnSuccessListener { Toast.makeText(context, "SubGoal deleted", Toast.LENGTH_SHORT).show() }
+            .addOnFailureListener { Toast.makeText(context, "Failure while deleting SubGoal", Toast.LENGTH_SHORT).show() }
+    }
+
 }

@@ -22,4 +22,6 @@ interface GoalRepository {
     suspend fun sortByCriteria(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>, criteria: String, order: Query.Direction): ArrayList<Goal>
 
     suspend fun deleteGoal(goalId: String, context: Context)
+
+    suspend fun modifyGoal(goalId: String, name: String, description: String, date: String, time: String, context: Context)
 }

@@ -13,13 +13,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -56,7 +54,7 @@ fun GoalDisplay(goal: Goal, content: @Composable () -> Unit = {}) {
             .padding(5.dp)
     ) {
 
-        Row() {
+        Row {
             Text(
                 text = goal.Name!!,
                 fontSize = 20.sp,
@@ -69,7 +67,7 @@ fun GoalDisplay(goal: Goal, content: @Composable () -> Unit = {}) {
             content()
         }
         Divider(modifier = Modifier.fillMaxWidth())
-        Row() {
+        Row {
 
 
             Text(

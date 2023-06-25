@@ -1,29 +1,28 @@
 package com.example.procrasticure.screens
 
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
-import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.data.repository.GoalRepositoryImpl
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
-import com.example.procrasticure.widgets.*
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.procrasticure.widgets.CustomIcon
+import com.example.procrasticure.widgets.GoalsDisplay
+import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
-import java.util.*
 
 @Composable
 fun ManageGoalsScreen(navController: NavController, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
-    var goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
+    val goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
 
     Column {
         TopMenu(heading = "Editing Goals", arrowBackClicked = { navController.popBackStack() })
@@ -62,7 +61,6 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                                         goal.Id?.let { it2 -> goalsViewModel.deleteGoal(goalId = it2, context) }
                                         navController.navigate(Screen.GoalsScreen.route)
                                     }
-                                    deleteGoal(courseID = goal.Id, context = context)
                                 })
                         }
                     }
@@ -70,44 +68,6 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
             }
         }
     }
-}
-
-
-//deletes Goals without deleting the SubGoals
-private fun deleteGoal(courseID: String?, context: Context) {
-
-    val db = FirebaseFirestore.getInstance();
-
-    deleteSubGoals(courseID)
-
-    db.collection("Goals")
-        .document(courseID.toString())
-        .delete()
-        .addOnSuccessListener { Toast.makeText(context, "Goal was deleted successfully..", Toast.LENGTH_SHORT).show() }
-        .addOnFailureListener { Toast.makeText(context, "Fail to delete goal..", Toast.LENGTH_SHORT).show() }
-
-}
-
-private fun updateDataToFirebase(
-    id: String?,
-    date: String?,
-    description: String?,
-    name: String?,
-    time: String?,
-    finished: Boolean,
-    context: Context
-) {
-    val updateGoal = Goal(Id = id, Date = date, Name = name, Description = description, Time = time, Finished = finished)
-
-    val db = FirebaseFirestore.getInstance();
-    db.collection("Goals").document(id.toString()).set(updateGoal)
-        .addOnSuccessListener {
-            Toast.makeText(context, "Goal is updated successfully..", Toast.LENGTH_SHORT).show()
-
-        }.addOnFailureListener {
-            Toast.makeText(context, "Fail to update goal : " + it.message, Toast.LENGTH_SHORT)
-                .show()
-        }
 }
 
 

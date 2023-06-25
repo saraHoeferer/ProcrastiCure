@@ -9,7 +9,7 @@ import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class AnimalRepositoryImpl(): AnimalRepository {
+class AnimalRepositoryImpl: AnimalRepository {
     override val database = FirebaseFirestore.getInstance()
 
     override suspend fun buyAnimal(sessionViewModel: BigViewModel, animal: Animals, context: Context) {

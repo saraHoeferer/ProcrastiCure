@@ -1,33 +1,31 @@
 package com.example.procrasticure.screens
 
-import android.content.ContentValues
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.*
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.procrasticure.data.repository.SubGoalRepository
 import com.example.procrasticure.data.repository.SubGoalRepositoryImpl
-import com.example.procrasticure.viewModels.BigViewModel
-import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.viewModels.SubGoalsViewModel
 import com.example.procrasticure.widgets.CustomIcon
 import com.example.procrasticure.widgets.SubGoalsDisplay
 import com.example.procrasticure.widgets.TopMenu
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @Composable
 fun ManageSubGoalsScreen(navController: NavController, goalID: String?, goalRepository: SubGoalRepositoryImpl) {
@@ -42,7 +40,9 @@ fun ManageSubGoalsScreen(navController: NavController, goalID: String?, goalRepo
 @Composable
 fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String, navController: NavController) {
     val goalListState = remember { subGoalsViewModel.subGoals }
-    LazyColumn() {
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    LazyColumn {
         items(items = goalListState) { subgoal ->
             SubGoalsDisplay(subgoal = subgoal){
                 Row {
@@ -75,40 +75,16 @@ fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String,
                         icon = Icons.Default.Delete,
                         description = "Delete a specific SubGoal",
                         size = 30,
-                        clickEvent = { deleteOneSubGoals(goalID = goalID, SubGoalID = subgoal.Id)}
+                        clickEvent = {
+                            coroutineScope.launch {
+                                subGoalsViewModel.deleteSubGoal(goalID, subgoal.Id!!, context)
+                                navController.popBackStack()
+                                navController.navigate(Screen.GoalsScreen.route)
+                            }
+                        }
                     )
                 }
             }
         }
     }
-}
-
-fun deleteSubGoals(courseID: String?){
-
-    val db = FirebaseFirestore.getInstance()
-
-    db.collection("Goals")
-        .document(courseID.toString())
-        .collection("SubGoals")
-        .get()
-        .addOnSuccessListener { docs ->
-            for (document in docs){
-                Log.d("SUBGOAL ID", document.id)
-                deleteOneSubGoals(SubGoalID = document.id, goalID = courseID)
-            }
-        }
-        .addOnFailureListener{ e -> Log.d(ContentValues.TAG, "Error getting documents: ", e)}
-
-}
-
-fun deleteOneSubGoals(SubGoalID: String?, goalID: String?){
-
-    val db = FirebaseFirestore.getInstance()
-    db.collection("Goals")
-        .document(goalID.toString())
-        .collection("SubGoals")
-        .document(SubGoalID.toString())
-        .delete()
-        .addOnSuccessListener { Log.d("TAG", "SubGoal was deleted successfully!") }
-        .addOnFailureListener { e -> Log.d(ContentValues.TAG, "Error deleting subgoals: ", e) }
 }

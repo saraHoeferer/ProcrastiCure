@@ -30,6 +30,7 @@ import com.example.procrasticure.widgets.GoalsDisplay
 import com.example.procrasticure.widgets.TopHomeMenu
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun GoalsScreen(
     navController: NavController,
@@ -54,9 +55,9 @@ fun GoalsScreen(
     }
 
     var option by remember {
-       mutableStateOf(3)
+        mutableStateOf(4)
     }
-
+    if (option == 4){coroutineScope.launch{goalsViewModel.getGoals(sessionViewModel)}}
     val goalListState by goalsViewModel.goalsState.collectAsState()
     Column {
         TopHomeMenu(

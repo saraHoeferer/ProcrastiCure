@@ -1,7 +1,5 @@
 package com.example.procrasticure.screens
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -16,16 +14,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
-import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
 @Composable
-fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?,navController: NavController){
+fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?,navController: NavController, goalsViewModel: GoalsViewModel){
 
     val context = LocalContext.current
-    val db = FirebaseFirestore.getInstance()
 
 
     var name by remember { mutableStateOf(name.toString()) }
@@ -33,10 +31,7 @@ fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: 
     var date by remember{ mutableStateOf(date.toString()) }
     var time by remember{ mutableStateOf(time.toString()) }
 
-    Log.d("NAME", name)
-    Log.d("DESCRIPTION", description)
-    Log.d("DATE", date)
-    Log.d("TIME", time)
+    val coroutineScope = rememberCoroutineScope()
 
     Card(
         Modifier
@@ -52,50 +47,34 @@ fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: 
                 heading = "Update A Goal"
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
-            Row() {
-                name.let {
-                    OutlinedTextField(label = { Text("Name") }, value = it, onValueChange = {name = it},
-                        modifier = Modifier.width(320.dp), placeholder = {
-                            Text(text = "Change the name of your goal", fontSize = 14.sp)
-                        })
-                }
+            Row {
+                OutlinedTextField(label = { Text("Name") }, value = name, onValueChange = {name = it},
+                    modifier = Modifier.width(320.dp), placeholder = {
+                        Text(text = "Change the name of your goal", fontSize = 14.sp)
+                    })
             }
-            Row() {
-                description.let {
-                    OutlinedTextField(label = { Text("Description (Optional)") }, value = it, onValueChange = {description = it},
-                        modifier = Modifier
-                            .width(320.dp)
-                            .defaultMinSize(minHeight = 120.dp), placeholder = {
-                            Text(text = "Change the description for your goal", fontSize = 14.sp)
-                        })
-                }
+            Row {
+                OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
+                    modifier = Modifier
+                        .width(320.dp)
+                        .defaultMinSize(minHeight = 120.dp), placeholder = {
+                        Text(text = "Change the description for your goal", fontSize = 14.sp)
+                    })
             }
             Spacer(modifier = Modifier.padding(4.dp))
-            Row() {
-                date = date.let { DatePickerWidget(dateText = it) }.toString()
+            Row {
+                date = DatePickerWidget(dateText = date)
             }
             Spacer(modifier = Modifier.padding(4.dp))
 
             Row {
-                time = time.let { TimePickerWidget(timeText = it) }.toString()
+                time = TimePickerWidget(timeText = time)
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
-
-                db.collection("Goals")
-                    .document(goalID)
-                    .update("name", name, "description", description, "time", time, "name", name)
-                    .addOnSuccessListener {
-                        name = ""
-                        description = ""
-                        date = ""
-                        time = ""
-                        Toast.makeText(context, "Goal Updated", Toast.LENGTH_SHORT).show()
-
-                    }
-                    .addOnFailureListener {
-                        println("Failure adding goal")
-                    }
+              coroutineScope.launch { goalsViewModel.modifyGoal(goalID, name, description, date, time, context) }
+                navController.popBackStack(Screen.GoalsScreen.route,  false)
+                navController.navigate(Screen.ManageGoalsScreen.route)
             }) {
                 Text(text = "Submit", fontSize = 18.sp)
             }
@@ -103,92 +82,6 @@ fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: 
         }
     }
 }
-
-@Composable
-fun UpdateSubGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?,navController: NavController, subGoalID: String?){
-
-    val context = LocalContext.current
-    val db = FirebaseFirestore.getInstance()
-
-
-    var name by remember { mutableStateOf(name.toString()) }
-    var description by remember{ mutableStateOf(description.toString()) }
-    var date by remember{ mutableStateOf(date.toString()) }
-    var time by remember{ mutableStateOf(time.toString()) }
-
-    Log.d("NAME", name)
-    Log.d("DESCRIPTION", description)
-    Log.d("DATE", date)
-    Log.d("TIME", time)
-
-    Card(
-        Modifier
-            .background(color = Color.White)
-            .fillMaxSize()
-    ) {
-
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            TopMenu(
-                arrowBackClicked = {
-                    navController.popBackStack()
-                },
-                heading = "Update A Goal"
-            )
-            Spacer(modifier = Modifier.padding(vertical = 10.dp))
-            Row() {
-                name.let {
-                    OutlinedTextField(label = { Text("Name") }, value = it, onValueChange = {name = it},
-                        modifier = Modifier.width(320.dp), placeholder = {
-                            Text(text = "Change the name of your goal", fontSize = 14.sp)
-                        })
-                }
-            }
-            Row() {
-                description.let {
-                    OutlinedTextField(label = { Text("Description (Optional)") }, value = it, onValueChange = {description = it},
-                        modifier = Modifier
-                            .width(320.dp)
-                            .defaultMinSize(minHeight = 120.dp), placeholder = {
-                            Text(text = "Change the description for your goal", fontSize = 14.sp)
-                        })
-                }
-            }
-            Spacer(modifier = Modifier.padding(4.dp))
-            Row() {
-                date = date.let { DatePickerWidget(dateText = it) }.toString()
-            }
-            Spacer(modifier = Modifier.padding(4.dp))
-
-            Row {
-                time = time.let { TimePickerWidget(timeText = it) }.toString()
-            }
-            Spacer(modifier = Modifier.padding(10.dp))
-            Button(onClick = {
-
-                db.collection("Goals")
-                    .document(goalID)
-                    .collection("SubGoals")
-                    .document(subGoalID.toString())
-                    .update("name", name, "description", description, "time", time, "name", name)
-                    .addOnSuccessListener {
-                        name = ""
-                        description = ""
-                        date = ""
-                        time = ""
-                        Toast.makeText(context, "Goal Updated", Toast.LENGTH_SHORT).show()
-
-                    }
-                    .addOnFailureListener {
-                        println("Failure adding goal")
-                    }
-            }) {
-                Text(text = "Submit", fontSize = 18.sp)
-            }
-
-        }
-    }
-}
-
 
 
 

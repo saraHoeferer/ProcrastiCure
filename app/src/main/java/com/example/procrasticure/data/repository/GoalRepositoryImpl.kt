@@ -148,4 +148,23 @@ class GoalRepositoryImpl: GoalRepository {
             Toast.makeText(context, "Fail to delete goal", Toast.LENGTH_SHORT).show()
         }
     }
+
+    override suspend fun modifyGoal(
+        goalId: String,
+        name: String,
+        description: String,
+        date: String,
+        time: String,
+        context: Context
+    ) {
+        database.collection("Goals")
+            .document(goalId)
+            .update("name", name, "description", description, "date", date, "time", time)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Goal Updated", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "Couldn't update Goal", Toast.LENGTH_SHORT).show()
+            }
+    }
 }

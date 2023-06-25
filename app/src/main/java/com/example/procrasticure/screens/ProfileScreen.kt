@@ -1,12 +1,14 @@
 package com.example.procrasticure.screens
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.Card
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +31,7 @@ import kotlinx.coroutines.launch
 // show user profile
 @Composable
 fun ProfileScreen(navController: NavController, sessionViewModel: BigViewModel, userViewModel: UserViewModel){
-    Column() {
+    Column {
         TopMenu(arrowBackClicked = { navController.popBackStack() },
             heading = "My Profile")
         ProfileDetails(sessionViewModel = sessionViewModel, userViewModel = userViewModel, navController)
@@ -50,7 +52,6 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
         }
         var password by remember { mutableStateOf("")}
         val coroutineScope = rememberCoroutineScope()
-        var successEmail = 0
 
         Column(
             modifier = Modifier
@@ -80,7 +81,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
 
             Button(onClick = {
                 if (!emailshow) {
-                    emailshow = !emailshow
+                    emailshow = true
                 } else {
                     if (email.isNotEmpty()){
                         coroutineScope.launch {
@@ -101,7 +102,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
             Spacer(modifier = Modifier.size(25.dp))
 
             Button(onClick = { if (!passwordShow) {
-                passwordShow = !passwordShow
+                passwordShow = true
             } else {
                 if (password.isNotEmpty()){
                     coroutineScope.launch { userViewModel.editPassword(password, sessionViewModel, context) }

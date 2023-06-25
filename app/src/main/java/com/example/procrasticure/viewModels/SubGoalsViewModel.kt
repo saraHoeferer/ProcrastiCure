@@ -1,7 +1,9 @@
 package com.example.procrasticure.viewModels
 
+import android.content.ClipDescription
 import android.content.ContentValues
 import android.content.Context
+import android.content.LocusId
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,8 +20,8 @@ import javax.inject.Inject
 class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepository: SubGoalRepositoryImpl) : ViewModel() {
     private val id = id
 
-    private var _subGoals = MutableStateFlow(ArrayList<Goal>())
-    val subGoalsState: StateFlow<ArrayList<Goal>> = _subGoals.asStateFlow()
+    private var _subGoals : MutableLiveData<ArrayList<Goal>> = MutableLiveData<ArrayList<Goal>>()
+    //val subGoalsState: StateFlow<ArrayList<Goal>> = _subGoals.asStateFlow()
 
     val subGoals: ArrayList<Goal> = ArrayList()
 
@@ -30,7 +32,7 @@ class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepos
             listenToChanges()
         }
     }
-    private suspend fun getSubGoals(){
+    suspend fun getSubGoals(){
         _subGoals.value = subGoalsRepository.getSubGoals(id, subGoals)
     }
     private suspend fun listenToChanges(){
@@ -47,6 +49,14 @@ class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepos
 
     suspend fun uncheckSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long{
         return subGoalsRepository.uncheckSubGoal(goalId = goalId, subGoalId = subGoalId, goalPoints = goalPoints)
+    }
+
+    suspend fun modifySubGoal(goalId: String, subGoalId: String, name: String, description: String, date: String, time: String, context: Context){
+        subGoalsRepository.modifySubGoal(goalId, subGoalId, name, description, date, time, context)
+    }
+
+    suspend fun deleteSubGoal(goalId: String, subGoalId: String, context: Context){
+        subGoalsRepository.deleteSubGoal(goalId, subGoalId, context)
     }
 
 
