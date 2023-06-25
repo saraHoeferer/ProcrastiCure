@@ -11,7 +11,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -19,6 +21,7 @@ import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.widgets.DatePickerWidget
+import com.example.procrasticure.widgets.RadioButtonGroup
 import com.example.procrasticure.widgets.TimePickerWidget
 import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
@@ -32,6 +35,8 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
     var description by remember{ mutableStateOf("") }
     var date by remember{ mutableStateOf("") }
     var time by remember{ mutableStateOf("") }
+    var warningPreference by remember { mutableStateOf(0) }
+
 
     Card(
         Modifier
@@ -71,14 +76,30 @@ fun AddGoalScreen(navController: NavController, sessionViewModel: BigViewModel, 
                 time = TimePickerWidget(timeText = time)
             }
             Spacer(modifier = Modifier.padding(10.dp))
+            Row(modifier = Modifier.align(Alignment.Start)){
+                Text(text ="Warn me before deadline (optional):", modifier = Modifier.padding(horizontal=50.dp))
+
+            }
+            Row{
+
+                RadioButtonGroup(
+                    options = listOf("No Warning", "1 Week", "5 Days", "2 Days"),
+                    selectedIndex = warningPreference,
+                    onSelectedIndexChanged = { warningPreference = it }
+                )
+
+            }
+            Spacer(modifier = Modifier.padding(5.dp))
+
             Button(onClick = {
                 if(name.isNotEmpty() && date.isNotEmpty()){
-                    val goal = Goal(Name=name, Description = description, Date = date, Time = time, UserId = sessionViewModel.user.getId())
+                    val goal = Goal(Name=name, Description = description, Date = date, Time = time, UserId = sessionViewModel.user.getId(), WarningPreference = warningPreference)
                     coroutineScope.launch { goalsViewModel.addGoal(goal, context) }
                     name = ""
                     description = ""
                     date = ""
                     time = ""
+                    warningPreference = 0
                     navController.navigate(Screen.GoalsScreen.route)
                 } else{
                     Toast.makeText(context, "Please insert values first", Toast.LENGTH_SHORT).show()

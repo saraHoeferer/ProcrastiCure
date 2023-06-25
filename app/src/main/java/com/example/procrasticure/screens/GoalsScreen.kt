@@ -1,6 +1,7 @@
 package com.example.procrasticure.screens
 
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.procrasticure.R
 import com.example.procrasticure.data.model.Goal
+import com.example.procrasticure.data.notifications.FCMMessage
 import com.example.procrasticure.viewModels.BigViewModel
 import com.example.procrasticure.viewModels.GoalsViewModel
 import com.example.procrasticure.viewModels.UserViewModel
@@ -55,7 +57,7 @@ fun GoalsScreen(
     var option by remember {
        mutableStateOf(3)
     }
-    
+
     val goalListState by goalsViewModel.goalsState.collectAsState()
     Column {
         TopHomeMenu(
