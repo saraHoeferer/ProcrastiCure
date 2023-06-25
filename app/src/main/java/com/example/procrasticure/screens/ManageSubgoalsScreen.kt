@@ -22,17 +22,20 @@ import com.example.procrasticure.widgets.SubGoalsDisplay
 import com.example.procrasticure.widgets.TopMenu
 
 @Composable
-fun ManageSubGoalsScreen(navController: NavController) {
+fun ManageSubGoalsScreen(navController: NavController, goalID: String) {
     val subGoalsViewModel: SubGoalsViewModel = viewModel()
 
     Column {
         TopMenu(heading = "Editing Subgoals", arrowBackClicked = { navController.popBackStack() })
-        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel)
+        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel, goalID= goalID)
     }
 }
 
 @Composable
-fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel) {
+fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String) {
+
+    var subGoalListState = remember {subGoalsViewModel.subGoals}
+
     LazyColumn() {
         items(items = subGoalsViewModel.subGoals) { subgoal ->
             SubGoalsDisplay(subgoal = subgoal){
@@ -48,15 +51,47 @@ fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel) {
                     CustomIcon(
                         icon = Icons.Outlined.Edit,
                         description = "Edit a specific SubGoal",
-                        size = 30
+                        size = 30,
+                        clickEvent = { }
                     )
                     CustomIcon(
                         icon = Icons.Default.Delete,
                         description = "Delete a specific SubGoal",
-                        size = 30
+                        size = 30,
+                        clickEvent = { deleteOneSubGoals(goalID = goalID, id = subgoal.getId())}
                     )
                 }
             }
         }
     }
+}
+
+fun deleteSubGoals(courseID: String?){
+
+    val db = FirebaseFirestore.getInstance()
+
+    db.collection("Goals")
+        .document(courseID.toString())
+        .collection("SubGoals")
+        .get()
+        .addOnSuccessListener { docs ->
+            for (document in docs){
+                Log.d("SUBGOAL ID", document.id)
+                deleteOneSubGoals(document.id, courseID)
+            }
+        }
+        .addOnFailureListener{ e -> Log.d(ContentValues.TAG, "Error getting documents: ", e)}
+
+}
+
+fun deleteOneSubGoals(id: String?, goalID: String?){
+
+    val db = FirebaseFirestore.getInstance()
+    db.collection("Goals")
+        .document(goalID.toString())
+        .collection("SubGoals")
+        .document(id.toString())
+        .delete()
+        .addOnSuccessListener { Log.d("TAG", "SubGoal was deleted successfully!") }
+        .addOnFailureListener { e -> Log.d(ContentValues.TAG, "Error deleting subgoals: ", e) }
 }

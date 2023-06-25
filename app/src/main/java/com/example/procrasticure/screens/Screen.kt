@@ -1,29 +1,31 @@
 package com.example.procrasticure.screens
 
-const val DETAIL_ARGUMENT_KEY = "goalId"
-const val ARGUMENT_KEY_2 = "goalName"
+const val GOAL_ID = "goalID"
+const val GOAL_NAME = "goalName"
 
 const val DESCRIPTION = "description"
 const val DATE = "date"
 const val TIME= "time"
+const val FINISHED= "finished"
 
 sealed class Screen(val route: String) {
     object GoalsScreen : Screen("main")
     object ProfileScreen : Screen("profile")
 
-    object SubGoalsScreen : Screen("detail/{$DETAIL_ARGUMENT_KEY}/{$ARGUMENT_KEY_2}") {
+    object SubGoalsScreen : Screen("detail/{$GOAL_ID}/{$GOAL_NAME}") {
         fun withIdandName(id: String, name: String): String {
-            return this.route.replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id).replace(oldValue = "{$ARGUMENT_KEY_2}", newValue = name)
+            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id).replace(oldValue = "{$GOAL_NAME}", newValue = name)
         }
 
     }
 
     object TimerScreen : Screen("timer")
 
-    object UpdateGoalScreen : Screen("updateGoalScreen/{$ARGUMENT_KEY_2}/{$DESCRIPTION}/{$DATE}/{$TIME}"){
-        fun withDetails(name: String, description: String, date: String, time: String): String {
+    object UpdateGoalScreen : Screen("updateGoalScreen/?goalID={$GOAL_ID}/?goalName={$GOAL_NAME}/?description={$DESCRIPTION}/?date={$DATE}/?time={$TIME}"){
+        fun withDetails(goalID: String, name: String, description: String, date: String, time: String): String {
             return this.route
-                .replace(oldValue =  "{$ARGUMENT_KEY_2}", newValue = name)
+                .replace(oldValue =  "{$GOAL_ID}", newValue = goalID)
+                .replace(oldValue =  "{$GOAL_NAME}", newValue = name)
                 .replace(oldValue = "{$DESCRIPTION}", newValue = description)
                 .replace(oldValue = "{$DATE}", newValue = date)
                 .replace(oldValue = "{$TIME}", newValue = time)
@@ -32,15 +34,19 @@ sealed class Screen(val route: String) {
 
     object AddGoalScreen : Screen("addGoal")
 
-    object AddSubGoalScreen : Screen("addSubGoal/{$DETAIL_ARGUMENT_KEY}") {
+    object AddSubGoalScreen : Screen("addSubGoal/{$GOAL_ID}") {
         fun withGoalId(id: String): String{
-            return this.route.replace(oldValue = "{$DETAIL_ARGUMENT_KEY}", newValue = id)
+            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id)
         }
     }
 
     object ManageGoalsScreen : Screen("manageGoals")
 
-    object ManageSubGoalsScreen : Screen("manageSubGoals")
+    object ManageSubGoalsScreen : Screen("manageSubGoals/{$GOAL_ID}") {
+        fun withGoalID(id : String): String{
+            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id)
+        }
+    }
 
     object Login : Screen("Login")
 

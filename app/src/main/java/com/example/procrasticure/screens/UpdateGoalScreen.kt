@@ -1,5 +1,6 @@
 package com.example.procrasticure.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,7 +24,7 @@ import com.example.procrasticure.widgets.TopMenu
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun UpdateGoalScreen(name: String?, description: String?, date: String?, time: String?, navController: NavController){
+fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?, navController: NavController, finished: Boolean){
 
     val context = LocalContext.current
     val db = FirebaseFirestore.getInstance()
@@ -34,10 +35,16 @@ fun UpdateGoalScreen(name: String?, description: String?, date: String?, time: S
     val viewModel: MoviesViewModel = viewModel(factory = factory)
      */
 
+
     var name by remember { mutableStateOf(name.toString()) }
     var description by remember{ mutableStateOf(description.toString()) }
     var date by remember{ mutableStateOf(date.toString()) }
     var time by remember{ mutableStateOf(time.toString()) }
+
+    Log.d("NAME", name)
+    Log.d("DESCRIPTION", description)
+    Log.d("DATE", date)
+    Log.d("TIME", time)
 
     Card(
         Modifier
@@ -54,7 +61,7 @@ fun UpdateGoalScreen(name: String?, description: String?, date: String?, time: S
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Row() {
-                name?.let {
+                name.let {
                     OutlinedTextField(label = { Text("Name") }, value = it, onValueChange = {name = it},
                         modifier = Modifier.width(320.dp), placeholder = {
                             Text(text = "Change the name of your goal", fontSize = 14.sp)
@@ -62,7 +69,7 @@ fun UpdateGoalScreen(name: String?, description: String?, date: String?, time: S
                 }
             }
             Row() {
-                description?.let {
+                description.let {
                     OutlinedTextField(label = { Text("Description (Optional)") }, value = it, onValueChange = {description = it},
                         modifier = Modifier
                             .width(320.dp)
@@ -82,14 +89,26 @@ fun UpdateGoalScreen(name: String?, description: String?, date: String?, time: S
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
-                val goal = Goal(Name=name, Description = description, Date = date, Time = time)
+
+                val updatedGoal = hashMapOf(
+                    "name" to name,
+                    "description" to description,
+                    "date" to date,
+                    "time" to time,
+                    "finished" to "false",
+                    "id" to "",
+                    "points" to "",
+                    "userId" to "OTD8PUe37SZ4F4FHblfdVDYZyqA3"
+                )
+
                 db.collection("Goals")
-                    .add(goal)
+                    .document(goalID)
+                    .set(updatedGoal)
                     .addOnSuccessListener {
-                        name = ""
+                        /*name = ""
                         description = ""
                         date = ""
-                        time = ""
+                        time = ""*/
                         Toast.makeText(context, "Goal Updated", Toast.LENGTH_SHORT).show()
 
                     }

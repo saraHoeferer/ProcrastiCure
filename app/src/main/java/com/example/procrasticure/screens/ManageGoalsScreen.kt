@@ -55,12 +55,15 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                             CustomIcon(
                                 icon = Icons.Outlined.Edit,
                                 description = "Edit Goal",
-                                clickEvent = { navController.navigate(Screen.UpdateGoalScreen.route) })
+                                clickEvent = { navController.navigate(Screen.UpdateGoalScreen.withDetails(name = goal.Name!!, description = goal.Description!!, date = goal.Date!!, time = goal.Time!!, goalID = goal.getId()!!)) })
 
                             CustomIcon(
                                 icon = Icons.Default.Delete,
                                 description = "Delete Goal",
-                                clickEvent = { deleteDataFromFirebase(courseID = goal.getId(), context = context) })
+                                clickEvent = {
+                                    Log.d("GOAl ID", goal.getId().toString())
+                                    deleteGoal(courseID = goal.getId(), context = context)
+                                })
                         }
                     }
                 }
@@ -70,16 +73,18 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
 }
 
 
-
-private fun deleteDataFromFirebase(courseID: String?, context: Context) {
+//deletes Goals without deleting the SubGoals
+private fun deleteGoal(courseID: String?, context: Context) {
 
     val db = FirebaseFirestore.getInstance();
 
-    db.collection("Goals").document(courseID.toString()).delete().addOnSuccessListener {
-        Toast.makeText(context, "Goal was deleted successfully..", Toast.LENGTH_SHORT).show()
-    }.addOnFailureListener {
-        Toast.makeText(context, "Fail to delete goal..", Toast.LENGTH_SHORT).show()
-    }
+    deleteSubGoals(courseID)
+
+    db.collection("Goals")
+        .document(courseID.toString())
+        .delete()
+        .addOnSuccessListener { Toast.makeText(context, "Goal was deleted successfully..", Toast.LENGTH_SHORT).show() }
+        .addOnFailureListener { Toast.makeText(context, "Fail to delete goal..", Toast.LENGTH_SHORT).show() }
 
 }
 
@@ -89,9 +94,10 @@ private fun updateDataToFirebase(
     description: String?,
     name: String?,
     time: String?,
+    finished: Boolean,
     context: Context
 ) {
-    val updateGoal = Goal(Id = id, Date = date, Name = name, Description = description, Time = time)
+    val updateGoal = Goal(Id = id, Date = date, Name = name, Description = description, Time = time, Finished = finished)
 
     val db = FirebaseFirestore.getInstance();
     db.collection("Goals").document(id.toString()).set(updateGoal)

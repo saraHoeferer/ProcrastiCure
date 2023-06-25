@@ -125,7 +125,7 @@ fun SubGoalList(
             var checked = remember {subgoal.Finished}
             SubGoalsDisplay(
                 subgoal = subgoal,
-                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.route) }) {
+                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId)) }) {
                 Checkbox(
                     checked = checked!!,
                     onCheckedChange = {
