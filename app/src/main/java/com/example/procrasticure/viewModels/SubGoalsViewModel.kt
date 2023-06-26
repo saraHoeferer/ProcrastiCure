@@ -3,6 +3,7 @@ package com.example.procrasticure.viewModels
 import android.content.ClipDescription
 import android.content.ContentValues
 import android.content.Context
+import android.content.IntentSender.OnFinished
 import android.content.LocusId
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -55,8 +56,8 @@ class SubGoalsViewModel@Inject constructor(id: String, private val subGoalsRepos
         subGoalsRepository.modifySubGoal(goalId, subGoalId, name, description, date, time, context)
     }
 
-    suspend fun deleteSubGoal(goalId: String, subGoalId: String, context: Context){
-        subGoalsRepository.deleteSubGoal(goalId, subGoalId, context)
+    suspend fun deleteSubGoal(goalId: String, goalPoints: Long, subGoalId: String, finished: Boolean, context: Context){
+        subGoalsRepository.deleteSubGoal(goalId, goalPoints, subGoalId, finished, context)
     }
 
 

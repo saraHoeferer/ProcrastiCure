@@ -3,6 +3,7 @@ package com.example.procrasticure.data.repository
 import android.content.ContentValues
 import android.content.Context
 import android.util.Log
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import com.example.procrasticure.data.model.Goal
 import com.example.procrasticure.viewModels.BigViewModel
@@ -19,9 +20,9 @@ class GoalRepositoryImpl: GoalRepository {
     ): ArrayList<Goal> {
         database.collection("Goals").whereEqualTo("userId", "${sessionViewModel.user.getId()}").get()
             .addOnSuccessListener { queryDocumentSnapshot ->
+                goalArrayList.clear() // without: would expand list all the time
                 if (!queryDocumentSnapshot.isEmpty) {
                     val list = queryDocumentSnapshot.documents
-                    goalArrayList.clear() // without: would expand list all the time
                     for (document in list) {
                         val goal: Goal? = document.toObject(Goal::class.java)
                         if (goal != null) {

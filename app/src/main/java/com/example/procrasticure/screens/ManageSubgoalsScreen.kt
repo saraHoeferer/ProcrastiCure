@@ -28,17 +28,17 @@ import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
 
 @Composable
-fun ManageSubGoalsScreen(navController: NavController, goalID: String?, goalRepository: SubGoalRepositoryImpl) {
+fun ManageSubGoalsScreen(navController: NavController, goalID: String?, goalPoints: String?, goalRepository: SubGoalRepositoryImpl) {
     val subGoalsViewModel: SubGoalsViewModel = goalID?.let { SubGoalsViewModel(it, goalRepository) }!!
 
     Column {
         TopMenu(heading = "Editing Subgoals", arrowBackClicked = { navController.popBackStack() })
-        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel, goalID= goalID, navController = navController)
+        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel, goalID= goalID, navController = navController, goalPoints = goalPoints!!.toLong())
     }
 }
 
 @Composable
-fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String, navController: NavController) {
+fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String, goalPoints: Long, navController: NavController) {
     val goalListState = remember { subGoalsViewModel.subGoals }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -77,7 +77,8 @@ fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String,
                         size = 30,
                         clickEvent = {
                             coroutineScope.launch {
-                                subGoalsViewModel.deleteSubGoal(goalID, subgoal.Id!!, context)
+                                subGoalsViewModel.deleteSubGoal(goalID, goalPoints, subgoal.Id!!,
+                                    subgoal.Finished!!, context)
                                 navController.popBackStack()
                                 navController.navigate(Screen.GoalsScreen.route)
                             }

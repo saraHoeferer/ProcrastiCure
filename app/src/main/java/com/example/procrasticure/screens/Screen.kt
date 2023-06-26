@@ -59,9 +59,9 @@ sealed class Screen(val route: String) {
 
     object ManageGoalsScreen : Screen("manageGoals")
 
-    object ManageSubGoalsScreen : Screen("manageSubGoals/{$GOAL_ID}") {
-        fun withGoalID(id : String): String{
-            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id)
+    object ManageSubGoalsScreen : Screen("manageSubGoals/{$GOAL_ID}/{$POINTS}") {
+        fun withGoalID(id : String, points: String): String{
+            return this.route.replace(oldValue = "{$GOAL_ID}", newValue = id).replace(oldValue = "{$POINTS}", newValue = points)
         }
     }
 

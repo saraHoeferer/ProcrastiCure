@@ -62,12 +62,13 @@ fun Navigation(sessionViewModel: BigViewModel){
 
         composable(
             route = Screen.ManageSubGoalsScreen.route,
-            arguments = listOf(navArgument(name = GOAL_ID) {type = NavType.StringType})
+            arguments = listOf(navArgument(name = GOAL_ID) {type = NavType.StringType}, navArgument(name = POINTS) {type = NavType.StringType})
         ){backStackEntry ->
             ManageSubGoalsScreen(
                 navController = navController,
                 goalRepository = subGoalRepository,
-                goalID = backStackEntry.arguments?.getString(GOAL_ID)
+                goalID = backStackEntry.arguments?.getString(GOAL_ID),
+                goalPoints = backStackEntry.arguments?.getString(POINTS)
             )
         }
 

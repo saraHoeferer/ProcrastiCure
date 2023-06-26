@@ -47,7 +47,6 @@ fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: Stri
     }
 }
 
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun FinishGoal(subGoalListState: ArrayList<Goal>, goalId: String, goalPoints:Long, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, navController: NavController) {
     val context = LocalContext.current
@@ -129,7 +128,7 @@ fun SubGoalList(
             val checked = remember { mutableStateOf(subgoal.Finished) }
             SubGoalsDisplay(
                 subgoal = subgoal,
-                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId)) }
+                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId, goalPoints.toString())) }
             ) {
                 Checkbox(
                     checked = checked.value!!,

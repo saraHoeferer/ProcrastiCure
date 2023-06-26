@@ -42,7 +42,7 @@ fun UpdateSubGoalScreen(goalID: String, name: String?, description: String?, dat
                 arrowBackClicked = {
                     navController.popBackStack()
                 },
-                heading = "Update A Goal"
+                heading = "Update A SubGoal"
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Row {

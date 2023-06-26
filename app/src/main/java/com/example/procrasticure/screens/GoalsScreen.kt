@@ -227,7 +227,6 @@ fun GoalList(
 
 ) {
         LazyColumn {
-
             items(items = goalListState) { goal ->
                 if (!goal.Finished!!) {
                     goal.Name?.let {

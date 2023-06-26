@@ -121,8 +121,12 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
             Spacer(modifier = Modifier.size(100.dp))
 
             Button(onClick = {
-                coroutineScope.launch { userViewModel.delete(sessionViewModel = sessionViewModel) }
-                navController.navigate(Screen.Login.route)
+                coroutineScope.launch {
+                    userViewModel.delete(sessionViewModel = sessionViewModel)
+                    sessionViewModel.user.setLoggedIn(false)
+                    navController.popBackStack()
+                    navController.navigate(Screen.Login.route)
+                }
             }) {
                 Text(text = "Delete Account", fontSize = 18.sp)
             }

@@ -126,15 +126,33 @@ class SubGoalRepositoryImpl: SubGoalRepository {
             }
     }
 
-    override suspend fun deleteSubGoal(goalId: String, subGoalId: String, context: Context) {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("Goals")
+    override suspend fun deleteSubGoal(goalId: String, goalPoints: Long, subGoalId: String, finished: Boolean, context: Context) {
+        database.collection("Goals")
             .document(goalId)
             .collection("SubGoals")
             .document(subGoalId)
             .delete()
             .addOnSuccessListener { Toast.makeText(context, "SubGoal deleted", Toast.LENGTH_SHORT).show() }
             .addOnFailureListener { Toast.makeText(context, "Failure while deleting SubGoal", Toast.LENGTH_SHORT).show() }
+
+        if (finished) {
+            database.collection("Goals").document(goalId)
+                .update("points", goalPoints - 50)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        context,
+                        "SubGoal deleted",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(
+                        context,
+                        "Failure while deleting SubGoal",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+        }
     }
 
 }

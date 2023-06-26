@@ -19,5 +19,5 @@ interface SubGoalRepository {
 
     suspend fun modifySubGoal(goalId: String, subGoalId: String, name: String, description: String, date: String, time: String, context: Context)
 
-    suspend fun deleteSubGoal(goalId: String, subGoalId: String, context: Context)
+    suspend fun deleteSubGoal(goalId: String, goalPoints: Long, subGoalId: String, finished: Boolean, context: Context)
 }
