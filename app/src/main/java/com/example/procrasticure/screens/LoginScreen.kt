@@ -160,15 +160,7 @@ fun LoginDetails(
             AnimatedVisibility(visible = !signup) {
 
                 Button(onClick = {
-
-                    if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()) {
-                        coroutineScope.launch {
-                            userViewModel.signIn(LoginName, LoginPW, sessionViewModel)
-                        }
-                        navController.navigate(Screen.GoalsScreen.route)
-                    } else {
                         login = !login
-                    }
                 },
                     modifier = Modifier.size(150.dp, 50.dp),
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
