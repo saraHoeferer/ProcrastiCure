@@ -77,16 +77,15 @@ fun TopHomeMenu(
                     DropdownMenuItem(onClick = { navController.navigate(Screen.TimerScreen.route) }) {
                         Text(text = "Timer")
                     }
-
+                    DropdownMenuItem(onClick = { navController.navigate(Screen.AnimalScreen.route) }) {
+                        Text(text = "Animals")
+                    }
                     DropdownMenuItem(onClick = {
                         coroutineScope.launch { userViewModel.logout(sessionViewModel) }
                         navController.popBackStack()
                         navController.navigate(Screen.Login.route)
                     }) {
                         Text(text = "LogOut")
-                    }
-                    DropdownMenuItem(onClick = { navController.navigate(Screen.AnimalScreen.route) }) {
-                        Text(text = "Animals")
                     }
                 }
             }
