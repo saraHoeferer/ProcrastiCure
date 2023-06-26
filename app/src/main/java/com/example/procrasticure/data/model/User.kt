@@ -12,7 +12,7 @@ data class User(
         return this.Id
     }
 
-    fun setId(id: String){
+    fun setId(id: String) {
         this.Id = id
     }
 
@@ -20,7 +20,7 @@ data class User(
         return this.Points
     }
 
-    fun setPoints(points: Long){
+    fun setPoints(points: Long) {
         this.Points = points
     }
 
@@ -28,7 +28,7 @@ data class User(
         return this.LoggedIn
     }
 
-    fun setLoggedIn(loggedIn: Boolean){
+    fun setLoggedIn(loggedIn: Boolean) {
         this.LoggedIn = loggedIn
     }
 
@@ -36,7 +36,7 @@ data class User(
         return this.FirebaseUser
     }
 
-    fun setFirebaseUser(firebaseUser: FirebaseUser?){
+    fun setFirebaseUser(firebaseUser: FirebaseUser?) {
         this.FirebaseUser = firebaseUser
     }
 

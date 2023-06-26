@@ -9,18 +9,23 @@ import com.example.procrasticure.viewModels.BigViewModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class AnimalRepositoryImpl: AnimalRepository {
+class AnimalRepositoryImpl : AnimalRepository {
     override val database = FirebaseFirestore.getInstance()
 
-    override suspend fun buyAnimal(sessionViewModel: BigViewModel, animal: Animals, context: Context) {
-        if (sessionViewModel.user.getPoints()!! >= animal.price!!){
+    override suspend fun buyAnimal(
+        sessionViewModel: BigViewModel,
+        animal: Animals,
+        context: Context
+    ) {
+        if (sessionViewModel.user.getPoints()!! >= animal.price!!) {
             database.collection("Users/${sessionViewModel.user.getId()}/Animals")
                 .add(animal)
                 .addOnSuccessListener {
                     Toast.makeText(context, "Record Inserted", Toast.LENGTH_SHORT).show()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(context, "Failed to insert Record: $e", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Failed to insert Record: $e", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
             sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! - animal.price!!)
@@ -31,13 +36,20 @@ class AnimalRepositoryImpl: AnimalRepository {
 
             sessionViewModel.user.getId().let {
                 if (it != null) {
-                    database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
+                    database.collection("Users").document(it).set(user)
+                        .addOnSuccessListener { println("points to user") }
+                        .addOnFailureListener { println("failure points to user") }
                 }
             }
         } else {
-            Toast.makeText(context, "You don't have enough points to buy a ${animal.url}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                context,
+                "You don't have enough points to buy a ${animal.url}",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
+
     override suspend fun getUserAnimals(
         sessionViewModel: BigViewModel,
         animalList: ArrayList<Animals>
@@ -61,7 +73,7 @@ class AnimalRepositoryImpl: AnimalRepository {
                     println("No Animals")
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Failure")
             }.await()
         println(animalList.toString())
@@ -87,7 +99,7 @@ class AnimalRepositoryImpl: AnimalRepository {
                     val animals: Animals = change.document.toObject(Animals::class.java)
                     animals.Id = change.document.id
                     val oldGoal = getAnimalsById(animals.Id!!, animalList)
-                    if (oldGoal != null){
+                    if (oldGoal != null) {
                         animalList.remove(oldGoal)
                     }
                     animalList.add(animals)
@@ -98,8 +110,8 @@ class AnimalRepositoryImpl: AnimalRepository {
     }
 
     override fun getAnimalsById(animalId: String, animalList: ArrayList<Animals>): Animals? {
-        for (animal in animalList){
-            if (animal.Id == animalId){
+        for (animal in animalList) {
+            if (animal.Id == animalId) {
                 return animal
             }
         }

@@ -8,10 +8,13 @@ import com.example.procrasticure.data.model.Goal
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
-class SubGoalRepositoryImpl: SubGoalRepository {
+class SubGoalRepositoryImpl : SubGoalRepository {
     override val database = FirebaseFirestore.getInstance()
 
-    override suspend fun getSubGoals(goalId: String, subGoalList: ArrayList<Goal>): ArrayList<Goal> {
+    override suspend fun getSubGoals(
+        goalId: String,
+        subGoalList: ArrayList<Goal>
+    ): ArrayList<Goal> {
         val docRef = database.collection("Goals/$goalId/SubGoals")
         docRef.get()
             .addOnSuccessListener { queryDocumentSnapshot ->
@@ -30,7 +33,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
                     println("No Goals")
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Failure")
             }.await()
         return subGoalList
@@ -76,7 +79,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
     override suspend fun checkSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long {
         val docRef = database.collection("Goals/${goalId}/SubGoals").document(subGoalId)
         docRef
-            .update("finished",true)
+            .update("finished", true)
             .addOnSuccessListener { println("Subgoal check updated") }
             .addOnFailureListener { println("Failure check subgoal") }
 
@@ -91,7 +94,7 @@ class SubGoalRepositoryImpl: SubGoalRepository {
     override suspend fun uncheckSubGoal(goalId: String, subGoalId: String, goalPoints: Long): Long {
         val docRef = database.collection("Goals/${goalId}/SubGoals").document(subGoalId)
         docRef
-            .update("finished",false)
+            .update("finished", false)
             .addOnSuccessListener { println("Subgoal points updated") }
             .addOnFailureListener { println("Failure points subgoal") }
 
@@ -126,14 +129,28 @@ class SubGoalRepositoryImpl: SubGoalRepository {
             }
     }
 
-    override suspend fun deleteSubGoal(goalId: String, goalPoints: Long, subGoalId: String, finished: Boolean, context: Context) {
+    override suspend fun deleteSubGoal(
+        goalId: String,
+        goalPoints: Long,
+        subGoalId: String,
+        finished: Boolean,
+        context: Context
+    ) {
         database.collection("Goals")
             .document(goalId)
             .collection("SubGoals")
             .document(subGoalId)
             .delete()
-            .addOnSuccessListener { Toast.makeText(context, "SubGoal deleted", Toast.LENGTH_SHORT).show() }
-            .addOnFailureListener { Toast.makeText(context, "Failure while deleting SubGoal", Toast.LENGTH_SHORT).show() }
+            .addOnSuccessListener {
+                Toast.makeText(context, "SubGoal deleted", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(
+                    context,
+                    "Failure while deleting SubGoal",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
 
         if (finished) {
             database.collection("Goals").document(goalId)

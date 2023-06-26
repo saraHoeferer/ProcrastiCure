@@ -20,7 +20,9 @@ fun RadioButtonGroup(
 ) {
     Column {
         options.forEachIndexed { index, option ->
-            Row(modifier = Modifier.fillMaxWidth().padding(horizontal=38.dp)) {
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 38.dp)) {
                 RadioButton(
                     selected = selectedIndex == index,
                     onClick = { onSelectedIndexChanged(index) },

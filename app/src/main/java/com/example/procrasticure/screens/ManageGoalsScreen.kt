@@ -21,7 +21,11 @@ import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
 
 @Composable
-fun ManageGoalsScreen(navController: NavController, sessionViewModel: BigViewModel, goalsRepository: GoalRepositoryImpl) {
+fun ManageGoalsScreen(
+    navController: NavController,
+    sessionViewModel: BigViewModel,
+    goalsRepository: GoalRepositoryImpl
+) {
     val goalsViewModel = GoalsViewModel(sessionViewModel, goalsRepository)
 
     Column {
@@ -34,9 +38,9 @@ fun ManageGoalsScreen(navController: NavController, sessionViewModel: BigViewMod
 fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavController) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
-    val goalListState = remember {goalsViewModel.goals}
+    val goalListState = remember { goalsViewModel.goals }
     LazyColumn {
-        items(items = goalListState ){ goal ->
+        items(items = goalListState) { goal ->
             if (!goal.Finished!!) {
                 goal.Name?.let {
                     goal.Date?.let { it1 ->
@@ -44,13 +48,18 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                             CustomIcon(
                                 icon = Icons.Outlined.Edit,
                                 description = "Edit Goal",
-                                clickEvent = { navController.navigate(Screen.UpdateGoalScreen
-                                    .withDetails(
-                                        name = goal.Name!!,
-                                        description = goal.Description!!,
-                                        date = goal.Date!!,
-                                        time = goal.Time!!,
-                                        goalID = goal.Id!!)) })
+                                clickEvent = {
+                                    navController.navigate(
+                                        Screen.UpdateGoalScreen
+                                            .withDetails(
+                                                name = goal.Name!!,
+                                                description = goal.Description!!,
+                                                date = goal.Date!!,
+                                                time = goal.Time!!,
+                                                goalID = goal.Id!!
+                                            )
+                                    )
+                                })
 
                             CustomIcon(
                                 icon = Icons.Default.Delete,
@@ -58,7 +67,12 @@ fun EditingGoalsDisplay(goalsViewModel: GoalsViewModel, navController: NavContro
                                 clickEvent = {
                                     Log.d("GOAl ID", goal.Id.toString())
                                     coroutineScope.launch {
-                                        goal.Id?.let { it2 -> goalsViewModel.deleteGoal(goalId = it2, context) }
+                                        goal.Id?.let { it2 ->
+                                            goalsViewModel.deleteGoal(
+                                                goalId = it2,
+                                                context
+                                            )
+                                        }
                                         navController.navigate(Screen.GoalsScreen.route)
                                     }
                                 })

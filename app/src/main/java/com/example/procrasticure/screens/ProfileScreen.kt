@@ -30,27 +30,41 @@ import kotlinx.coroutines.launch
 
 // show user profile
 @Composable
-fun ProfileScreen(navController: NavController, sessionViewModel: BigViewModel, userViewModel: UserViewModel){
+fun ProfileScreen(
+    navController: NavController,
+    sessionViewModel: BigViewModel,
+    userViewModel: UserViewModel
+) {
     Column {
-        TopMenu(arrowBackClicked = { navController.popBackStack() },
-            heading = "My Profile")
-        ProfileDetails(sessionViewModel = sessionViewModel, userViewModel = userViewModel, navController)
+        TopMenu(
+            arrowBackClicked = { navController.popBackStack() },
+            heading = "My Profile"
+        )
+        ProfileDetails(
+            sessionViewModel = sessionViewModel,
+            userViewModel = userViewModel,
+            navController
+        )
     }
 }
 
 @Composable
-fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel, navController: NavController) {
+fun ProfileDetails(
+    sessionViewModel: BigViewModel,
+    userViewModel: UserViewModel,
+    navController: NavController
+) {
     val context = LocalContext.current
     Card(modifier = Modifier) {
 
         var emailshow by remember {
             mutableStateOf(false)
         }
-        var email by remember { mutableStateOf("")}
+        var email by remember { mutableStateOf("") }
         var passwordShow by remember {
             mutableStateOf(false)
         }
-        var password by remember { mutableStateOf("")}
+        var password by remember { mutableStateOf("") }
         val coroutineScope = rememberCoroutineScope()
 
         Column(
@@ -75,7 +89,11 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                     fontWeight = FontWeight.Bold
                 )
             }
-            Text(text = "points: ${sessionViewModel.user.getPoints()}", fontSize = 20.sp, fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "points: ${sessionViewModel.user.getPoints()}",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.SemiBold
+            )
 
             Spacer(modifier = Modifier.size(80.dp))
 
@@ -83,7 +101,7 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
                 if (!emailshow) {
                     emailshow = true
                 } else {
-                    if (email.isNotEmpty()){
+                    if (email.isNotEmpty()) {
                         coroutineScope.launch {
                             userViewModel.editEmail(email, sessionViewModel, context)
                         }
@@ -101,21 +119,34 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
             }
             Spacer(modifier = Modifier.size(25.dp))
 
-            Button(onClick = { if (!passwordShow) {
-                passwordShow = true
-            } else {
-                if (password.isNotEmpty()){
-                    coroutineScope.launch { userViewModel.editPassword(password, sessionViewModel, context) }
-                    navController.popBackStack()
-                    navController.navigate(Screen.GoalsScreen.route)
+            Button(onClick = {
+                if (!passwordShow) {
+                    passwordShow = true
                 } else {
-                    passwordShow = !passwordShow
+                    if (password.isNotEmpty()) {
+                        coroutineScope.launch {
+                            userViewModel.editPassword(
+                                password,
+                                sessionViewModel,
+                                context
+                            )
+                        }
+                        navController.popBackStack()
+                        navController.navigate(Screen.GoalsScreen.route)
+                    } else {
+                        passwordShow = !passwordShow
+                    }
                 }
-            } }) {
+            }) {
                 Text(text = "Change password", fontSize = 18.sp)
             }
             AnimatedVisibility(visible = passwordShow) {
-                password = simpleTextField2(label = "Change your Password", modifier = Modifier, KeyboardType.Password, PasswordVisualTransformation())
+                password = simpleTextField2(
+                    label = "Change your Password",
+                    modifier = Modifier,
+                    KeyboardType.Password,
+                    PasswordVisualTransformation()
+                )
             }
 
             Spacer(modifier = Modifier.size(100.dp))
@@ -135,7 +166,12 @@ fun ProfileDetails(sessionViewModel: BigViewModel, userViewModel: UserViewModel,
 }
 
 @Composable
-fun simpleTextField2(label: String, modifier: Modifier, keyboardoptions: KeyboardType = KeyboardType.Email, animation: VisualTransformation = VisualTransformation.None): String {
+fun simpleTextField2(
+    label: String,
+    modifier: Modifier,
+    keyboardoptions: KeyboardType = KeyboardType.Email,
+    animation: VisualTransformation = VisualTransformation.None
+): String {
     var text by remember { mutableStateOf("") }
 
     OutlinedTextField(

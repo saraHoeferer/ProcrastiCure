@@ -10,9 +10,15 @@ interface AnimalRepository {
 
     suspend fun buyAnimal(sessionViewModel: BigViewModel, animal: Animals, context: Context)
 
-    suspend fun getUserAnimals(sessionViewModel: BigViewModel, animalList: ArrayList<Animals>): ArrayList<Animals>
+    suspend fun getUserAnimals(
+        sessionViewModel: BigViewModel,
+        animalList: ArrayList<Animals>
+    ): ArrayList<Animals>
 
-    suspend fun listenToChanges(sessionViewModel: BigViewModel, animalList: ArrayList<Animals>): ArrayList<Animals>
+    suspend fun listenToChanges(
+        sessionViewModel: BigViewModel,
+        animalList: ArrayList<Animals>
+    ): ArrayList<Animals>
 
     fun getAnimalsById(animalId: String, animalList: ArrayList<Animals>): Animals?
 }

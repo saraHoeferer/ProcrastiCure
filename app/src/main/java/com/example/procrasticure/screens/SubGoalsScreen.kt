@@ -33,22 +33,51 @@ import kotlinx.coroutines.launch
 // Goal + Subgoal
 
 @Composable
-fun SubGoalsScreen(navController: NavController, goalId: String?, goalName: String?, goalPoints: String?, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, subGoalRepository: SubGoalRepositoryImpl) {
+fun SubGoalsScreen(
+    navController: NavController,
+    goalId: String?,
+    goalName: String?,
+    goalPoints: String?,
+    goalsViewModel: GoalsViewModel,
+    sessionViewModel: BigViewModel,
+    subGoalRepository: SubGoalRepositoryImpl
+) {
     val subGoalsViewModel = SubGoalsViewModel(goalId!!, subGoalRepository)
-    val subGoalListState = remember {subGoalsViewModel.subGoals}
+    val subGoalListState = remember { subGoalsViewModel.subGoals }
     println(subGoalListState)
     Column {
         GoalMenu(heading = goalName!!, arrowBackClicked = { navController.popBackStack() })
-        DisplayMainGoal(navController = navController, goalName = "$goalName", goalId= goalId)
+        DisplayMainGoal(navController = navController, goalName = "$goalName", goalId = goalId)
         if (goalPoints != null) {
-            SubGoalList( navController = navController, subGoalsViewModel = subGoalsViewModel, goalId = goalId, goalPoints = goalPoints.toLong(), subGoalListState = subGoalListState, goalName = goalName)
+            SubGoalList(
+                navController = navController,
+                subGoalsViewModel = subGoalsViewModel,
+                goalId = goalId,
+                goalPoints = goalPoints.toLong(),
+                subGoalListState = subGoalListState,
+                goalName = goalName
+            )
         }
-        FinishGoal(subGoalListState, goalId = goalId, goalPoints = goalPoints!!.toLong(), goalsViewModel = goalsViewModel, sessionViewModel = sessionViewModel,navController)
+        FinishGoal(
+            subGoalListState,
+            goalId = goalId,
+            goalPoints = goalPoints!!.toLong(),
+            goalsViewModel = goalsViewModel,
+            sessionViewModel = sessionViewModel,
+            navController
+        )
     }
 }
 
 @Composable
-fun FinishGoal(subGoalListState: ArrayList<Goal>, goalId: String, goalPoints:Long, goalsViewModel: GoalsViewModel, sessionViewModel: BigViewModel, navController: NavController) {
+fun FinishGoal(
+    subGoalListState: ArrayList<Goal>,
+    goalId: String,
+    goalPoints: Long,
+    goalsViewModel: GoalsViewModel,
+    sessionViewModel: BigViewModel,
+    navController: NavController
+) {
     val context = LocalContext.current
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
         val coroutineScope = rememberCoroutineScope()
@@ -64,14 +93,22 @@ fun FinishGoal(subGoalListState: ArrayList<Goal>, goalId: String, goalPoints:Lon
                 } else {
                     enabled.value = true
                 }
-                if (enabled.value){
-                    coroutineScope.launch{
-                         goalsViewModel.finishGoal(goalId = goalId, goalPoints = goalPoints, sessionViewModel = sessionViewModel)
+                if (enabled.value) {
+                    coroutineScope.launch {
+                        goalsViewModel.finishGoal(
+                            goalId = goalId,
+                            goalPoints = goalPoints,
+                            sessionViewModel = sessionViewModel
+                        )
                         navController.popBackStack()
                         navController.navigate(Screen.GoalsScreen.route)
                     }
                 } else {
-                    Toast.makeText(context, "You must finish all subgoals before you can finish the mainGoal", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "You must finish all subgoals before you can finish the mainGoal",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }, modifier = Modifier
                 .fillMaxWidth()
@@ -128,25 +165,58 @@ fun SubGoalList(
             val checked = remember { mutableStateOf(subgoal.Finished) }
             SubGoalsDisplay(
                 subgoal = subgoal,
-                onLongClick = { navController.navigate(Screen.ManageSubGoalsScreen.withGoalID(goalId, goalPoints.toString())) }
+                onLongClick = {
+                    navController.navigate(
+                        Screen.ManageSubGoalsScreen.withGoalID(
+                            goalId,
+                            goalPoints.toString()
+                        )
+                    )
+                }
             ) {
                 Checkbox(
                     checked = checked.value!!,
                     onCheckedChange = {
-                        if (checked.value == true){
+                        if (checked.value == true) {
                             checked.value = it
-                            coroutineScope.launch { subgoal.Id
-                                ?.let { it1 -> goalP = subGoalsViewModel.uncheckSubGoal(goalId = goalId, subGoalId = it1, goalPoints = goalP) }
+                            coroutineScope.launch {
+                                subgoal.Id
+                                    ?.let { it1 ->
+                                        goalP = subGoalsViewModel.uncheckSubGoal(
+                                            goalId = goalId,
+                                            subGoalId = it1,
+                                            goalPoints = goalP
+                                        )
+                                    }
                                 navController.popBackStack(Screen.GoalsScreen.route, false)
-                                navController.navigate(Screen.SubGoalsScreen.withIdandName(goalId, goalName, goalP.toString()))
+                                navController.navigate(
+                                    Screen.SubGoalsScreen.withIdandName(
+                                        goalId,
+                                        goalName,
+                                        goalP.toString()
+                                    )
+                                )
                             }
 
                         } else {
                             checked.value = it
-                            coroutineScope.launch { subgoal.Id
-                                ?.let { it1 -> goalP = subGoalsViewModel.checkSubGoal(goalId = goalId, subGoalId = it1, goalPoints = goalP) }
+                            coroutineScope.launch {
+                                subgoal.Id
+                                    ?.let { it1 ->
+                                        goalP = subGoalsViewModel.checkSubGoal(
+                                            goalId = goalId,
+                                            subGoalId = it1,
+                                            goalPoints = goalP
+                                        )
+                                    }
                                 navController.popBackStack(Screen.GoalsScreen.route, false)
-                                navController.navigate(Screen.SubGoalsScreen.withIdandName(goalId, goalName, goalP.toString()))
+                                navController.navigate(
+                                    Screen.SubGoalsScreen.withIdandName(
+                                        goalId,
+                                        goalName,
+                                        goalP.toString()
+                                    )
+                                )
                             }
 
 

@@ -28,46 +28,62 @@ import com.example.procrasticure.viewModels.BigViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun AnimalShopScreen(navController: NavController, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
+fun AnimalShopScreen(
+    navController: NavController,
+    animalViewModel: AnimalViewModel,
+    sessionViewModel: BigViewModel
+) {
     Column {
-        TopMenu(arrowBackClicked = { navController.popBackStack() },
-            heading = "My Shop")
-        AnimalShop(listOf(
-            Animals("chicken", 100),
-            Animals("pig", 150 ),
-            Animals("sheep", 200 ),
-            Animals("cow", 250)
-        ),
-        sessionViewModel = sessionViewModel,
-        animalViewModel = animalViewModel)
+        TopMenu(
+            arrowBackClicked = { navController.popBackStack() },
+            heading = "My Shop"
+        )
+        AnimalShop(
+            listOf(
+                Animals("chicken", 100),
+                Animals("pig", 150),
+                Animals("sheep", 200),
+                Animals("cow", 250)
+            ),
+            sessionViewModel = sessionViewModel,
+            animalViewModel = animalViewModel
+        )
     }
 }
 
 
 @Composable
-fun AnimalShop(animals: List<Animals>, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
+fun AnimalShop(
+    animals: List<Animals>,
+    animalViewModel: AnimalViewModel,
+    sessionViewModel: BigViewModel
+) {
     LazyColumn(
         modifier = Modifier
             .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,){
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         items(animals) { animal ->
             AnimalRow(
-                animal =animal,
-            sessionViewModel = sessionViewModel,
-            animalViewModel = animalViewModel)
+                animal = animal,
+                sessionViewModel = sessionViewModel,
+                animalViewModel = animalViewModel
+            )
             Spacer(modifier = Modifier.size(20.dp))
         }
     }
 }
 
 @Composable
-fun AnimalRow(animal: Animals, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
+fun AnimalRow(animal: Animals, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    Row(modifier = Modifier
-        .background(color = Color(0xFFE7E0F5))
-        .padding(30.dp)
-        .fillMaxWidth()) {
+    Row(
+        modifier = Modifier
+            .background(color = Color(0xFFE7E0F5))
+            .padding(30.dp)
+            .fillMaxWidth()
+    ) {
         Image(
             painter = painterResource(
                 id =
@@ -87,7 +103,7 @@ fun AnimalRow(animal: Animals, animalViewModel: AnimalViewModel, sessionViewMode
                 }
             ),
             contentDescription = "...",
-            modifier = Modifier.size(150.dp,150.dp)
+            modifier = Modifier.size(150.dp, 150.dp)
         )
 
         Spacer(modifier = Modifier.size(60.dp))
@@ -98,9 +114,22 @@ fun AnimalRow(animal: Animals, animalViewModel: AnimalViewModel, sessionViewMode
             Spacer(modifier = Modifier.size(20.dp))
 
             Button(
-                onClick = { coroutineScope.launch{animalViewModel.buyAnimal(sessionViewModel, animal, context)} },
-                border = BorderStroke(4.dp,Color(0xFF673AB7)), shape = CutCornerShape(10)) {
-                Icon(imageVector = Icons.Default.ShoppingCart, contentDescription = "", Modifier.size(20.dp))
+                onClick = {
+                    coroutineScope.launch {
+                        animalViewModel.buyAnimal(
+                            sessionViewModel,
+                            animal,
+                            context
+                        )
+                    }
+                },
+                border = BorderStroke(4.dp, Color(0xFF673AB7)), shape = CutCornerShape(10)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ShoppingCart,
+                    contentDescription = "",
+                    Modifier.size(20.dp)
+                )
                 Spacer(modifier = Modifier.size(10.dp))
                 Text(text = "BUY")
             }

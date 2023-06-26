@@ -19,14 +19,16 @@ import com.example.procrasticure.viewModels.BigViewModel
 
 class MainActivity : ComponentActivity() {
     private val sessionViewModel by viewModels<BigViewModel>()
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             ProcrastiCureTheme {
-                Box(modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color.White)
                 ) {
                     Navigation(sessionViewModel = sessionViewModel)
 

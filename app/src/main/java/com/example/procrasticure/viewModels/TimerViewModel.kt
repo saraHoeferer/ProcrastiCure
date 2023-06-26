@@ -10,7 +10,11 @@ import com.example.procrasticure.timer.formatTime
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
-class TimerViewModel(private val input: Long, private val userViewModel: UserViewModel, private val sessionViewModel: BigViewModel) : ViewModel() {
+class TimerViewModel(
+    private val input: Long,
+    private val userViewModel: UserViewModel,
+    private val sessionViewModel: BigViewModel
+) : ViewModel() {
 
     //region Properties
     private var countDownTimer: CountDownTimer? = null
@@ -52,18 +56,28 @@ class TimerViewModel(private val input: Long, private val userViewModel: UserVie
         countDownTimer?.cancel()
         println(progress.value)
         println(input)
-        val timeSpent = (input - input* progress.value!!.toFloat())/60000f
-        if (timeSpent > 1.0f || progress.value!! < 0.1f){
+        val timeSpent = (input - input * progress.value!!.toFloat()) / 60000f
+        if (timeSpent > 1.0f || progress.value!! < 0.1f) {
             println("hier")
             val collectedPoints: Int
-            if (progress.value!! < 0.1f){
-                collectedPoints = (input/60000L).toFloat().roundToInt() * 100
+            if (progress.value!! < 0.1f) {
+                collectedPoints = (input / 60000L).toFloat().roundToInt() * 100
                 println(collectedPoints)
-                viewModelScope.launch { userViewModel.givePointstoUser(sessionViewModel, collectedPoints.toLong()) }
+                viewModelScope.launch {
+                    userViewModel.givePointstoUser(
+                        sessionViewModel,
+                        collectedPoints.toLong()
+                    )
+                }
             } else {
                 collectedPoints = timeSpent.roundToInt() * 100
                 println(collectedPoints)
-                viewModelScope.launch { userViewModel.givePointstoUser(sessionViewModel, collectedPoints.toLong()) }
+                viewModelScope.launch {
+                    userViewModel.givePointstoUser(
+                        sessionViewModel,
+                        collectedPoints.toLong()
+                    )
+                }
             }
         }
         handleTimerValues(false, input.formatTime(), 1.0F, false)
@@ -87,7 +101,12 @@ class TimerViewModel(private val input: Long, private val userViewModel: UserVie
         }.start()
     }
 
-    private fun handleTimerValues(isPlaying: Boolean, text: String, progress: Float, celebrate: Boolean) {
+    private fun handleTimerValues(
+        isPlaying: Boolean,
+        text: String,
+        progress: Float,
+        celebrate: Boolean
+    ) {
         _isPlaying.value = isPlaying
         _time.value = text
         _progress.value = progress

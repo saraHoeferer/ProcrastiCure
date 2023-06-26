@@ -12,13 +12,17 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl: UserRepository {
+class UserRepositoryImpl : UserRepository {
     override val auth = Firebase.auth
     private val database = FirebaseFirestore.getInstance()
 
-    override suspend fun signUpUser(email: String, password: String, sessionViewModel: BigViewModel) = flow{
+    override suspend fun signUpUser(
+        email: String,
+        password: String,
+        sessionViewModel: BigViewModel
+    ) = flow {
         emit(State.loading())
-        auth.createUserWithEmailAndPassword(email, password). await().run {
+        auth.createUserWithEmailAndPassword(email, password).await().run {
             emit(State.success(this))
             sessionViewModel.user.setId(FirebaseAuth.getInstance().currentUser!!.uid)
             sessionViewModel.user.setFirebaseUser(FirebaseAuth.getInstance().currentUser)
@@ -28,9 +32,13 @@ class UserRepositoryImpl: UserRepository {
         emit(State.error(it.message ?: UNKNOWN_ERROR))
     }
 
-    override suspend fun signInUser(email: String, password: String, sessionViewModel: BigViewModel)= flow {
+    override suspend fun signInUser(
+        email: String,
+        password: String,
+        sessionViewModel: BigViewModel
+    ) = flow {
         emit(State.loading())
-        auth.signInWithEmailAndPassword(email, password).await().run{
+        auth.signInWithEmailAndPassword(email, password).await().run {
             emit(State.success(this))
             sessionViewModel.user.setId(FirebaseAuth.getInstance().currentUser!!.uid)
             sessionViewModel.user.setFirebaseUser(FirebaseAuth.getInstance().currentUser)
@@ -39,38 +47,48 @@ class UserRepositoryImpl: UserRepository {
 
         }
 
-    }.catch{
+    }.catch {
         emit(State.error(it.message ?: UNKNOWN_ERROR))
     }
 
     override suspend fun deleteUser(sessionViewModel: BigViewModel) {
-        auth.currentUser?.delete()?.addOnSuccessListener{
+        auth.currentUser?.delete()?.addOnSuccessListener {
             sessionViewModel.user.setId("")
             sessionViewModel.user.setPoints(0)
             sessionViewModel.user.setFirebaseUser(null)
             sessionViewModel.user.setLoggedIn(false)
             println("worked delete")
-        }?.addOnFailureListener{
+        }?.addOnFailureListener {
             println("didnt delete")
         }
     }
 
-    override suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
-        auth.currentUser?.updateEmail(email)?.addOnSuccessListener{
+    override suspend fun editEmail(
+        email: String,
+        sessionViewModel: BigViewModel,
+        context: Context
+    ) {
+        auth.currentUser?.updateEmail(email)?.addOnSuccessListener {
             sessionViewModel.user.setId(auth.currentUser!!.uid)
             sessionViewModel.user.setFirebaseUser(auth.currentUser)
-            Toast.makeText(context, "Your Email was successfully changed", Toast.LENGTH_SHORT).show()
-        }?.addOnFailureListener{
+            Toast.makeText(context, "Your Email was successfully changed", Toast.LENGTH_SHORT)
+                .show()
+        }?.addOnFailureListener {
             Toast.makeText(context, "Your Email could not be changed", Toast.LENGTH_SHORT).show()
         }
     }
 
-    override suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
-        auth.currentUser?.updatePassword(password)?.addOnSuccessListener{
+    override suspend fun editPassword(
+        password: String,
+        sessionViewModel: BigViewModel,
+        context: Context
+    ) {
+        auth.currentUser?.updatePassword(password)?.addOnSuccessListener {
             sessionViewModel.user.setId(auth.currentUser!!.uid)
             sessionViewModel.user.setFirebaseUser(auth.currentUser)
-            Toast.makeText(context, "Your Password was successfully changed", Toast.LENGTH_SHORT).show()
-        }?.addOnFailureListener{
+            Toast.makeText(context, "Your Password was successfully changed", Toast.LENGTH_SHORT)
+                .show()
+        }?.addOnFailureListener {
             Toast.makeText(context, "Your Password could not be changed", Toast.LENGTH_SHORT).show()
         }
     }
@@ -90,17 +108,17 @@ class UserRepositoryImpl: UserRepository {
                 println(queryDocumentSnapshot.data?.get("points"))
                 println(queryDocumentSnapshot.get("value"))
 
-                    val points = queryDocumentSnapshot.data?.get("points")
-                    if (points != null) {
-                        sessionViewModel.user.setPoints(points as Long)
-                    }
+                val points = queryDocumentSnapshot.data?.get("points")
+                if (points != null) {
+                    sessionViewModel.user.setPoints(points as Long)
+                }
                 println("worked")
             }
-            .addOnFailureListener{ println("no points") }
+            .addOnFailureListener { println("no points") }
     }
 
     override suspend fun givePointsToUser(sessionViewModel: BigViewModel, points: Long) {
-        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +points)
+        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! + points)
 
         val user = hashMapOf(
             "points" to sessionViewModel.user.getPoints()
@@ -108,12 +126,14 @@ class UserRepositoryImpl: UserRepository {
 
         sessionViewModel.user.getId().let {
             if (it != null) {
-                database.collection("Users").document(it).set(user).addOnSuccessListener { println("points to user") }.addOnFailureListener { println("failure points to user") }
+                database.collection("Users").document(it).set(user)
+                    .addOnSuccessListener { println("points to user") }
+                    .addOnFailureListener { println("failure points to user") }
             }
         }
     }
 
-    companion object{
+    companion object {
         const val UNKNOWN_ERROR = "An unknown error occurred. Please try again later."
     }
 }

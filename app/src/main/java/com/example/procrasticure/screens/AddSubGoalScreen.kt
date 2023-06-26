@@ -25,14 +25,18 @@ import kotlinx.coroutines.launch
 // add a subgoal
 
 @Composable
-fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y3IHX7iKGHT", subGoalsViewModel: SubGoalsViewModel){
+fun AddSubGoalScreen(
+    navController: NavController,
+    goalId: String? = "BzA1Tkky3Y3IHX7iKGHT",
+    subGoalsViewModel: SubGoalsViewModel
+) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     var name by remember { mutableStateOf("") }
-    var description by remember{ mutableStateOf("") }
-    var date by remember{ mutableStateOf("") }
-    var time by remember{ mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var date by remember { mutableStateOf("") }
+    var time by remember { mutableStateOf("") }
     Card(
         Modifier
             .background(color = Color.White)
@@ -46,16 +50,22 @@ fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Row {
-                OutlinedTextField(label = { Text("Name") }, value = name, onValueChange = {name = it},
-                    modifier = Modifier.width(320.dp), placeholder = {
+                OutlinedTextField(label = { Text("Name") },
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.width(320.dp),
+                    placeholder = {
                         Text(text = "Enter the name of your sub goal", fontSize = 14.sp)
                     })
             }
             Row {
-                OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
+                OutlinedTextField(label = { Text("Description (Optional)") },
+                    value = description,
+                    onValueChange = { description = it },
                     modifier = Modifier
                         .width(320.dp)
-                        .defaultMinSize(minHeight = 120.dp), placeholder = {
+                        .defaultMinSize(minHeight = 120.dp),
+                    placeholder = {
                         Text(text = "Write a description for your sub goal", fontSize = 14.sp)
                     })
             }
@@ -71,10 +81,20 @@ fun AddSubGoalScreen(navController: NavController, goalId: String? = "BzA1Tkky3Y
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
                 if (name.isNotEmpty()) {
-                    val subGoal = Goal(Name = name, Description = description, Date = date, Time = time, Finished = false)
+                    val subGoal = Goal(
+                        Name = name,
+                        Description = description,
+                        Date = date,
+                        Time = time,
+                        Finished = false
+                    )
                     coroutineScope.launch {
                         if (goalId != null) {
-                            subGoalsViewModel.addSubGoal(goalId = goalId, subGoal = subGoal, context = context)
+                            subGoalsViewModel.addSubGoal(
+                                goalId = goalId,
+                                subGoal = subGoal,
+                                context = context
+                            )
                         }
                     }
                     name = ""

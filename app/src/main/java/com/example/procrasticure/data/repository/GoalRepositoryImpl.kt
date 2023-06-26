@@ -11,14 +11,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.coroutines.tasks.await
 
-class GoalRepositoryImpl: GoalRepository {
+class GoalRepositoryImpl : GoalRepository {
     override val database = FirebaseFirestore.getInstance()
 
     override suspend fun getGoals(
         sessionViewModel: BigViewModel,
         goalArrayList: ArrayList<Goal>
     ): ArrayList<Goal> {
-        database.collection("Goals").whereEqualTo("userId", "${sessionViewModel.user.getId()}").get()
+        database.collection("Goals").whereEqualTo("userId", "${sessionViewModel.user.getId()}")
+            .get()
             .addOnSuccessListener { queryDocumentSnapshot ->
                 goalArrayList.clear() // without: would expand list all the time
                 if (!queryDocumentSnapshot.isEmpty) {
@@ -35,7 +36,7 @@ class GoalRepositoryImpl: GoalRepository {
                     println("No Goals")
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Failure")
             }.await()
         println(goalArrayList.toString())
@@ -47,7 +48,8 @@ class GoalRepositoryImpl: GoalRepository {
         goalArrayList: ArrayList<Goal>
     ): ArrayList<Goal> {
         println(goalArrayList)
-        val docRef = database.collection("Goals").whereEqualTo("userId", "${sessionViewModel.user.getId()}")
+        val docRef =
+            database.collection("Goals").whereEqualTo("userId", "${sessionViewModel.user.getId()}")
         docRef.addSnapshotListener { snapshot, e ->
             if (e != null) {
                 Log.w(ContentValues.TAG, "Listen failed.", e)
@@ -61,7 +63,7 @@ class GoalRepositoryImpl: GoalRepository {
                     val goal: Goal = change.document.toObject(Goal::class.java)
                     goal.Id = change.document.id
                     val oldGoal = getGoalsById(goal.Id!!, goalArrayList)
-                    if (oldGoal != null){
+                    if (oldGoal != null) {
                         goalArrayList.remove(oldGoal)
                     }
                     goalArrayList.add(goal)
@@ -72,8 +74,8 @@ class GoalRepositoryImpl: GoalRepository {
     }
 
     override fun getGoalsById(goalId: String, goalArrayList: ArrayList<Goal>): Goal? {
-        for (goal in goalArrayList){
-            if (goal.Id == goalId){
+        for (goal in goalArrayList) {
+            if (goal.Id == goalId) {
                 return goal
             }
         }
@@ -91,13 +93,17 @@ class GoalRepositoryImpl: GoalRepository {
             }
     }
 
-    override suspend fun finishGoal(goalId: String, goalPoints: Long, sessionViewModel: BigViewModel) {
+    override suspend fun finishGoal(
+        goalId: String,
+        goalPoints: Long,
+        sessionViewModel: BigViewModel
+    ) {
         val docRef = database.collection("Goals").document(goalId)
         docRef
-            .update("finished",true)
+            .update("finished", true)
             .addOnSuccessListener { println("Goal check updated") }
             .addOnFailureListener { println("Failure check Goal") }
-        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! +(200)+goalPoints)
+        sessionViewModel.user.setPoints(sessionViewModel.user.getPoints()!! + (200) + goalPoints)
 
         val user = hashMapOf(
             "points" to sessionViewModel.user.getPoints()
@@ -105,10 +111,13 @@ class GoalRepositoryImpl: GoalRepository {
 
         sessionViewModel.user.getId().let {
             if (it != null) {
-                database.collection("Users").document(it).set(user).addOnSuccessListener { println("Updated User Points") }.addOnFailureListener { println("Failure when trying to update user Points") }
+                database.collection("Users").document(it).set(user)
+                    .addOnSuccessListener { println("Updated User Points") }
+                    .addOnFailureListener { println("Failure when trying to update user Points") }
             }
         }
     }
+
     override suspend fun sortByCriteria(
         sessionViewModel: BigViewModel,
         goalArrayList: ArrayList<Goal>,
@@ -135,7 +144,7 @@ class GoalRepositoryImpl: GoalRepository {
                     println("Couldn't find goals while ordering by $criteria")
                 }
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 println("Failure when trying to order by $criteria")
             }
             .await()

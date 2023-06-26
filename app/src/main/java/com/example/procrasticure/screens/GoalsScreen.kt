@@ -57,7 +57,9 @@ fun GoalsScreen(
     var option by remember {
         mutableStateOf(4)
     }
-    if (option == 4){coroutineScope.launch{goalsViewModel.getGoals(sessionViewModel)}}
+    if (option == 4) {
+        coroutineScope.launch { goalsViewModel.getGoals(sessionViewModel) }
+    }
     val goalListState by goalsViewModel.goalsState.collectAsState()
     Column {
         TopHomeMenu(
@@ -186,38 +188,38 @@ fun GoalsScreen(
 
 @Composable
 fun FinishedGoalList(goalListState: ArrayList<Goal>) {
-        LazyColumn {
-            items(items = goalListState) { goal ->
-                if (goal.Finished!!) {
-                    Box(
+    LazyColumn {
+        items(items = goalListState) { goal ->
+            if (goal.Finished!!) {
+                Box(
+                    modifier = Modifier
+                        .padding(5.dp)
+                        .clip(shape = RoundedCornerShape(18.dp))
+                        .background(Color(87, 87, 87, 22))
+                        .width(400.dp)
+                ) {
+                    Column(
                         modifier = Modifier
-                            .padding(5.dp)
-                            .clip(shape = RoundedCornerShape(18.dp))
-                            .background(Color(87, 87, 87, 22))
-                            .width(400.dp)
+                            .padding(horizontal = 18.dp, vertical = 10.dp)
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .padding(horizontal = 18.dp, vertical = 10.dp)
-                        ) {
-                            goal.Name?.let {
-                                Text(
-                                    text = it,
-                                    fontSize = 20.sp,
-                                    textAlign = TextAlign.Center,
-                                )
-                            }
+                        goal.Name?.let {
                             Text(
-                                text = "Points earned: ${goal.Points + 200}",
-                                fontSize = 12.sp,
+                                text = it,
+                                fontSize = 20.sp,
                                 textAlign = TextAlign.Center,
-                                color = Color.Gray
                             )
                         }
+                        Text(
+                            text = "Points earned: ${goal.Points + 200}",
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray
+                        )
                     }
                 }
             }
         }
+    }
 }
 
 @Composable
@@ -226,40 +228,40 @@ fun GoalList(
     goalListState: ArrayList<Goal>
 
 ) {
-        LazyColumn {
-            items(items = goalListState) { goal ->
-                if (!goal.Finished!!) {
-                    goal.Name?.let {
-                        GoalsDisplay(
-                            goal = goal,
-                            onClick = {
-                                navController.navigate(
-                                    Screen.SubGoalsScreen.withIdandName(
-                                        goal.Id!!,
-                                        goal.Name!!,
-                                        goal.Points.toString()
-                                    )
+    LazyColumn {
+        items(items = goalListState) { goal ->
+            if (!goal.Finished!!) {
+                goal.Name?.let {
+                    GoalsDisplay(
+                        goal = goal,
+                        onClick = {
+                            navController.navigate(
+                                Screen.SubGoalsScreen.withIdandName(
+                                    goal.Id!!,
+                                    goal.Name!!,
+                                    goal.Points.toString()
                                 )
-                            },
-                            onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
+                            )
+                        },
+                        onLongClick = { navController.navigate(Screen.ManageGoalsScreen.route) }
+                    ) {
+                        CustomIcon(
+                            icon = Icons.Default.KeyboardArrowRight,
+                            description = "Go to Goal Details",
+                            color = Color.Gray
                         ) {
-                            CustomIcon(
-                                icon = Icons.Default.KeyboardArrowRight,
-                                description = "Go to Goal Details",
-                                color = Color.Gray
-                            ) {
 
-                                navController.navigate(
-                                    Screen.SubGoalsScreen.withIdandName(
-                                        goal.Id!!,
-                                        goal.Name!!,
-                                        goal.Points.toString()
-                                    )
+                            navController.navigate(
+                                Screen.SubGoalsScreen.withIdandName(
+                                    goal.Id!!,
+                                    goal.Name!!,
+                                    goal.Points.toString()
                                 )
-                            }
+                            )
                         }
                     }
                 }
             }
         }
+    }
 }

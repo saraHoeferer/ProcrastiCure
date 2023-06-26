@@ -26,7 +26,7 @@ import com.example.procrasticure.R
 import java.util.*
 
 @Composable
-fun TimePickerWidget(timeText: String): String{
+fun TimePickerWidget(timeText: String): String {
     var timeText by remember {
         mutableStateOf(timeText)
     }
@@ -43,7 +43,7 @@ fun TimePickerWidget(timeText: String): String{
     // Creating a TimePicker dialog
     val mTimePickerDialog = TimePickerDialog(
         mContext,
-        {_, mHour : Int, mMinute: Int ->
+        { _, mHour: Int, mMinute: Int ->
             timeText = "$mHour:$mMinute"
         }, mHour, mMinute, false
     )
@@ -59,23 +59,31 @@ fun TimePickerWidget(timeText: String): String{
                 BorderStroke(1.dp, SolidColor(Color.Gray)),
                 shape = RoundedCornerShape(3.dp)
             ),
-            onClick = { mTimePickerDialog.show()
+            onClick = {
+                mTimePickerDialog.show()
             }) {
-            Text(text = timeText,
+            Text(
+                text = timeText,
                 modifier = Modifier.width(280.dp),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.W400,
                 color = Color.DarkGray,
-                textAlign = TextAlign.Left)
+                textAlign = TextAlign.Left
+            )
         }
 
-        Icon(painter = painterResource(id = R.drawable.baseline_access_time_24), contentDescription = "Change Date", modifier = Modifier
-            .padding(8.dp)
-            .align(
-                Alignment.BottomEnd
-            )
-            .width(40.dp)
-            .height(40.dp), tint = Color.DarkGray)
+        Icon(
+            painter = painterResource(id = R.drawable.baseline_access_time_24),
+            contentDescription = "Change Date",
+            modifier = Modifier
+                .padding(8.dp)
+                .align(
+                    Alignment.BottomEnd
+                )
+                .width(40.dp)
+                .height(40.dp),
+            tint = Color.DarkGray
+        )
     }
     return timeText
 }

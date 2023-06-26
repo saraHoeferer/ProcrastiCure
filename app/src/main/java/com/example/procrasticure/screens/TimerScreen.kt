@@ -25,7 +25,11 @@ import java.time.LocalTime
 
 
 @Composable
-fun Timer(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
+fun Timer(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    sessionViewModel: BigViewModel
+) {
 
     Column {
         TopMenu(
@@ -50,20 +54,29 @@ fun getTimerInfo(userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
         mutableStateOf(true)
     }
 
-    Card(modifier = Modifier.padding(10.dp).fillMaxHeight()) {
+    Card(modifier = Modifier
+        .padding(10.dp)
+        .fillMaxHeight()) {
         Column(modifier = Modifier, horizontalAlignment = Alignment.CenterHorizontally) {
 
 
             AnimatedVisibility(visible = enable) {
 
-                Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    
-                    Text(text = "Type in the time in minutes!", fontSize = 25.sp, fontWeight = FontWeight.Medium)
-                    
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Text(
+                        text = "Type in the time in minutes!",
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+
                     Spacer(modifier = Modifier.size(10.dp))
 
                     WheelTimePicker(
-                        startTime = LocalTime.of(0,0),
+                        startTime = LocalTime.of(0, 0),
                         rowCount = 3,
                         textStyle = MaterialTheme.typography.subtitle1,
                         textColor = Color.Black,
@@ -73,7 +86,7 @@ fun getTimerInfo(userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
                             color = Color(0xFFf1faee).copy(alpha = 0.2f),
                             border = BorderStroke(2.dp, Color(0xFFf1faee))
                         )
-                    ){snappedTime -> input = snappedTime.toString() }
+                    ) { snappedTime -> input = snappedTime.toString() }
 
                     Spacer(modifier = Modifier.size(20.dp))
 
@@ -98,7 +111,8 @@ fun getTimerInfo(userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
 
                         ) {
 
-                        Text("Start timer!",
+                        Text(
+                            "Start timer!",
                             fontSize = 20.sp,
                             color = Color.White,
                             fontWeight = FontWeight.Medium
@@ -129,7 +143,7 @@ fun getTimerInfo(userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
 fun convertTime(input: String): Long {
     val hours = input.dropLast(3)
     val minutes = input.substring(input.length - 2)
-    return minutes.toLong()*60000 + hours.toLong()*3600000
+    return minutes.toLong() * 60000 + hours.toLong() * 3600000
 }
 
 

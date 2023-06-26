@@ -9,9 +9,15 @@ import com.google.firebase.firestore.Query
 interface GoalRepository {
     val database: FirebaseFirestore
 
-    suspend fun getGoals(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>): ArrayList<Goal>
+    suspend fun getGoals(
+        sessionViewModel: BigViewModel,
+        goalArrayList: ArrayList<Goal>
+    ): ArrayList<Goal>
 
-    suspend fun listenToChange(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>): ArrayList<Goal>
+    suspend fun listenToChange(
+        sessionViewModel: BigViewModel,
+        goalArrayList: ArrayList<Goal>
+    ): ArrayList<Goal>
 
     fun getGoalsById(goalId: String, goalArrayList: ArrayList<Goal>): Goal?
 
@@ -19,9 +25,21 @@ interface GoalRepository {
 
     suspend fun addGoal(goal: Goal, context: Context)
 
-    suspend fun sortByCriteria(sessionViewModel: BigViewModel, goalArrayList: ArrayList<Goal>, criteria: String, order: Query.Direction): ArrayList<Goal>
+    suspend fun sortByCriteria(
+        sessionViewModel: BigViewModel,
+        goalArrayList: ArrayList<Goal>,
+        criteria: String,
+        order: Query.Direction
+    ): ArrayList<Goal>
 
     suspend fun deleteGoal(goalId: String, context: Context)
 
-    suspend fun modifyGoal(goalId: String, name: String, description: String, date: String, time: String, context: Context)
+    suspend fun modifyGoal(
+        goalId: String,
+        name: String,
+        description: String,
+        date: String,
+        time: String,
+        context: Context
+    )
 }

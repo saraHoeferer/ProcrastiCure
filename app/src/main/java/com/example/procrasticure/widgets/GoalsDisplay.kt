@@ -110,13 +110,10 @@ fun GoalDisplay(goal: Goal, content: @Composable () -> Unit = {}) {
                     withStyle(style = SpanStyle(fontSize = 15.sp)) {
                         append("Description: ")
 
-                            append(goal.Description!!)
+                        append(goal.Description!!)
 
                     }
                 })
-
-
-
 
 
             }

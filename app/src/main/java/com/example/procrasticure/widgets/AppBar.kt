@@ -19,7 +19,7 @@ import com.example.procrasticure.viewModels.UserViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun TopMenu(arrowBackClicked: () -> Unit = {}, heading: String){
+fun TopMenu(arrowBackClicked: () -> Unit = {}, heading: String) {
     TopAppBar(elevation = 2.dp) {
         Row(Modifier.padding(10.dp)) {
             Icon(imageVector = Icons.Default.ArrowBack,
@@ -34,8 +34,9 @@ fun TopMenu(arrowBackClicked: () -> Unit = {}, heading: String){
         }
     }
 }
+
 @Composable
-fun GoalMenu(arrowBackClicked: () -> Unit = {}, heading: String){
+fun GoalMenu(arrowBackClicked: () -> Unit = {}, heading: String) {
     TopAppBar(elevation = 2.dp) {
         Row(Modifier.padding(10.dp)) {
             Icon(imageVector = Icons.Default.ArrowBack,
@@ -51,7 +52,11 @@ fun GoalMenu(arrowBackClicked: () -> Unit = {}, heading: String){
 }
 
 @Composable
-fun TopHomeMenu(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel) {
+fun TopHomeMenu(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    sessionViewModel: BigViewModel
+) {
     var showMenu by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
     TopAppBar(elevation = 2.dp) {

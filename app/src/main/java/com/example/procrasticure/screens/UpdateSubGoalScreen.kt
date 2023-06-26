@@ -21,15 +21,24 @@ import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
 
 @Composable
-fun UpdateSubGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?, navController: NavController, subGoalID: String?, subGoalsViewModel: SubGoalsViewModel){
+fun UpdateSubGoalScreen(
+    goalID: String,
+    name: String?,
+    description: String?,
+    date: String?,
+    time: String?,
+    navController: NavController,
+    subGoalID: String?,
+    subGoalsViewModel: SubGoalsViewModel
+) {
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     var name by remember { mutableStateOf(name.toString()) }
-    var description by remember{ mutableStateOf(description.toString()) }
-    var date by remember{ mutableStateOf(date.toString()) }
-    var time by remember{ mutableStateOf(time.toString()) }
+    var description by remember { mutableStateOf(description.toString()) }
+    var date by remember { mutableStateOf(date.toString()) }
+    var time by remember { mutableStateOf(time.toString()) }
 
     Card(
         Modifier
@@ -76,8 +85,18 @@ fun UpdateSubGoalScreen(goalID: String, name: String?, description: String?, dat
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
-                coroutineScope.launch { subGoalsViewModel.modifySubGoal(goalID, subGoalID.toString(), name, description, date, time, context) }
-                navController.popBackStack(Screen.GoalsScreen.route,  false)
+                coroutineScope.launch {
+                    subGoalsViewModel.modifySubGoal(
+                        goalID,
+                        subGoalID.toString(),
+                        name,
+                        description,
+                        date,
+                        time,
+                        context
+                    )
+                }
+                navController.popBackStack(Screen.GoalsScreen.route, false)
                 navController.navigate(Screen.GoalsScreen.route)
             }) {
                 Text(text = "Submit", fontSize = 18.sp)

@@ -34,42 +34,43 @@ class UserViewModel @Inject constructor(private val userRepository: UserReposito
         }
     }
 
-    suspend fun delete(sessionViewModel: BigViewModel){
+    suspend fun delete(sessionViewModel: BigViewModel) {
         viewModelScope.launch {
             userRepository.deleteUser(sessionViewModel = sessionViewModel)
             resetUiState()
         }
     }
 
-    suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context){
+    suspend fun editEmail(email: String, sessionViewModel: BigViewModel, context: Context) {
         viewModelScope.launch {
             userRepository.editEmail(email, sessionViewModel, context)
             resetUiState()
         }
     }
 
-    suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context){
+    suspend fun editPassword(password: String, sessionViewModel: BigViewModel, context: Context) {
         viewModelScope.launch {
             userRepository.editPassword(password, sessionViewModel, context)
             resetUiState()
         }
     }
 
-    suspend fun logout(sessionViewModel: BigViewModel){
+    suspend fun logout(sessionViewModel: BigViewModel) {
         viewModelScope.launch {
             userRepository.logOut(sessionViewModel)
             resetUiState()
         }
     }
-    suspend fun givePointstoUser(sessionViewModel: BigViewModel, points: Long){
+
+    suspend fun givePointstoUser(sessionViewModel: BigViewModel, points: Long) {
         viewModelScope.launch {
             userRepository.givePointsToUser(sessionViewModel, points)
             resetUiState()
         }
     }
 
-    fun resetUiState(){
-        viewModelScope.launch{
+    fun resetUiState() {
+        viewModelScope.launch {
             _uiState.emit(State())
         }
     }

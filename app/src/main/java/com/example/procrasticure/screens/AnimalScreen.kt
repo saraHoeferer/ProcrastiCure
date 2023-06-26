@@ -25,11 +25,16 @@ import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun AnimalScreen(navController: NavController, animalViewModel: AnimalViewModel, sessionViewModel: BigViewModel){
+fun AnimalScreen(
+    navController: NavController,
+    animalViewModel: AnimalViewModel,
+    sessionViewModel: BigViewModel
+) {
     val coroutineScope = rememberCoroutineScope()
     coroutineScope.launch { animalViewModel.getUserAnimals(sessionViewModel) }
-    val animalList = remember {animalViewModel.animals}
-    Box(modifier =
+    val animalList = remember { animalViewModel.animals }
+    Box(
+        modifier =
         Modifier
             .height(1000.dp)
             .paint(
@@ -38,48 +43,50 @@ fun AnimalScreen(navController: NavController, animalViewModel: AnimalViewModel,
             )
     ) {
         Column {
-            TopMenu(arrowBackClicked = { navController.popBackStack() },
-                heading = "My Animals")
+            TopMenu(
+                arrowBackClicked = { navController.popBackStack() },
+                heading = "My Animals"
+            )
             AnimalDetails(navController, animalList)
         }
     }
 }
 
 @Composable
-fun AnimalDetails(navController: NavController, animalList: ArrayList<Animals>){
+fun AnimalDetails(navController: NavController, animalList: ArrayList<Animals>) {
     Column {
-            Column {
-                Image(painter = painterResource(id = R.drawable.barn), contentDescription = "barn",
-                    Modifier
-                        .size(110.dp, 110.dp)
-                        .clickable {
-                            navController.navigate(Screen.AnimalShopScreen.route)
-                        })
-                LazyVerticalGrid(GridCells.Fixed(3)) {
-                    items(items = animalList) { animal ->
-                        Image(
-                            painter = painterResource(
-                                id =
-                                when (animal.url) {
-                                    "chicken" -> {
-                                        R.drawable.chicken
-                                    }
-                                    "pig" -> {
-                                        R.drawable.pig
-                                    }
-                                    "cow" -> {
-                                        R.drawable.cow
-                                    }
-                                    else -> {
-                                        R.drawable.sheep
-                                    }
+        Column {
+            Image(painter = painterResource(id = R.drawable.barn), contentDescription = "barn",
+                Modifier
+                    .size(110.dp, 110.dp)
+                    .clickable {
+                        navController.navigate(Screen.AnimalShopScreen.route)
+                    })
+            LazyVerticalGrid(GridCells.Fixed(3)) {
+                items(items = animalList) { animal ->
+                    Image(
+                        painter = painterResource(
+                            id =
+                            when (animal.url) {
+                                "chicken" -> {
+                                    R.drawable.chicken
                                 }
-                            ),
-                            contentDescription = "${animal.url}"
-                        )
-                    }
+                                "pig" -> {
+                                    R.drawable.pig
+                                }
+                                "cow" -> {
+                                    R.drawable.cow
+                                }
+                                else -> {
+                                    R.drawable.sheep
+                                }
+                            }
+                        ),
+                        contentDescription = "${animal.url}"
+                    )
                 }
             }
+        }
     }
 }
 

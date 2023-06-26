@@ -28,23 +28,39 @@ import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
 
 @Composable
-fun ManageSubGoalsScreen(navController: NavController, goalID: String?, goalPoints: String?, goalRepository: SubGoalRepositoryImpl) {
-    val subGoalsViewModel: SubGoalsViewModel = goalID?.let { SubGoalsViewModel(it, goalRepository) }!!
+fun ManageSubGoalsScreen(
+    navController: NavController,
+    goalID: String?,
+    goalPoints: String?,
+    goalRepository: SubGoalRepositoryImpl
+) {
+    val subGoalsViewModel: SubGoalsViewModel =
+        goalID?.let { SubGoalsViewModel(it, goalRepository) }!!
 
     Column {
         TopMenu(heading = "Editing Subgoals", arrowBackClicked = { navController.popBackStack() })
-        EditingSubgoalsDisplay(subGoalsViewModel = subGoalsViewModel, goalID= goalID, navController = navController, goalPoints = goalPoints!!.toLong())
+        EditingSubgoalsDisplay(
+            subGoalsViewModel = subGoalsViewModel,
+            goalID = goalID,
+            navController = navController,
+            goalPoints = goalPoints!!.toLong()
+        )
     }
 }
 
 @Composable
-fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String, goalPoints: Long, navController: NavController) {
+fun EditingSubgoalsDisplay(
+    subGoalsViewModel: SubGoalsViewModel,
+    goalID: String,
+    goalPoints: Long,
+    navController: NavController
+) {
     val goalListState = remember { subGoalsViewModel.subGoals }
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
     LazyColumn {
         items(items = goalListState) { subgoal ->
-            SubGoalsDisplay(subgoal = subgoal){
+            SubGoalsDisplay(subgoal = subgoal) {
                 Row {
                     Text(
                         text = subgoal.Name!!,
@@ -62,14 +78,18 @@ fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String,
                             Log.d("GOALID", goalID)
                             Log.d("SUBGOALID", subgoal.Id.toString())
 
-                            navController.navigate(Screen.UpdateSubGoalScreen
-                            .withDetails(
-                                goalID = goalID,
-                                name = subgoal.Name!!,
-                                description = subgoal.Description!!,
-                                date= subgoal.Date!!,
-                                time = subgoal.Time!!,
-                                subGoalID = subgoal.Id!!)) }
+                            navController.navigate(
+                                Screen.UpdateSubGoalScreen
+                                    .withDetails(
+                                        goalID = goalID,
+                                        name = subgoal.Name!!,
+                                        description = subgoal.Description!!,
+                                        date = subgoal.Date!!,
+                                        time = subgoal.Time!!,
+                                        subGoalID = subgoal.Id!!
+                                    )
+                            )
+                        }
                     )
                     CustomIcon(
                         icon = Icons.Default.Delete,
@@ -77,8 +97,10 @@ fun EditingSubgoalsDisplay(subGoalsViewModel: SubGoalsViewModel, goalID: String,
                         size = 30,
                         clickEvent = {
                             coroutineScope.launch {
-                                subGoalsViewModel.deleteSubGoal(goalID, goalPoints, subgoal.Id!!,
-                                    subgoal.Finished!!, context)
+                                subGoalsViewModel.deleteSubGoal(
+                                    goalID, goalPoints, subgoal.Id!!,
+                                    subgoal.Finished!!, context
+                                )
                                 navController.popBackStack()
                                 navController.navigate(Screen.GoalsScreen.route)
                             }

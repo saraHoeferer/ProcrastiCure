@@ -11,8 +11,12 @@ import com.example.procrasticure.data.repository.AnimalRepositoryImpl
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class AnimalViewModel  @Inject constructor(private val sessionViewModel: BigViewModel, private val animalRepositoryImpl: AnimalRepositoryImpl): ViewModel() {
-    private var _animals : MutableLiveData<ArrayList<Animals>> = MutableLiveData<ArrayList<Animals>>()
+class AnimalViewModel @Inject constructor(
+    private val sessionViewModel: BigViewModel,
+    private val animalRepositoryImpl: AnimalRepositoryImpl
+) : ViewModel() {
+    private var _animals: MutableLiveData<ArrayList<Animals>> =
+        MutableLiveData<ArrayList<Animals>>()
 
     val animals: ArrayList<Animals> = ArrayList()
 
@@ -26,15 +30,21 @@ class AnimalViewModel  @Inject constructor(private val sessionViewModel: BigView
         }
     }
 
-    suspend fun getUserAnimals(sessionViewModel: BigViewModel){
-        _animals.value = animalRepositoryImpl.getUserAnimals(sessionViewModel = sessionViewModel, animalList = animals)
+    suspend fun getUserAnimals(sessionViewModel: BigViewModel) {
+        _animals.value = animalRepositoryImpl.getUserAnimals(
+            sessionViewModel = sessionViewModel,
+            animalList = animals
+        )
     }
 
-    private suspend fun listenToChanges(sessionViewModel: BigViewModel){
-        _animals.value = animalRepositoryImpl.listenToChanges(sessionViewModel = sessionViewModel, animalList = animals)
+    private suspend fun listenToChanges(sessionViewModel: BigViewModel) {
+        _animals.value = animalRepositoryImpl.listenToChanges(
+            sessionViewModel = sessionViewModel,
+            animalList = animals
+        )
     }
 
-    suspend fun buyAnimal(sessionViewModel: BigViewModel, animals: Animals, context: Context){
+    suspend fun buyAnimal(sessionViewModel: BigViewModel, animals: Animals, context: Context) {
         animalRepositoryImpl.buyAnimal(sessionViewModel, animals, context)
     }
 }

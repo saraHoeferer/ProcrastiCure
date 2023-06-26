@@ -24,7 +24,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.procrasticure.R
 
-enum class InputState{
+enum class InputState {
     INITIAL, VALID, INVALID
 }
 
@@ -46,7 +46,7 @@ fun InputFieldWithErrorLabelEmail(
         onValueChange = {
             onInputChange(it)
         },
-        isError = when(inputState){
+        isError = when (inputState) {
             InputState.INITIAL, InputState.VALID -> false
             InputState.INVALID -> true
         },
@@ -57,7 +57,7 @@ fun InputFieldWithErrorLabelEmail(
             imeAction = imeAction
         ),
         keyboardActions = KeyboardActions(
-            onDone = {focusManager.clearFocus()}
+            onDone = { focusManager.clearFocus() }
         ),
         visualTransformation = VisualTransformation.None,
         colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
@@ -68,11 +68,11 @@ fun InputFieldWithErrorLabelEmail(
             )
         },
         trailingIcon = {
-            if(inputState == InputState.INITIAL && input.isNotEmpty()) Icon(
-               modifier = Modifier
-                   .clickable {
-                       onInputChange("")
-                   },
+            if (inputState == InputState.INITIAL && input.isNotEmpty()) Icon(
+                modifier = Modifier
+                    .clickable {
+                        onInputChange("")
+                    },
                 imageVector = Icons.Default.Clear,
                 contentDescription = "Reset Icon"
             )
@@ -99,7 +99,7 @@ fun InputFieldWithErrorLabelPassword(
         onValueChange = {
             onInputChange(it)
         },
-        isError = when(inputState){
+        isError = when (inputState) {
             InputState.INITIAL, InputState.VALID -> false
             InputState.INVALID -> true
         },
@@ -110,7 +110,7 @@ fun InputFieldWithErrorLabelPassword(
             imeAction = imeAction
         ),
         keyboardActions = KeyboardActions(
-            onDone = {focusManager.clearFocus()}
+            onDone = { focusManager.clearFocus() }
         ),
         visualTransformation = if (showPassword) {
 
@@ -130,17 +130,17 @@ fun InputFieldWithErrorLabelPassword(
         },
         trailingIcon = {
             Row {
-                if(inputState == InputState.INITIAL && input.isNotEmpty()) Icon(
-                modifier = Modifier
-                    .clickable {
-                        onInputChange("")
-                    }
-                    .padding(top = 13.dp),
-                imageVector = Icons.Default.Clear,
-                contentDescription = "Reset Icon"
-            )
+                if (inputState == InputState.INITIAL && input.isNotEmpty()) Icon(
+                    modifier = Modifier
+                        .clickable {
+                            onInputChange("")
+                        }
+                        .padding(top = 13.dp),
+                    imageVector = Icons.Default.Clear,
+                    contentDescription = "Reset Icon"
+                )
                 if (showPassword) {
-                    IconButton(onClick = { showPassword = false}) {
+                    IconButton(onClick = { showPassword = false }) {
                         Icon(
                             painter = painterResource(R.drawable.baseline_visibility_24),
                             contentDescription = "hide_password"
@@ -155,7 +155,7 @@ fun InputFieldWithErrorLabelPassword(
                         )
                     }
                 }
-                
+
             }
 
         }

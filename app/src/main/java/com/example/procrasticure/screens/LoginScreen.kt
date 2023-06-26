@@ -30,7 +30,11 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun Login(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel){
+fun Login(
+    navController: NavController,
+    userViewModel: UserViewModel,
+    sessionViewModel: BigViewModel
+) {
 
     Column {
         LoginDetails(navController, userViewModel, sessionViewModel)
@@ -40,8 +44,9 @@ fun Login(navController: NavController, userViewModel: UserViewModel, sessionVie
 
 
 @Composable
-fun LoginDetails(navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel
-){
+fun LoginDetails(
+    navController: NavController, userViewModel: UserViewModel, sessionViewModel: BigViewModel
+) {
 
     val uiState by userViewModel.uiState.collectAsState()
 
@@ -85,26 +90,33 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .fillMaxHeight()
-                , horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxHeight(), horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(modifier = Modifier
-                .height(250.dp)
-                .background(brush = Brush.linearGradient(
-                    colors = listOf(
-                        MaterialTheme.colors.primary,
-                        MaterialTheme.colors.primarySurface,
-                        MaterialTheme.colors.primaryVariant,
+            Box(
+                modifier = Modifier
+                    .height(250.dp)
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                MaterialTheme.colors.primary,
+                                MaterialTheme.colors.primarySurface,
+                                MaterialTheme.colors.primaryVariant,
 
-                    ),
-                    start = Offset(0f, 0f), // top left corner
-                    end = Offset(boxSize, boxSize) // bottom right corner
-                ))
-                .fillMaxWidth()
-                .fillMaxSize(),
+                                ),
+                            start = Offset(0f, 0f), // top left corner
+                            end = Offset(boxSize, boxSize) // bottom right corner
+                        )
+                    )
+                    .fillMaxWidth()
+                    .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "ProcrastiCure", fontSize = 50.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(
+                    text = "ProcrastiCure",
+                    fontSize = 50.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
             }
 
 
@@ -112,11 +124,11 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
             Spacer(modifier = Modifier.size(50.dp))
 
             AnimatedVisibility(visible = login) {
-                Column(modifier = Modifier.padding(20.dp)){
+                Column(modifier = Modifier.padding(20.dp)) {
                     CreateAccountSection(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        text="Log into your Account",
+                        text = "Log into your Account",
                         textButton = "Login",
                         focusManager = localFocusManager,
                         email = LoginName,
@@ -128,12 +140,12 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                         onPasswordChange = {
                             LoginPW = it
                             userViewModel.resetUiState()
-                        } ,
+                        },
                         error = uiState.error
                     ) {
                         localFocusManager.clearFocus()
                         coroutineScope.launch {
-                            userViewModel.signIn(LoginName, LoginPW,sessionViewModel)
+                            userViewModel.signIn(LoginName, LoginPW, sessionViewModel)
                         }
                     }
                     /*LoginName = SimpleTextFieldLogin("username", modifier = Modifier)
@@ -141,7 +153,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                 }
             }
 
-            if (login){
+            if (login) {
                 Spacer(modifier = Modifier.size(30.dp))
             }
 
@@ -149,18 +161,17 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
 
                 Button(onClick = {
 
-                    if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()){
+                    if (LoginName.isNotEmpty() && LoginPW.isNotEmpty()) {
                         coroutineScope.launch {
                             userViewModel.signIn(LoginName, LoginPW, sessionViewModel)
                         }
                         navController.navigate(Screen.GoalsScreen.route)
-                    }else{
+                    } else {
                         login = !login
                     }
-                                 }
-
-                    , modifier = Modifier.size(150.dp, 50.dp)
-                    , colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
+                },
+                    modifier = Modifier.size(150.dp, 50.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
                     if (login) {
                         Text(text = "Go back", color = Color.White)
                     } else {
@@ -172,7 +183,7 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
 
 
 
-            if (!signup){
+            if (!signup) {
                 Spacer(modifier = Modifier.size(20.dp))
             }
 
@@ -189,33 +200,41 @@ fun LoginDetails(navController: NavController, userViewModel: UserViewModel, ses
                             SignUpName = it
                             userViewModel.resetUiState()
                         },
-                        password = SignUpPW ,
+                        password = SignUpPW,
                         onPasswordChange = {
                             SignUpPW = it
                             userViewModel.resetUiState()
-                        } ,
+                        },
                         error = uiState.error
                     ) {
                         localFocusManager.clearFocus()
-                        coroutineScope.launch { userViewModel.signUp(SignUpName, SignUpPW,sessionViewModel) }
+                        coroutineScope.launch {
+                            userViewModel.signUp(
+                                SignUpName,
+                                SignUpPW,
+                                sessionViewModel
+                            )
+                        }
                     }
                 }
             }
 
 
-            if (signup){
+            if (signup) {
                 Spacer(modifier = Modifier.size(30.dp))
             }
 
             AnimatedVisibility(visible = !login) {
-                    Button(onClick = {signup = !signup},
-                        modifier = Modifier.size(150.dp, 50.dp),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))) {
-                        if (signup) {
-                            Text(text = "Go back", color = Color.White)
-                        } else {
-                            Text(text = "Sign up", color = Color.White)
-                        }
+                Button(
+                    onClick = { signup = !signup },
+                    modifier = Modifier.size(150.dp, 50.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF5A27B3))
+                ) {
+                    if (signup) {
+                        Text(text = "Go back", color = Color.White)
+                    } else {
+                        Text(text = "Sign up", color = Color.White)
+                    }
                 }
             }
         }
@@ -234,7 +253,7 @@ fun CreateAccountSection(
     password: String,
     onPasswordChange: (String) -> Unit,
     error: String?,
-    onButtonClick:  () -> Unit
+    onButtonClick: () -> Unit
 ) {
     var emailValidityState by rememberSaveable {
         mutableStateOf(InputState.INITIAL)
@@ -250,12 +269,12 @@ fun CreateAccountSection(
         modifier = modifier,
         horizontalAlignment = horizontalAlignment
     ) {
-       Text(
-           modifier = Modifier
-               .fillMaxWidth()
-               .padding(top = 30.dp, bottom = 12.dp),
-           text = text
-       )
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 30.dp, bottom = 12.dp),
+            text = text
+        )
         InputFieldWithErrorLabelEmail(
             modifier = Modifier.fillMaxWidth(),
             input = email,
@@ -266,13 +285,13 @@ fun CreateAccountSection(
             focusManager = focusManager,
             onUnfocusedState = {
                 emailValidityState =
-                    when (email.isNotEmpty()){
+                    when (email.isNotEmpty()) {
                         true -> InputState.VALID
                         else -> InputState.INVALID
                     }
-            } ,
+            },
             inputState = emailValidityState,
-            imeAction = ImeAction.Done ,
+            imeAction = ImeAction.Done,
         )
         InputFieldWithErrorLabelPassword(
             modifier = Modifier
@@ -280,13 +299,13 @@ fun CreateAccountSection(
                 .padding(top = 12.dp),
             input = password,
             onInputChange = {
-                            onPasswordChange(it)
+                onPasswordChange(it)
                 passwordValidityState = InputState.INITIAL
             },
-            focusManager =focusManager ,
+            focusManager = focusManager,
             onUnfocusedState = {
-                               passwordValidityState =
-                                   if (password.isNotEmpty()) InputState.VALID else InputState.INVALID
+                passwordValidityState =
+                    if (password.isNotEmpty()) InputState.VALID else InputState.INVALID
             },
             inputState = passwordValidityState,
             imeAction = ImeAction.Done,
@@ -296,11 +315,13 @@ fun CreateAccountSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 20.dp),
-            onClick = { onButtonClick()    },
+            onClick = { onButtonClick() },
             enabled = isButtonEnabled
         ) {
-            Text(modifier = Modifier.padding(6.dp),
-                text = textButton)
+            Text(
+                modifier = Modifier.padding(6.dp),
+                text = textButton
+            )
         }
 
         if (!error.isNullOrEmpty()) Row(

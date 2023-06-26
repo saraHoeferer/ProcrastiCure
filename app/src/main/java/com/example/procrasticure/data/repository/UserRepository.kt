@@ -8,12 +8,20 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.Flow
 
 
-interface UserRepository{
+interface UserRepository {
     val auth: FirebaseAuth
 
-    suspend fun signUpUser(email: String, password: String, sessionViewModel: BigViewModel): Flow<State<AuthResult>>
+    suspend fun signUpUser(
+        email: String,
+        password: String,
+        sessionViewModel: BigViewModel
+    ): Flow<State<AuthResult>>
 
-    suspend fun signInUser(email: String, password: String, sessionViewModel: BigViewModel): Flow<State<AuthResult>>
+    suspend fun signInUser(
+        email: String,
+        password: String,
+        sessionViewModel: BigViewModel
+    ): Flow<State<AuthResult>>
 
     suspend fun deleteUser(sessionViewModel: BigViewModel)
 
@@ -25,5 +33,5 @@ interface UserRepository{
 
     suspend fun getPoints(sessionViewModel: BigViewModel)
 
-    suspend fun givePointsToUser(sessionViewModel: BigViewModel, points:Long)
+    suspend fun givePointsToUser(sessionViewModel: BigViewModel, points: Long)
 }

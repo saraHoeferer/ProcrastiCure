@@ -21,15 +21,23 @@ import com.example.procrasticure.widgets.TopMenu
 import kotlinx.coroutines.launch
 
 @Composable
-fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: String?, time: String?,navController: NavController, goalsViewModel: GoalsViewModel){
+fun UpdateGoalScreen(
+    goalID: String,
+    name: String?,
+    description: String?,
+    date: String?,
+    time: String?,
+    navController: NavController,
+    goalsViewModel: GoalsViewModel
+) {
 
     val context = LocalContext.current
 
 
     var name by remember { mutableStateOf(name.toString()) }
-    var description by remember{ mutableStateOf(description.toString()) }
-    var date by remember{ mutableStateOf(date.toString()) }
-    var time by remember{ mutableStateOf(time.toString()) }
+    var description by remember { mutableStateOf(description.toString()) }
+    var date by remember { mutableStateOf(date.toString()) }
+    var time by remember { mutableStateOf(time.toString()) }
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -48,16 +56,22 @@ fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: 
             )
             Spacer(modifier = Modifier.padding(vertical = 10.dp))
             Row {
-                OutlinedTextField(label = { Text("Name") }, value = name, onValueChange = {name = it},
-                    modifier = Modifier.width(320.dp), placeholder = {
+                OutlinedTextField(label = { Text("Name") },
+                    value = name,
+                    onValueChange = { name = it },
+                    modifier = Modifier.width(320.dp),
+                    placeholder = {
                         Text(text = "Change the name of your goal", fontSize = 14.sp)
                     })
             }
             Row {
-                OutlinedTextField(label = { Text("Description (Optional)") }, value = description, onValueChange = {description = it},
+                OutlinedTextField(label = { Text("Description (Optional)") },
+                    value = description,
+                    onValueChange = { description = it },
                     modifier = Modifier
                         .width(320.dp)
-                        .defaultMinSize(minHeight = 120.dp), placeholder = {
+                        .defaultMinSize(minHeight = 120.dp),
+                    placeholder = {
                         Text(text = "Change the description for your goal", fontSize = 14.sp)
                     })
             }
@@ -72,8 +86,17 @@ fun UpdateGoalScreen(goalID: String, name: String?, description: String?, date: 
             }
             Spacer(modifier = Modifier.padding(10.dp))
             Button(onClick = {
-              coroutineScope.launch { goalsViewModel.modifyGoal(goalID, name, description, date, time, context) }
-                navController.popBackStack(Screen.GoalsScreen.route,  false)
+                coroutineScope.launch {
+                    goalsViewModel.modifyGoal(
+                        goalID,
+                        name,
+                        description,
+                        date,
+                        time,
+                        context
+                    )
+                }
+                navController.popBackStack(Screen.GoalsScreen.route, false)
                 navController.navigate(Screen.ManageGoalsScreen.route)
             }) {
                 Text(text = "Submit", fontSize = 18.sp)
